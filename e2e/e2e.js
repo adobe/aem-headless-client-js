@@ -28,28 +28,28 @@ const queryString = `
     }
   }
 }
-`;
+`
 
 test('e2e test listQueries API Error', async () => {
   const promise = listQueries()
   // just match the error message
-  expect(promise).rejects.toThrow('401')
+  return expect(promise).rejects.toThrow('401')
 })
 
 test('e2e test listQueries API Success', async () => {
   const promise = listQueries()
   // just match the error message
-  expect(promise).resolves.toBeTruthy()
+  return expect(promise).resolves.toBeTruthy()
 })
 
 test('e2e test postQuery API Success', async () => {
   // check success response
   const promise = postQuery(queryString)
-  expect(promise).resolves.toBeTruthy()
+  return expect(promise).resolves.toBeTruthy()
 })
 
 test('e2e test getQuery API Success', async () => {
   // check success response
   const promise = getQuery('/test')
-  expect(promise).resolves.toBeTruthy()
+  return expect(promise).resolves.toBeTruthy()
 })

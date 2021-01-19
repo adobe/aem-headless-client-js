@@ -1,13 +1,13 @@
 {
   "bugs": {
-    "url": "https://github.com/adobe/graphql-sdk/issues"
+    "url": "https://github.com/adobe/aem-headless-sdk/issues"
   },
   "bundleDependencies": false,
   "dependencies": {
     "cross-fetch": "^3.0.6"
   },
   "deprecated": false,
-  "description": "Adobe GraphQL SDK",
+  "description": "AEM Headless SDK",
   "devDependencies": {
     "@adobe/eslint-config-aio-lib-config": "^1.2.1",
     "dotenv": "^8.2.0",
@@ -30,7 +30,7 @@
   "license": "Apache-2.0",
   "main": "src/index.js",
   "name": "@adobe/graphql-sdk",
-  "repository": "https://github.com/adobe/graphql-sdk",
+  "repository": "https://github.com/adobe/aem-headless-sdk",
   "scripts": {
     "docs": "jsdoc2md -t ./docs/readme_template.md src/index.js > README.md",
     "lint": "eslint src test",

@@ -10,18 +10,18 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 -->
 
-[![Version](https://img.shields.io/npm/v/@adobe/graphql-sdk.svg)](https://npmjs.org/package/@adobe/graphql-sdk)
-[![Downloads/week](https://img.shields.io/npm/dw/@adobe/graphql-sdk.svg)](https://npmjs.org/package/@adobe/graphql-sdk)
-[![Build Status](https://travis-ci.com/adobe/graphql-sdk.svg?branch=master)](https://travis-ci.com/adobe/graphql-sdk)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Greenkeeper badge](https://badges.greenkeeper.io/adobe/graphql-sdk.svg)](https://greenkeeper.io/)
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/graphql-sdk/master.svg?style=flat-square)](https://codecov.io/gh/adobe/graphql-sdk/)
+[![Version](https://img.shields.io/npm/v/@adobe/aem-headless-sdk.svg)](https://npmjs.org/package/@adobe/aem-headless-sdk)
+[![Downloads/week](https://img.shields.io/npm/dw/@adobe/aem-headless-sdk.svg)](https://npmjs.org/package/@adobe/aem-headless-sdk)
+[![Build Status](https://travis-ci.com/adobe/aem-headless-sdk.svg?branch=master)](https://travis-ci.com/adobe/aem-headless-sdk)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Greenkeeper badge](https://badges.greenkeeper.io/adobe/aem-headless-sdk.svg)](https://greenkeeper.io/)
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/aem-headless-sdk/master.svg?style=flat-square)](https://codecov.io/gh/adobe/aem-headless-sdk/)
 
-# Adobe GraphQL Lib
+# AEM Headless SDK
 
 ### Installing
 
 ```bash
-$ npm install @adobe/graphql-sdk
+$ npm install @adobe/aem-headless-sdk
 ```
 
 ### Usage
@@ -32,7 +32,7 @@ const {
   saveQuery,
   getQuery,
   listQueries
-} = require('@adobe/aem-graphql-sdk');
+} = require('@adobe/aem-headless-sdk');
 ```
 
 {{>main-index~}}

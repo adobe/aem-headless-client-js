@@ -1,0 +1,48 @@
+{
+  "bugs": {
+    "url": "https://github.com/adobe/graphql-sdk/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "cross-fetch": "^3.0.6"
+  },
+  "deprecated": false,
+  "description": "Adobe GraphQL SDK",
+  "devDependencies": {
+    "@adobe/eslint-config-aio-lib-config": "^1.2.1",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.18.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.3",
+    "eslint-plugin-jsdoc": "^31.0.7",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "jest": "^26.6.3",
+    "jest-fetch-mock": "^3.0.3",
+    "jest-junit": "^12.0.0",
+    "jsdoc": "^3.6.3",
+    "jsdoc-to-markdown": "^6.0.1",
+    "stdout-stderr": "^0.1.13"
+  },
+  "homepage": "https://github.com/adobe/graphql-sdk",
+  "license": "Apache-2.0",
+  "main": "src/index.js",
+  "name": "@adobe/graphql-sdk",
+  "repository": "https://github.com/adobe/graphql-sdk",
+  "scripts": {
+    "docs": "jsdoc2md -t ./docs/readme_template.md src/index.js > README.md",
+    "lint": "eslint src test",
+    "unit-tests": "jest --config test/jest.config.js --maxWorkers=2",
+    "test": "npm run lint && npm run unit-tests",
+    "e2e": "jest --config e2e/jest.config.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "version": "0.0.1"
+}

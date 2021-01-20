@@ -30,26 +30,26 @@ const queryString = `
 }
 `
 
-test('e2e test listQueries API Error', async () => {
+test('e2e test listQueries API Error', () => {
   const promise = listQueries()
-  // just match the error message
-  return expect(promise).rejects.toThrow('401')
+  // ???
+  return expect(promise).rejects.toThrow()
 })
 
-test('e2e test listQueries API Success', async () => {
-  const promise = listQueries()
-  // just match the error message
-  return expect(promise).resolves.toBeTruthy()
-})
-
-test('e2e test postQuery API Success', async () => {
+test('e2e test postQuery API Success', () => {
   // check success response
   const promise = postQuery(queryString)
   return expect(promise).resolves.toBeTruthy()
 })
 
-test('e2e test getQuery API Success', async () => {
+test('e2e test getQuery API Error', () => {
   // check success response
   const promise = getQuery('/test')
+  return expect(promise).rejects.toThrow()
+})
+
+test('e2e test getQuery API Success', () => {
+  // check success response
+  const promise = getQuery('/wknd/plain-article-query')
   return expect(promise).resolves.toBeTruthy()
 })

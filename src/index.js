@@ -117,11 +117,11 @@ async function handleRequest (endpoint, data, options, auth = AEM_AUTHORIZATION)
     .catch((error) => {
       if (error instanceof SDKError) {
         // 3.1 Request error: custom that was thrown
-        return error
+        throw error
       }
       // 3.2 Request error: general
       const { name, type, message, details } = error
-      return new SDKError(name, type || name, '', message, details)
+      throw new SDKError(name, type || name, '', message, details)
     })
 }
 

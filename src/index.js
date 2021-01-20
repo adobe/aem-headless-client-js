@@ -10,7 +10,7 @@ governing permissions and limitations under the License.
 */
 
 const fetch = require('cross-fetch')
-
+const { SDKError } = require('./errors')
 const {
   AEM_GRAPHQL_ACTIONS,
   AEM_AUTHORIZATION,
@@ -82,18 +82,47 @@ async function listQueries (options = {}, auth) {
 async function handleRequest (endpoint, data, options, auth = AEM_AUTHORIZATION) {
   const requestOptions = getRequestOptions(data, options, auth)
   const url = getUrl(endpoint)
-  let result
-
-  try {
-    result = await fetch(url, requestOptions)
-      .then(response => {
+  return fetch(url, requestOptions)
+    .then(response => {
+      if (!response.ok) {
+        // 1. Check if error message is defined in API response
         return response.json()
-      })
-  } catch (e) {
-    result = e
-  }
-
-  return result
+          .then((apiError) => {
+            // 1.1. JSON parsed: valid error defined in API response
+            return apiError
+          })
+          .catch((error) => {
+            // 1.2. Couldn't parse JSON: no error defined in API response
+            const { name, type, message, details } = error
+            throw new SDKError(name, type, response.status, message, details)
+          })
+          .then((finalError) => {
+            // 1.3 Throw error from API response (1.1)
+            const { name, errorType, type, message, details } = finalError.error || finalError.errors[0]
+            throw new SDKError(errorType || name, type || name, response.status, message, details)
+          })
+      }
+      // 2. Successful response, parse the JSON and return the data
+      return response.json()
+        .then((data) => {
+          // 2.1. Got valid data from response.json()
+          return data
+        })
+        .catch((error) => {
+          // 2.2. Couldn't parse the JSON from OK response
+          const { name, type, message, details } = error
+          throw new SDKError(name, type || name, response.status, message, details)
+        })
+    })
+    .catch((error) => {
+      if (error instanceof SDKError) {
+        // 3.1 Request error: custom that was thrown
+        return error
+      }
+      // 3.2 Request error: general
+      const { name, type, message, details } = error
+      return new SDKError(name, type || name, '', message, details)
+    })
 }
 
 /**

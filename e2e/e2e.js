@@ -9,15 +9,15 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+const path = require('path')
+// load .env values in the e2e folder, if any
+require('dotenv').config({ path: path.join(__dirname, '.env') })
+
 const {
   postQuery,
   getQuery,
   listQueries
 } = require('../src')
-const path = require('path')
-
-// load .env values in the e2e folder, if any
-require('dotenv').config({ path: path.join(__dirname, '.env') })
 
 const queryString = `
  {

@@ -4,6 +4,7 @@
   },
   "bundleDependencies": false,
   "dependencies": {
+    "@adobe/aemcs-api-client-lib": "file:aemcs-api-client-lib/nodejs",
     "cross-fetch": "^3.0.6"
   },
   "deprecated": false,

@@ -27,7 +27,7 @@ $ npm install @adobe/aem-headless-sdk
 ### Usage
 Import AEMHeadless Class
 ```javascript
-const AEMHeadless = require('@adobe/aem-headless-sdk');
+const { AEMHeadless } = require('@adobe/aem-headless-sdk');
 ```
 Configure SDK with Host and Auth data (if needed)
 ```javascript
@@ -54,8 +54,33 @@ sdk.getQuery('wknd/persist-query-name')
    .catch(e => console.error(e.toJSON()))
 ```
 
-Authorization
-Basic Authorization is used. If needed, auth param should be base64 token or [user,pass] array
+### Authorization
+
+If `auth` param is a string, it's treated as a Bearer token
+
+If `auth` param is an array, expected data is ['user', 'pass'] pair, and Basic Authorization will be ued
+
+If `auth` is not defined, env variables will be checked for AEM_TOKEN || AEM_USER && AEM_PASS
+
+If `auth` is not defined, and env variables are not set, Authorization header will not be set
+
+#### DEV token and service credentials
+
+SDK contains helper function to get Auth token from credentials config file
+
+```javascript
+const { getToken } = require('@adobe/aem-headless-sdk')
+
+  getToken('path/to/service-config.json')
+    .then(({ accessToken, type, expires }) => {
+      const sdkNode = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, accessToken)
+
+      sdkNode.postQuery(queryString)
+        .then(data => console.log(data))
+        .catch(e => console.error(e.toJSON()))
+    })
+    .catch(e => console.error(e.toJSON()))
+```
 
 <a name="AEMHeadless"></a>
 
@@ -83,7 +108,7 @@ Constructor.
 | --- | --- | --- | --- |
 | endpoint | <code>string</code> |  | GraphQL endpoint |
 | [host] | <code>string</code> | <code>&quot;env.AEM_HOST_URI&quot;</code> | GraphQL host |
-| [auth] | <code>string</code> | <code>&quot;&#x27;&#x27;&quot;</code> | base64 token string or [user,pass] pair array. If not defined env variables are checked: env.AEM_TOKEN || env.AEM_USER and env.AEM_PASS |
+| [auth] | <code>string</code> \| <code>Array</code> | <code>&quot;&#x27;&#x27;&quot;</code> | Bearer token string or [user,pass] pair array. If not defined env variables are checked: env.AEM_TOKEN || env.AEM_USER && env.AEM_PASS |
 
 <a name="AEMHeadless+postQuery"></a>
 

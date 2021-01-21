@@ -27,7 +27,7 @@ $ npm install @adobe/aem-headless-sdk
 ### Usage
 Import AEMHeadless Class
 ```javascript
-const AEMHeadless = require('@adobe/aem-headless-sdk');
+const { AEMHeadless } = require('@adobe/aem-headless-sdk');
 ```
 Configure SDK with Host and Auth data (if needed)
 ```javascript
@@ -54,15 +54,35 @@ sdk.getQuery('wknd/persist-query-name')
    .catch(e => console.error(e.toJSON()))
 ```
 
-##$ Authorization
+### Authorization
 
 If `auth` param is a string, it's treated as a Bearer token
+
 If `auth` param is an array, expected data is ['user', 'pass'] pair, and Basic Authorization will be ued
+
 If `auth` is not defined, env variables will be checked for AEM_TOKEN || AEM_USER && AEM_PASS
+
 If `auth` is not defined, and env variables are not set, Authorization header will not be set
 
-{{>main-index~}}
-{{>all-docs~}}
+#### DEV token and service credentials
+
+SDK contains helper function to get Auth token from credentials config file
+
+```javascript
+const { getToken } = require('@adobe/aem-headless-sdk')
+
+  getToken('path/to/service-config.json')
+    .then(({ accessToken, type, expires }) => {
+      const sdkNode = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, accessToken)
+
+      sdkNode.postQuery(queryString)
+        .then(data => console.log(data))
+        .catch(e => console.error(e.toJSON()))
+    })
+    .catch(e => console.error(e.toJSON()))
+```
+
+{{>main-index~}}{{>all-docs~}}
 
 ### Contributing
 

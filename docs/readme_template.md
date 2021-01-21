@@ -25,15 +25,37 @@ $ npm install @adobe/aem-headless-sdk
 ```
 
 ### Usage
-Import functions from the package
+Import AEMHeadless Class
 ```javascript
-const {
-  postQuery,
-  saveQuery,
-  getQuery,
-  listQueries
-} = require('@adobe/aem-headless-sdk');
+const AEMHeadless = require('@adobe/aem-headless-sdk');
 ```
+Configure SDK with Host and Auth data (if needed)
+```javascript
+const sdk = new AEMHeadless('<graphql_endpoint>', '<aem_host>', '<aem_token>' || ['<aem_user>', '<aem_pass>'])
+// Eg:
+const sdk = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
+```
+Use SDK methods. Eg:
+```javascript
+sdk.postQuery(queryString)
+  .then(data => console.log(data))
+  .catch(e => console.error(e.toJSON()))
+
+sdk.listQueries()
+   .then(data => console.log(data))
+   .catch(e => console.error(e.toJSON()))
+
+sdk.saveQuery(queryString, 'wknd/persist-query-name')
+   .then(data => console.log(data))
+   .catch(e => console.error(e.toJSON()))
+
+sdk.getQuery('wknd/persist-query-name')
+   .then(data => console.log(data))
+   .catch(e => console.error(e.toJSON()))
+```
+
+Authorization
+Basic Authorization is used. If needed, auth param should be base64 token or [user,pass] array
 
 {{>main-index~}}
 {{>all-docs~}}

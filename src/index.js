@@ -17,16 +17,21 @@ const {
   AEM_HOST_URI
 } = require('./config')
 
+/**
+ * This class provides methods to call AEM GraphQL APIs.
+ * Before calling any method initialize the instance
+ * with GraphQL endpoint, GraphQL host and auth if needed
+ */
 class AEMHeadless {
   /**
    * Constructor.
    *
    *
    * @param {string} endpoint GraphQL endpoint
-   * @param {string} [host=env.AEM_HOST_URI || ''] GraphQL host
-   * @param {string} [auth=env.AEM_TOKEN || [env.AEM_USER, env.AEM_PASS] || ''] base64 token string or [user,pass] pair array
+   * @param {string} [host=env.AEM_HOST_URI] GraphQL host
+   * @param {string} [auth=''] base64 token string or [user,pass] pair array. If not defined env variables are checked: env.AEM_TOKEN || env.AEM_USER and env.AEM_PASS
    */
-  constructor (endpoint = '', host = AEM_HOST_URI, auth = AEM_AUTHORIZATION) {
+  constructor (endpoint = AEM_GRAPHQL_ACTIONS.endpoint, host = AEM_HOST_URI, auth = AEM_AUTHORIZATION) {
     this.host = host
     this.endpoint = endpoint
     this.token = this.__getToken(auth)
@@ -47,7 +52,7 @@ class AEMHeadless {
    * Returns a Promise that resolves with a PUT request JSON data.
    *
    * @param {string} query - the query string
-   * @param {string} endpoint - AEM path to save query, format: <configuration name>/<endpoint name>
+   * @param {string} endpoint - AEM path to save query, format: configuration_name/endpoint_name
    * @param {object} [options={}] - additional PUT request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
@@ -70,7 +75,7 @@ class AEMHeadless {
   /**
    * Returns a Promise that resolves with a GET request JSON data.
    *
-   * @param {string} endpoint - AEM path for persisted query, format: <configuration name>/<endpoint name>
+   * @param {string} endpoint - AEM path for persisted query, format: configuration_name/endpoint_name
    * @param {object} [options={}] - additional GET request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */

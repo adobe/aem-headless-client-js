@@ -54,8 +54,12 @@ sdk.getQuery('wknd/persist-query-name')
    .catch(e => console.error(e.toJSON()))
 ```
 
-Authorization
-Basic Authorization is used. If needed, auth param should be base64 token or [user,pass] array
+##$ Authorization
+
+If `auth` param is a string, it's treated as a Bearer token
+If `auth` param is an array, expected data is ['user', 'pass'] pair, and Basic Authorization will be ued
+If `auth` is not defined, env variables will be checked for AEM_TOKEN || AEM_USER && AEM_PASS
+If `auth` is not defined, and env variables are not set, Authorization header will not be set
 
 {{>main-index~}}
 {{>all-docs~}}

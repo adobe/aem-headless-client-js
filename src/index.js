@@ -29,12 +29,13 @@ class AEMHeadless {
    *
    * @param {string} endpoint GraphQL endpoint
    * @param {string} [host=env.AEM_HOST_URI] GraphQL host
-   * @param {string|Array} [auth=''] base64 token string or [user,pass] pair array. If not defined env variables are checked: env.AEM_TOKEN || env.AEM_USER and env.AEM_PASS
+   * @param {string|Array} [auth=''] Bearer token string or [user,pass] pair array. If not defined env variables are checked: env.AEM_TOKEN || env.AEM_USER && env.AEM_PASS
    */
   constructor (endpoint = AEM_GRAPHQL_ACTIONS.endpoint, host = AEM_HOST_URI, auth = AEM_AUTHORIZATION) {
     this.endpoint = endpoint
     this.host = host
     this.token = this.__getToken(auth)
+    this.authType = Array.isArray(auth) ? 'Basic' : 'Bearer'
   }
 
   /**
@@ -85,11 +86,11 @@ class AEMHeadless {
   }
 
   /**
-   * Returns token for Basic auth.
+   * Returns token for Authorization.
    *
    * @private
    * @param {string|array} auth - base64 token string or [user,pass] pair array
-   * @returns {string} token for Basic auth
+   * @returns {string} token for auth
    */
   __getToken (auth) {
     if (!auth) {
@@ -143,7 +144,7 @@ class AEMHeadless {
     if (this.token) {
       requestOptions.headers = {
         ...requestOptions.headers,
-        Authorization: `Basic ${this.token}`
+        Authorization: `${this.authType} ${this.token}`
       }
       requestOptions.credentials = 'include'
     }

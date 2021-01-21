@@ -10,14 +10,13 @@ governing permissions and limitations under the License.
 */
 
 const path = require('path')
+
 // load .env values in the e2e folder, if any
 require('dotenv').config({ path: path.join(__dirname, '.env') })
 
-const {
-  postQuery,
-  getQuery,
-  listQueries
-} = require('../src')
+const Sdk = require('../src')
+
+const { AEM_TOKEN, AEM_USER, AEM_PASS, AEM_HOST_URI } = process.env
 
 const queryString = `
  {
@@ -29,27 +28,32 @@ const queryString = `
   }
 }
 `
+let sdk = {}
+
+beforeAll(() => {
+  sdk = new Sdk('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
+})
 
 test('e2e test listQueries API Error', () => {
-  const promise = listQueries()
+  const promise = sdk.listQueries()
   // ???
   return expect(promise).rejects.toThrow()
 })
 
 test('e2e test postQuery API Success', () => {
   // check success response
-  const promise = postQuery(queryString)
+  const promise = sdk.postQuery(queryString)
   return expect(promise).resolves.toBeTruthy()
 })
 
 test('e2e test getQuery API Error', () => {
   // check success response
-  const promise = getQuery('/test')
+  const promise = sdk.getQuery('/test')
   return expect(promise).rejects.toThrow()
 })
 
 test('e2e test getQuery API Success', () => {
   // check success response
-  const promise = getQuery('/wknd/plain-article-query')
+  const promise = sdk.getQuery('/wknd/plain-article-query')
   return expect(promise).resolves.toBeTruthy()
 })

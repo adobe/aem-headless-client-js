@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const Sdk = require('../src')
+const { AEMHeadless } = require('../src')
 const fetch = require('cross-fetch')
 
 // /////////////////////////////////////////////
@@ -17,7 +17,7 @@ const fetch = require('cross-fetch')
 let sdk = {}
 
 beforeAll(() => {
-  sdk = new Sdk('endpoint/path.gql', 'http://localhost', ['user', 'pass'])
+  sdk = new AEMHeadless('endpoint/path.gql', 'http://localhost', ['user', 'pass'])
 })
 
 beforeEach(() => {

@@ -14,7 +14,7 @@ const path = require('path')
 // load .env values in the e2e folder, if any
 require('dotenv').config({ path: path.join(__dirname, '.env') })
 
-const Sdk = require('../src')
+const { AEMHeadless } = require('../src')
 
 const { AEM_TOKEN, AEM_USER, AEM_PASS, AEM_HOST_URI } = process.env
 
@@ -31,7 +31,7 @@ const queryString = `
 let sdk = {}
 
 beforeAll(() => {
-  sdk = new Sdk('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
+  sdk = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
 })
 
 test('e2e test listQueries API Error', () => {

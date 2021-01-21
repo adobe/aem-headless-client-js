@@ -29,11 +29,11 @@ class AEMHeadless {
    *
    * @param {string} endpoint GraphQL endpoint
    * @param {string} [host=env.AEM_HOST_URI] GraphQL host
-   * @param {string} [auth=''] base64 token string or [user,pass] pair array. If not defined env variables are checked: env.AEM_TOKEN || env.AEM_USER and env.AEM_PASS
+   * @param {string|Array} [auth=''] base64 token string or [user,pass] pair array. If not defined env variables are checked: env.AEM_TOKEN || env.AEM_USER and env.AEM_PASS
    */
   constructor (endpoint = AEM_GRAPHQL_ACTIONS.endpoint, host = AEM_HOST_URI, auth = AEM_AUTHORIZATION) {
-    this.host = host
     this.endpoint = endpoint
+    this.host = host
     this.token = this.__getToken(auth)
   }
 

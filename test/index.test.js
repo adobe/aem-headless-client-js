@@ -9,26 +9,29 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const {
-  getQuery,
-  listQueries
-} = require('../src')
+const Sdk = require('../src')
 const fetch = require('cross-fetch')
 
 // /////////////////////////////////////////////
+
+let sdk = {}
+
+beforeAll(() => {
+  sdk = new Sdk('endpoint/path.gql', 'http://localhost', ['user', 'pass'])
+})
 
 beforeEach(() => {
   fetch.resetMocks()
 })
 
 test('listQueries API Error', async () => {
-  const promise = listQueries()
+  const promise = sdk.listQueries()
   // just match the error message
-  return expect(promise).resolves.toBeTruthy()
+  return expect(promise).rejects.toThrow()
 })
 
 test('getQuery API Success', async () => {
   // check success response
-  const promise = getQuery('/test')
-  return expect(promise).resolves.toBeTruthy()
+  const promise = sdk.getQuery('/test')
+  return expect(promise).rejects.toThrow()
 })

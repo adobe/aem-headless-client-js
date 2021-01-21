@@ -36,7 +36,7 @@ class SDKError extends Error {
   /**
    * Returns a JSON representation of this Error object.
    *
-   * @returns {object}
+   * @returns {object} Object with error data
    */
   toJSON () {
     return {

@@ -97,7 +97,7 @@ class AEMHeadless {
       return ''
     }
     // If auth is user, pass pair
-    if (Array.isArray(auth)) {
+    if (Array.isArray(auth) && auth[0] && auth[1]) {
       return Buffer.from(`${auth[0]}:${auth[1]}`, 'utf8').toString('base64')
     }
 
@@ -169,6 +169,7 @@ class AEMHeadless {
   async __handleRequest (endpoint, body = '', options = {}) {
     const requestOptions = this.__getRequestOptions(body, options)
     const url = this.__getUrl(endpoint)
+
     return fetch(url, requestOptions)
       .then(response => {
         if (!response.ok) {

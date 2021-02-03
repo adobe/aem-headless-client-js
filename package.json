@@ -1,6 +1,6 @@
 {
   "bugs": {
-    "url": "https://github.com/adobe/aem-headless-sdk/issues"
+    "url": "https://github.com/adobe/aem-headless-client-sdk/issues"
   },
   "bundleDependencies": false,
   "dependencies": {
@@ -8,7 +8,7 @@
     "cross-fetch": "^3.0.6"
   },
   "deprecated": false,
-  "description": "AEM Headless SDK",
+  "description": "AEM Headless SDK Client",
   "devDependencies": {
     "@adobe/eslint-config-aio-lib-config": "^1.2.1",
     "dotenv": "^8.2.0",
@@ -27,13 +27,13 @@
     "jsdoc-to-markdown": "^6.0.1",
     "stdout-stderr": "^0.1.13"
   },
-  "homepage": "https://github.com/adobe/aem-headless-sdk",
+  "homepage": "https://github.com/adobe/aem-headless-client-sdk",
   "license": "Apache-2.0",
   "main": "src/index.js",
-  "name": "@adobe/aem-headless-sdk",
-  "repository": "https://github.com/adobe/aem-headless-sdk",
+  "name": "@adobe/aem-headless-client",
+  "repository": "https://github.com/adobe/aem-headless-client-sdk",
   "scripts": {
-    "docs": "jsdoc2md -t ./docs/readme_template.md src/index.js > README.md",
+    "docs": "jsdoc2md -t ./docs/readme_template.md src/main.js > README.md",
     "lint": "eslint src test",
     "unit-tests": "jest --config test/jest.config.js --maxWorkers=2",
     "test": "npm run lint && npm run unit-tests",

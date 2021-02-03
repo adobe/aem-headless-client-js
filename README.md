@@ -10,24 +10,24 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 -->
 
-[![Version](https://img.shields.io/npm/v/@adobe/aem-headless-sdk.svg)](https://npmjs.org/package/@adobe/aem-headless-sdk)
-[![Downloads/week](https://img.shields.io/npm/dw/@adobe/aem-headless-sdk.svg)](https://npmjs.org/package/@adobe/aem-headless-sdk)
-[![Build Status](https://travis-ci.com/adobe/aem-headless-sdk.svg?branch=master)](https://travis-ci.com/adobe/aem-headless-sdk)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Greenkeeper badge](https://badges.greenkeeper.io/adobe/aem-headless-sdk.svg)](https://greenkeeper.io/)
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/aem-headless-sdk/master.svg?style=flat-square)](https://codecov.io/gh/adobe/aem-headless-sdk/)
+[![Version](https://img.shields.io/npm/v/@adobe/aem-headless-client-sdk.svg)](https://npmjs.org/package/@adobe/aem-headless-client)
+[![Downloads/week](https://img.shields.io/npm/dw/@adobe/aem-headless-client-sdk.svg)](https://npmjs.org/package/@adobe/aem-headless-client)
+[![Build Status](https://travis-ci.com/adobe/aem-headless-client-sdk.svg?branch=master)](https://travis-ci.com/adobe/aem-headless-client-sdk)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Greenkeeper badge](https://badges.greenkeeper.io/adobe/aem-headless-client-sdk.svg)](https://greenkeeper.io/)
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/aem-headless-client-sdk/master.svg?style=flat-square)](https://codecov.io/gh/adobe/aem-headless-client-sdk/)
 
-# AEM Headless SDK
+# AEM Headless SDK Client
 
 ### Installing
 
 ```bash
-$ npm install @adobe/aem-headless-sdk
+$ npm install @adobe/aem-headless-client
 ```
 
 ### Usage
 Import AEMHeadless Class
 ```javascript
-const { AEMHeadless } = require('@adobe/aem-headless-sdk');
+const AEMHeadless = require('@adobe/aem-headless-client');
 ```
 Configure SDK with Host and Auth data (if needed)
 ```javascript

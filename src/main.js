@@ -121,7 +121,13 @@ class AEMHeadless {
       return url
     }
 
-    return `${this.host}/${path}`
+    const absPath = path[0] === '/' ? path : `/${path}`
+
+    if (!this.host) {
+      return absPath
+    }
+
+    return `${this.host}${absPath}`
   }
 
   /**

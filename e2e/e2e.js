@@ -16,28 +16,40 @@ require('dotenv').config({ path: path.join(__dirname, '.env') })
 
 const { AEMHeadless } = require('../src')
 
-const { AEM_TOKEN, AEM_USER, AEM_PASS, AEM_HOST_URI } = process.env
+const { AEM_TOKEN, AEM_USER, AEM_PASS, AEM_HOST_URI, AEM_GRAPHQL_ENDPOINT } = process.env
 
 const queryString = `
- {
-  personList {
+{
+  adventureList {
     items {
       _path
-      name
     }
   }
 }
 `
 let sdk = {}
+let persistedName = 'wknd/persist-query-name'
 
 beforeAll(() => {
-  sdk = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
+  persistedName = `${persistedName}-${Date.now()}`
+  sdk = new AEMHeadless(AEM_GRAPHQL_ENDPOINT || 'content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
 })
 
-test('e2e test listQueries API Error', () => {
-  const promise = sdk.listQueries()
-  // ???
+test('e2e test saveQuery API Success', () => {
+  // check success response
+  const promise = sdk.saveQuery(queryString, persistedName)
+  return expect(promise).resolves.toBeTruthy()
+})
+
+test('e2e test saveQuery API Error', () => {
+  // check error response
+  const promise = sdk.saveQuery(queryString, persistedName)
   return expect(promise).rejects.toThrow()
+})
+
+test('e2e test listQueries API Sucess', () => {
+  const promise = sdk.listQueries()
+  return expect(promise).resolves.toBeTruthy()
 })
 
 test('e2e test postQuery API Success', () => {
@@ -46,8 +58,14 @@ test('e2e test postQuery API Success', () => {
   return expect(promise).resolves.toBeTruthy()
 })
 
+test('e2e test postQuery API Error', () => {
+  // check error response
+  const promise = sdk.postQuery()
+  return expect(promise).rejects.toThrow()
+})
+
 test('e2e test getQuery API Error', () => {
-  // check success response
+  // check error response
   const promise = sdk.getQuery('/test')
   return expect(promise).rejects.toThrow()
 })

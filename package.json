@@ -30,6 +30,7 @@
   "homepage": "https://github.com/adobe/aem-headless-client-sdk",
   "license": "Apache-2.0",
   "main": "src/index.js",
+  "browser": "src/browser.js",
   "name": "@adobe/aem-headless-client",
   "repository": "https://github.com/adobe/aem-headless-client-sdk",
   "scripts": {

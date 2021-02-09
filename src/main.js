@@ -192,7 +192,7 @@ class AEMHeadless {
             })
             .then((finalError) => {
               // 1.3 Throw error from API response (1.1)
-              const { name, errorType, type, message, details } = finalError.error || finalError.errors[0]
+              const { name, errorType, type, message, details } = finalError.error || (finalError.errors ? finalError.errors[0] : {})
               throw new SDKError(errorType || name, type || name, response.status, message, details)
             })
         }

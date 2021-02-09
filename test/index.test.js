@@ -14,6 +14,16 @@ const fetch = require('cross-fetch')
 
 // /////////////////////////////////////////////
 
+const queryString = `
+{
+  adventureList {
+    items {
+      _path
+    }
+  }
+}
+`
+const persistedName = 'wknd/persist-query-name'
 let sdk = {}
 
 beforeAll(() => {
@@ -22,16 +32,61 @@ beforeAll(() => {
 
 beforeEach(() => {
   fetch.resetMocks()
+  fetch.mockResolvedValue({
+    ok: true,
+    status: 200,
+    json: async (data) => ({
+      data
+    })
+  })
 })
 
-test('listQueries API Error', async () => {
-  const promise = sdk.listQueries()
-  // just match the error message
+test('saveQuery API Success', () => {
+  // check success response
+  const promise = sdk.saveQuery(queryString, `${persistedName}-${Date.now()}`)
+  return expect(promise).resolves.toBeTruthy()
+})
+
+test('saveQuery API Error', () => {
+  fetch.mockRejectedValue({
+    ok: false
+  })
+  // check error response
+  const promise = sdk.saveQuery(queryString, persistedName)
   return expect(promise).rejects.toThrow()
 })
 
-test('getQuery API Success', async () => {
+test('listQueries API Success', () => {
+  const promise = sdk.listQueries()
+  return expect(promise).resolves.toBeTruthy()
+})
+
+test('postQuery API Success', () => {
   // check success response
+  const promise = sdk.postQuery(queryString)
+  return expect(promise).resolves.toBeTruthy()
+})
+
+test('postQuery API Error', () => {
+  fetch.mockRejectedValue({
+    ok: false
+  })
+  // check error response
+  const promise = sdk.postQuery()
+  return expect(promise).rejects.toThrow()
+})
+
+test('getQuery API Success', () => {
+  // check success response
+  const promise = sdk.getQuery(persistedName)
+  return expect(promise).resolves.toBeTruthy()
+})
+
+test('getQuery API Error', () => {
+  fetch.mockRejectedValue({
+    ok: false
+  })
+  // check error response
   const promise = sdk.getQuery('/test')
   return expect(promise).rejects.toThrow()
 })

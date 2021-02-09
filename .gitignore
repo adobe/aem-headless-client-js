@@ -4,3 +4,4 @@ junit.xml
 package-lock.json
 .idea
 .env
+.env.development

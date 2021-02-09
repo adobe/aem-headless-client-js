@@ -4,9 +4,8 @@
 
 To run the e2e test you'll need these env variables set:
   1. `AEM_HOST_URI`
-  1. `AEM_GRAPHQL_ENDPOINT`
-  2. `AEM_USER`
-  3. `AEM_PASS`
+  2. `AEM_GRAPHQL_ENDPOINT` (if different from default  `content/graphql/endpoint.gql`)
+  3. `AEM_TOKEN` (or `AEM_USER` and `AEM_PASS`)
 
 ## Run
 

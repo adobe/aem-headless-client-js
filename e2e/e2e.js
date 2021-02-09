@@ -28,16 +28,15 @@ const queryString = `
 }
 `
 let sdk = {}
-let persistedName = 'wknd/persist-query-name'
+const persistedName = 'wknd/persist-query-name'
 
 beforeAll(() => {
-  persistedName = `${persistedName}-${Date.now()}`
   sdk = new AEMHeadless(AEM_GRAPHQL_ENDPOINT || 'content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
 })
 
 test('e2e test saveQuery API Success', () => {
   // check success response
-  const promise = sdk.saveQuery(queryString, persistedName)
+  const promise = sdk.saveQuery(queryString, `${persistedName}-${Date.now()}`)
   return expect(promise).resolves.toBeTruthy()
 })
 
@@ -47,7 +46,7 @@ test('e2e test saveQuery API Error', () => {
   return expect(promise).rejects.toThrow()
 })
 
-test('e2e test listQueries API Sucess', () => {
+test('e2e test listQueries API Success', () => {
   const promise = sdk.listQueries()
   return expect(promise).resolves.toBeTruthy()
 })
@@ -64,14 +63,14 @@ test('e2e test postQuery API Error', () => {
   return expect(promise).rejects.toThrow()
 })
 
+test('e2e test getQuery API Success', () => {
+  // check success response
+  const promise = sdk.getQuery(persistedName)
+  return expect(promise).resolves.toBeTruthy()
+})
+
 test('e2e test getQuery API Error', () => {
   // check error response
   const promise = sdk.getQuery('/test')
   return expect(promise).rejects.toThrow()
-})
-
-test('e2e test getQuery API Success', () => {
-  // check success response
-  const promise = sdk.getQuery('/wknd/plain-article-query')
-  return expect(promise).resolves.toBeTruthy()
 })

@@ -35,7 +35,8 @@ const sdk = new AEMHeadless('<graphql_endpoint>', '<aem_host>', '<aem_token>' ||
 // Eg:
 const sdk = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
 ```
-Use SDK methods. Eg:
+Use SDK methods. 
+Eg Promise syntax:
 ```javascript
 sdk.postQuery(queryString)
   .then(data => console.log(data))
@@ -52,6 +53,37 @@ sdk.saveQuery(queryString, 'wknd/persist-query-name')
 sdk.getQuery('wknd/persist-query-name')
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
+```
+Eg async/await:
+```javascript
+(async () => {
+    let postData
+    try {
+        postData = sdk.postQuery(queryString)
+    } catch (e) {
+        console.error(e.toJSON())
+    }
+    
+    let list
+    try {
+        list = sdk.listQueries()
+    } catch (e) {
+        console.error(e.toJSON())
+    }
+
+    try {
+        sdk.saveQuery(queryString, 'wknd/persist-query-name')
+    } catch (e) {
+        console.error(e.toJSON())
+    }
+    
+    let getData
+    try {
+        getData = sdk.getQuery('wknd/persist-query-name')
+    } catch (e) {
+        console.error(e.toJSON())
+    }
+})()    
 ```
 
 ### Authorization
@@ -70,16 +102,11 @@ SDK contains helper function to get Auth token from credentials config file
 
 ```javascript
 const { getToken } = require('@adobe/aem-headless-sdk')
-
-  getToken('path/to/service-config.json')
-    .then(({ accessToken, type, expires }) => {
-      const sdkNode = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, accessToken)
-
-      sdkNode.postQuery(queryString)
-        .then(data => console.log(data))
-        .catch(e => console.error(e.toJSON()))
-    })
-    .catch(e => console.error(e.toJSON()))
+(async () => {
+    const { accessToken, type, expires } = await getToken('path/to/service-config.json')
+    const sdkNode = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, accessToken)
+    const data = sdkNode.postQuery(queryString)
+})()
 ```
 
 {{>main-index~}}{{>all-docs~}}

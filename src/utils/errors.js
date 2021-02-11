@@ -50,6 +50,12 @@ class SDKError extends Error {
   }
 }
 
+const SDKErrorWrapper = (error, errorType, code = '') => {
+  const { name, type, message, details } = error
+  return new SDKError(name, type || errorType, code, message, details)
+}
+
 module.exports = {
-  SDKError
+  SDKError,
+  SDKErrorWrapper
 }

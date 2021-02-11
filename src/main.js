@@ -10,7 +10,7 @@ governing permissions and limitations under the License.
 */
 
 const fetch = require('cross-fetch')
-const { SDKError } = require('./utils/errors')
+const { SDKError, SDKErrorWrapper } = require('./utils/errors')
 const {
   AEM_GRAPHQL_ACTIONS,
   AEM_AUTHORIZATION,
@@ -176,47 +176,41 @@ class AEMHeadless {
     const requestOptions = this.__getRequestOptions(body, options)
     const url = this.__getUrl(endpoint)
 
-    return fetch(url, requestOptions)
-      .then(response => {
-        if (!response.ok) {
-          // 1. Check if error message is defined in API response
-          return response.json()
-            .then((apiError) => {
-              // 1.1. JSON parsed: valid error defined in API response
-              return apiError
-            })
-            .catch((error) => {
-              // 1.2. Couldn't parse JSON: no error defined in API response
-              const { name, type, message, details } = error
-              throw new SDKError(name, type, response.status, message, details)
-            })
-            .then((finalError) => {
-              // 1.3 Throw error from API response (1.1)
-              const { name, errorType, type, message, details } = finalError.error || (finalError.errors ? finalError.errors[0] : {})
-              throw new SDKError(errorType || name, type || name, response.status, message, details)
-            })
-        }
-        // 2. Successful response, parse the JSON and return the data
-        return response.json()
-          .then((data) => {
-            // 2.1. Got valid data from response.json()
-            return data
-          })
-          .catch((error) => {
-            // 2.2. Couldn't parse the JSON from OK response
-            const { name, type, message, details } = error
-            throw new SDKError(name, type || name, response.status, message, details)
-          })
-      })
-      .catch((error) => {
-        if (error instanceof SDKError) {
-          // 3.1 Request error: custom that was thrown
-          throw error
-        }
-        // 3.2 Request error: general
-        const { name, type, message, details } = error
-        throw new SDKError(name, type || name, '', message, details)
-      })
+    let response
+    // 1. Handle Request
+    try {
+      response = await fetch(url, requestOptions)
+    } catch (error) {
+      // 1.1 Request error: general
+      throw SDKErrorWrapper(error, 'RequestError', '')
+    }
+    let apiError
+    // 2. Handle Response error
+    if (!response.ok) {
+      try {
+        // 2.1 Check if custom error is returned
+        apiError = await response.json()
+      } catch (error) {
+        // 2.3 Response error: Couldn't parse JSON - no error defined in API response
+        throw SDKErrorWrapper(error, 'ResponseError', response.status)
+      }
+    }
+
+    if (apiError) {
+      // 2.2 Response error: JSON parsed - valid error defined in API response
+      const { name, errorType, type, message, details } = apiError.error || (apiError.errors ? apiError.errors[0] : {})
+      throw new SDKError(errorType || name, type || 'APIError', response.status, message, details)
+    }
+    // 3. Handle ok response
+    let data
+    try {
+      data = await response.json()
+    } catch (error) {
+      // 3.2. Response ok: Data error - Couldn't parse the JSON from OK response
+      throw SDKErrorWrapper(error, 'ResponseError', response.status)
+    }
+
+    return data
   }
 }
 

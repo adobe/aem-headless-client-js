@@ -36,6 +36,7 @@ const sdk = new AEMHeadless('<graphql_endpoint>', '<aem_host>', '<aem_token>' ||
 const sdk = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
 ```
 Use SDK methods. 
+
 Eg Promise syntax:
 ```javascript
 sdk.postQuery(queryString)
@@ -92,9 +93,7 @@ If `auth` param is a string, it's treated as a Bearer token
 
 If `auth` param is an array, expected data is ['user', 'pass'] pair, and Basic Authorization will be ued
 
-If `auth` is not defined, env variables will be checked for AEM_TOKEN || AEM_USER && AEM_PASS
-
-If `auth` is not defined, and env variables are not set, Authorization header will not be set
+If `auth` is not defined, Authorization header will not be set
 
 #### DEV token and service credentials
 
@@ -131,11 +130,11 @@ with GraphQL endpoint, GraphQL host and auth if needed
 Constructor.
 
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| endpoint | <code>string</code> |  | GraphQL endpoint |
-| [host] | <code>string</code> | <code>&quot;env.AEM_HOST_URI&quot;</code> | GraphQL host |
-| [auth] | <code>string</code> \| <code>Array</code> | <code>&quot;&#x27;&#x27;&quot;</code> | Bearer token string or [user,pass] pair array. If not defined env variables are checked: env.AEM_TOKEN || env.AEM_USER && env.AEM_PASS |
+| Param | Type | Description |
+| --- | --- | --- |
+| endpoint | <code>string</code> | GraphQL endpoint |
+| [host] | <code>string</code> | GraphQL host, if not defined absolute endpoint path will be passed to fetch |
+| [auth] | <code>string</code> \| <code>Array</code> | Bearer token string or [user,pass] pair array |
 
 <a name="AEMHeadless+postQuery"></a>
 

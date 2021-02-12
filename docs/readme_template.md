@@ -36,6 +36,7 @@ const sdk = new AEMHeadless('<graphql_endpoint>', '<aem_host>', '<aem_token>' ||
 const sdk = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
 ```
 Use SDK methods. 
+
 Eg Promise syntax:
 ```javascript
 sdk.postQuery(queryString)
@@ -92,9 +93,7 @@ If `auth` param is a string, it's treated as a Bearer token
 
 If `auth` param is an array, expected data is ['user', 'pass'] pair, and Basic Authorization will be ued
 
-If `auth` is not defined, env variables will be checked for AEM_TOKEN || AEM_USER && AEM_PASS
-
-If `auth` is not defined, and env variables are not set, Authorization header will not be set
+If `auth` is not defined, Authorization header will not be set
 
 #### DEV token and service credentials
 

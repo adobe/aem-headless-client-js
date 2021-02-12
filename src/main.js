@@ -11,11 +11,7 @@ governing permissions and limitations under the License.
 
 const fetch = require('cross-fetch')
 const { SDKError, SDKErrorWrapper } = require('./utils/errors')
-const {
-  AEM_GRAPHQL_ACTIONS,
-  AEM_AUTHORIZATION,
-  AEM_HOST_URI
-} = require('./utils/config')
+const { AEM_GRAPHQL_ACTIONS } = require('./utils/config')
 
 /**
  * This class provides methods to call AEM GraphQL APIs.
@@ -28,12 +24,13 @@ class AEMHeadless {
    *
    *
    * @param {string} endpoint GraphQL endpoint
-   * @param {string} [host=env.AEM_HOST_URI] GraphQL host
-   * @param {string|Array} [auth=''] Bearer token string or [user,pass] pair array. If not defined env variables are checked: env.AEM_TOKEN || env.AEM_USER && env.AEM_PASS
+   * @param {string} [host] GraphQL host, if not defined absolute endpoint path will be passed to fetch
+   * @param {string|Array} [auth] Bearer token string or [user,pass] pair array
    */
-  constructor (endpoint = AEM_GRAPHQL_ACTIONS.endpoint, host = AEM_HOST_URI, auth = AEM_AUTHORIZATION) {
+  constructor (endpoint, host, auth) {
     this.endpoint = endpoint
     this.host = host
+    this.__validateParams(host, endpoint)
     this.token = this.__getToken(auth)
     this.authType = Array.isArray(auth) ? 'Basic' : 'Bearer'
   }
@@ -211,6 +208,79 @@ class AEMHeadless {
     }
 
     return data
+  }
+
+  /**
+   * Check required params.
+   *
+   * @private
+   * @param {Object} params
+   * @returns void
+   */
+  __validateRequiredParams (params = {}) {
+    const paramsArr = Object.keys(params)
+    const invalidParams = []
+    paramsArr.forEach(name => {
+      if (!params[name]) {
+        invalidParams.push(name)
+      }
+    })
+
+    if (invalidParams.length > 0) {
+      throw new SDKError('InvalidParameter', 'SDKError', '', `Required params missing: ${invalidParams.join(', ')}`)
+    }
+  }
+
+  /**
+   * Check valid url
+   *
+   * @private
+   * @param {string} url
+   * @returns void
+   */
+  __validateUrl (url) {
+    // Validate only provided values
+    if (!url) {
+      return
+    }
+
+    try {
+      new URL(url) // eslint-disable-line
+    } catch (e) {
+      throw new SDKError('InvalidParameter', 'SDKError', '', `Invalid URL: ${url}`)
+    }
+  }
+
+  /**
+   * Check valid url path
+   *
+   * @private
+   * @param {string} path
+   * @returns void
+   */
+  __validateUrlPath (path) {
+    const absPath = path[0] === '/' ? path : `/${path}`
+    const absUrl = `http://domain${absPath}`
+
+    try {
+      new URL(absUrl) // eslint-disable-line
+    } catch (e) {
+      throw new SDKError('InvalidParameter', 'SDKError', '', `Invalid URL path: ${path}`)
+    }
+  }
+
+  /**
+   * Check valid params
+   *
+   * @private
+   * @param {string} [host]
+   * @param {string} endpoint
+   * @returns void
+   */
+  __validateParams (host, endpoint) {
+    this.__validateRequiredParams({ endpoint })
+    this.__validateUrlPath(endpoint)
+    this.__validateUrl(host)
   }
 }
 

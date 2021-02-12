@@ -12,8 +12,9 @@ governing permissions and limitations under the License.
 
 [![Version](https://img.shields.io/npm/v/@adobe/aem-headless-client-sdk.svg)](https://npmjs.org/package/@adobe/aem-headless-client)
 [![Downloads/week](https://img.shields.io/npm/dw/@adobe/aem-headless-client-sdk.svg)](https://npmjs.org/package/@adobe/aem-headless-client)
-[![Build Status](https://travis-ci.com/adobe/aem-headless-client-sdk.svg?branch=master)](https://travis-ci.com/adobe/aem-headless-client-sdk)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Greenkeeper badge](https://badges.greenkeeper.io/adobe/aem-headless-client-sdk.svg)](https://greenkeeper.io/)
+![Build Status](https://github.com/@adobe/aem-headless-client-sdk/workflows/.github/workflows/nodejs.yml/badge.svg?branch=main)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
+[![Greenkeeper badge](https://badges.greenkeeper.io/adobe/aem-headless-client-sdk.svg)](https://greenkeeper.io/)
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/aem-headless-client-sdk/master.svg?style=flat-square)](https://codecov.io/gh/adobe/aem-headless-client-sdk/)
 
 # AEM Headless SDK Client

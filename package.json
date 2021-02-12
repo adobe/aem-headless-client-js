@@ -38,8 +38,7 @@
     "lint": "eslint src test",
     "unit-tests": "jest --config test/jest.config.js --maxWorkers=2",
     "test": "npm run lint && npm run unit-tests",
-    "e2e": "jest --config e2e/jest.config.js",
-    "ex": "NODE_ENV=production node ./e2e/example.js"
+    "e2e": "jest --config e2e/jest.config.js"
   },
   "publishConfig": {
     "access": "public"

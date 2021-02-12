@@ -207,7 +207,7 @@ class AEMHeadless {
       data = await response.json()
     } catch (error) {
       // 3.2. Response ok: Data error - Couldn't parse the JSON from OK response
-      throw SDKErrorWrapper(error, 'ResponseError', response.status)
+      throw SDKErrorWrapper(error, 'ResponseDataError', response.status)
     }
 
     return data

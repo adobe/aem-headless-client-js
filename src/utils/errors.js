@@ -50,6 +50,11 @@ class SDKError extends Error {
   }
 }
 
+/**
+ * Convert standard Error to SDKError. Returns new instance of SDKError
+ *
+ * @returns {object} Object with error data
+ */
 const SDKErrorWrapper = (error, errorType, code = '') => {
   const { name, type, message, details } = error
   return new SDKError(name, type || errorType, code, message, details)

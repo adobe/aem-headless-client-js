@@ -1,0 +1,6 @@
+node_modules
+coverage
+junit.xml
+.idea
+.env
+.env.development

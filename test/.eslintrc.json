@@ -1,0 +1,11 @@
+{
+  "globals": {
+    "fixtureFile": true,
+    "fixtureJson": true,
+    "fakeFileSystem": true,
+    "fetch": true
+  },
+  "rules": {
+    "node/no-unpublished-require": 0
+  }
+}

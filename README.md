@@ -19,76 +19,78 @@ governing permissions and limitations under the License.
 
 # AEM Headless SDK Client
 
-### Installing
+## Installation
 
 ```bash
 $ npm install @adobe/aem-headless-client
 ```
 
-### Usage
-Import AEMHeadless Class
+## Usage
+
+### Create AEMHeadless client
+
 ```javascript
 const AEMHeadless = require('@adobe/aem-headless-client');
 ```
 Configure SDK with Host and Auth data (if needed)
 ```javascript
-const sdk = new AEMHeadless('<graphql_endpoint>', '<aem_host>', '<aem_token>' || ['<aem_user>', '<aem_pass>'])
+const aemHeadlessClient = new AEMHeadless('<graphql_endpoint>', '<aem_host>', '<aem_token>' || ['<aem_user>', '<aem_pass>'])
 // Eg:
-const sdk = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
+const aemHeadlessClient = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
 ```
-Use SDK methods. 
+### Use AEMHeadless client 
 
-Eg Promise syntax:
+#### Promise syntax:
 ```javascript
-sdk.postQuery(queryString)
+aemHeadlessClient.postQuery(queryString)
   .then(data => console.log(data))
   .catch(e => console.error(e.toJSON()))
 
-sdk.listQueries()
+aemHeadlessClient.listQueries()
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
 
-sdk.saveQuery(queryString, 'wknd/persist-query-name')
+aemHeadlessClient.saveQuery(queryString, 'wknd/persist-query-name')
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
 
-sdk.getQuery('wknd/persist-query-name')
+aemHeadlessClient.getQuery('wknd/persist-query-name')
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
 ```
-Eg async/await:
+#### Within async/await:
 ```javascript
 (async () => {
     let postData
     try {
-        postData = sdk.postQuery(queryString)
+        postData = aemHeadlessClient.postQuery(queryString)
     } catch (e) {
         console.error(e.toJSON())
     }
     
     let list
     try {
-        list = sdk.listQueries()
+        list = aemHeadlessClient.listQueries()
     } catch (e) {
         console.error(e.toJSON())
     }
 
     try {
-        sdk.saveQuery(queryString, 'wknd/persist-query-name')
+        aemHeadlessClient.saveQuery(queryString, 'wknd/persist-query-name')
     } catch (e) {
         console.error(e.toJSON())
     }
     
     let getData
     try {
-        getData = sdk.getQuery('wknd/persist-query-name')
+        getData = aemHeadlessClient.getQuery('wknd/persist-query-name')
     } catch (e) {
         console.error(e.toJSON())
     }
 })()    
 ```
 
-### Authorization
+## Authorization
 
 If `auth` param is a string, it's treated as a Bearer token
 
@@ -96,7 +98,7 @@ If `auth` param is an array, expected data is ['user', 'pass'] pair, and Basic A
 
 If `auth` is not defined, Authorization header will not be set
 
-#### DEV token and service credentials
+### DEV token and service credentials
 
 SDK contains helper function to get Auth token from credentials config file
 
@@ -108,91 +110,15 @@ const { getToken } = require('@adobe/aem-headless-sdk')
     const data = sdkNode.postQuery(queryString)
 })()
 ```
+## API Reference
 
-<a name="AEMHeadless"></a>
-
-## AEMHeadless
-This class provides methods to call AEM GraphQL APIs.
-Before calling any method initialize the instance
-with GraphQL endpoint, GraphQL host and auth if needed
-
-**Kind**: global class  
-
-* [AEMHeadless](#AEMHeadless)
-    * [new AEMHeadless(endpoint, [host], [auth])](#new_AEMHeadless_new)
-    * [.postQuery(query, [options])](#AEMHeadless+postQuery) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.saveQuery(query, endpoint, [options])](#AEMHeadless+saveQuery) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.listQueries([options])](#AEMHeadless+listQueries) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.getQuery(endpoint, [options])](#AEMHeadless+getQuery) ⇒ <code>Promise.&lt;any&gt;</code>
-
-<a name="new_AEMHeadless_new"></a>
-
-### new AEMHeadless(endpoint, [host], [auth])
-Constructor.
+See generated [API Reference](./api-reference.md)
 
 
-| Param | Type | Description |
-| --- | --- | --- |
-| endpoint | <code>string</code> | GraphQL endpoint |
-| [host] | <code>string</code> | GraphQL host, if not defined absolute endpoint path will be passed to fetch |
-| [auth] | <code>string</code> \| <code>Array</code> | Bearer token string or [user,pass] pair array |
-
-<a name="AEMHeadless+postQuery"></a>
-
-### aemHeadless.postQuery(query, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
-Returns a Promise that resolves with a POST request JSON data.
-
-**Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
-**Returns**: <code>Promise.&lt;any&gt;</code> - - the response body wrapped inside a Promise  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| query | <code>string</code> |  | the query string |
-| [options] | <code>object</code> | <code>{}</code> | additional POST request options |
-
-<a name="AEMHeadless+saveQuery"></a>
-
-### aemHeadless.saveQuery(query, endpoint, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
-Returns a Promise that resolves with a PUT request JSON data.
-
-**Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
-**Returns**: <code>Promise.&lt;any&gt;</code> - - the response body wrapped inside a Promise  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| query | <code>string</code> |  | the query string |
-| endpoint | <code>string</code> |  | AEM path to save query, format: configuration_name/endpoint_name |
-| [options] | <code>object</code> | <code>{}</code> | additional PUT request options |
-
-<a name="AEMHeadless+listQueries"></a>
-
-### aemHeadless.listQueries([options]) ⇒ <code>Promise.&lt;any&gt;</code>
-Returns a Promise that resolves with a GET request JSON data.
-
-**Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
-**Returns**: <code>Promise.&lt;any&gt;</code> - - the response body wrapped inside a Promise  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>object</code> | <code>{}</code> | additional GET request options |
-
-<a name="AEMHeadless+getQuery"></a>
-
-### aemHeadless.getQuery(endpoint, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
-Returns a Promise that resolves with a GET request JSON data.
-
-**Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
-**Returns**: <code>Promise.&lt;any&gt;</code> - - the response body wrapped inside a Promise  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| endpoint | <code>string</code> |  | AEM path for persisted query, format: configuration_name/endpoint_name |
-| [options] | <code>object</code> | <code>{}</code> | additional GET request options |
-
-### Contributing
+## Contributing
 
 Contributions are welcome! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.
 
-### Licensing
+## Licensing
 
 This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.

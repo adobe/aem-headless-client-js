@@ -34,7 +34,7 @@
   "name": "@adobe/aem-headless-client",
   "repository": "https://github.com/adobe/aem-headless-client-sdk",
   "scripts": {
-    "docs": "jsdoc2md -t ./docs/readme_template.md src/main.js > README.md",
+    "docs": "jsdoc2md -t ./docs/readme_template.md src/main.js > api-reference.md",
     "lint": "eslint src test",
     "unit-tests": "jest --config test/jest.config.js --maxWorkers=2",
     "test": "npm run lint && npm run unit-tests",

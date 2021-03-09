@@ -19,6 +19,9 @@ governing permissions and limitations under the License.
 
 # AEM Headless SDK Client
 
+### TODO
+This repository should be made public soon, especially if it uses GitHub Actions: we have a limited amount of github action minutes and actions in private repos count against our 2000 minute cap.
+
 ### Installing
 
 ```bash

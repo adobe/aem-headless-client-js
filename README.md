@@ -15,7 +15,7 @@ governing permissions and limitations under the License.
 [![Build Status](https://github.com/adobe/aem-headless-client-sdk/workflows/Node.js%20CI/badge.svg?branch=main)](https://github.com/adobe/aem-headless-client-sdk/actions)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-# AEM Headless SDK Client
+# AEM Headless Client for JavaScript
 
 ## Installation
 

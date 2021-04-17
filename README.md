@@ -10,9 +10,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 -->
 
-[![Version](https://img.shields.io/npm/v/@adobe/aem-headless-client.svg)](https://npmjs.org/package/@adobe/aem-headless-client)
-[![Downloads/week](https://img.shields.io/npm/dw/@adobe/aem-headless-client.svg)](https://npmjs.org/package/@adobe/aem-headless-client)
-[![Build Status](https://github.com/adobe/aem-headless-client-sdk/workflows/Node.js%20CI/badge.svg?branch=main)](https://github.com/adobe/aem-headless-client-sdk/actions)
+[![Version](https://img.shields.io/npm/v/@adobe/aem-headless-client-js.svg)](https://npmjs.org/package/@adobe/aem-headless-client-js)
+[![Downloads/week](https://img.shields.io/npm/dw/@adobe/aem-headless-client-js.svg)](https://npmjs.org/package/@adobe/aem-headless-client-js)
+[![Build Status](https://github.com/adobe/aem-headless-client-js/workflows/Node.js%20CI/badge.svg?branch=main)](https://github.com/adobe/aem-headless-client-js/actions)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # AEM Headless Client for JavaScript
@@ -22,7 +22,7 @@ See [aem-headless-client-java](https://github.com/adobe/aem-headless-client-java
 ## Installation
 
 ```bash
-$ npm install @adobe/aem-headless-client
+$ npm install @adobe/aem-headless-client-js
 ```
 
 ## Usage
@@ -30,7 +30,7 @@ $ npm install @adobe/aem-headless-client
 ### Create AEMHeadless client
 
 ```javascript
-const AEMHeadless = require('@adobe/aem-headless-client');
+const AEMHeadless = require('@adobe/aem-headless-client-js');
 ```
 Configure SDK with Host and Auth data (if needed)
 ```javascript
@@ -103,7 +103,7 @@ If `auth` is not defined, Authorization header will not be set
 SDK contains helper function to get Auth token from credentials config file
 
 ```javascript
-const { getToken } = require('@adobe/aem-headless-sdk')
+const { getToken } = require('@adobe/aem-headless-client-js')
 (async () => {
     const { accessToken, type, expires } = await getToken('path/to/service-config.json')
     const sdkNode = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, accessToken)

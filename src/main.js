@@ -74,12 +74,16 @@ class AEMHeadless {
    * Returns a Promise that resolves with a GET request JSON data.
    *
    * @param {string} endpoint - AEM path for persisted query, format: configuration_name/endpoint_name
+   * @param {object} [variables={}] - query variables
    * @param {object} [options={}] - additional GET request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  getQuery (endpoint, options = {}) {
-    const url = `${AEM_GRAPHQL_ACTIONS.execute}/${endpoint}`
-    return this.__handleRequest(url, '', { method: 'GET', ...options })
+  getQuery (endpoint, variables = {}, options = {}) {
+    const method = (options.method || 'GET').toUpperCase()
+    const body = method === 'POST' ? JSON.stringify(variables) : ''
+    const variablesString = method === 'POST' ? '' : Object.keys(variables).map(key => `;${key}=${variables[key]}`).join()
+    const url = `${AEM_GRAPHQL_ACTIONS.execute}/${endpoint}${variablesString}`
+    return this.__handleRequest(url, body, { method, ...options })
   }
 
   /**

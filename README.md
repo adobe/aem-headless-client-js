@@ -57,6 +57,10 @@ aemHeadlessClient.saveQuery(queryString, 'wknd/persist-query-name')
 aemHeadlessClient.getQuery('wknd/persist-query-name')
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
+
+aemHeadlessClient.getQuery('wknd/persist-query-name-with-variables', { name: 'John Doe'})
+    .then(data => console.log(data))
+    .catch(e => console.error(e.toJSON()))
 ```
 #### Within async/await:
 ```javascript

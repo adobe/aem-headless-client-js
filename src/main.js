@@ -80,8 +80,14 @@ class AEMHeadless {
    */
   getQuery (endpoint, variables = {}, options = {}) {
     const method = (options.method || 'GET').toUpperCase()
-    const body = method === 'POST' ? JSON.stringify(variables) : ''
-    const variablesString = method === 'POST' ? '' : Object.keys(variables).map(key => `;${key}=${variables[key]}`).join()
+    let body = ''
+    let variablesString = Object.keys(variables).map(key => `;${key}=${encodeURIComponent(variables[key])}`).join()
+
+    if (method === 'POST') {
+      body = JSON.stringify({ variables })
+      variablesString = ''
+    }
+
     const url = `${AEM_GRAPHQL_ACTIONS.execute}/${endpoint}${variablesString}`
     return this.__handleRequest(url, body, { method, ...options })
   }

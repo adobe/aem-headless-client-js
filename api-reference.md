@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 -->
-# API Reference
+# AEM HEADLESS SDK API Reference
 
 <a name="AEMHeadless"></a>
 
@@ -25,7 +25,7 @@ with GraphQL endpoint, GraphQL host and auth if needed
     * [.postQuery(query, [options])](#AEMHeadless+postQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.saveQuery(query, endpoint, [options])](#AEMHeadless+saveQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.listQueries([options])](#AEMHeadless+listQueries) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.getQuery(endpoint, [options])](#AEMHeadless+getQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.getQuery(endpoint, [variables], [options])](#AEMHeadless+getQuery) ⇒ <code>Promise.&lt;any&gt;</code>
 
 <a name="new_AEMHeadless_new"></a>
 
@@ -80,7 +80,7 @@ Returns a Promise that resolves with a GET request JSON data.
 
 <a name="AEMHeadless+getQuery"></a>
 
-### aemHeadless.getQuery(endpoint, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.getQuery(endpoint, [variables], [options]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a GET request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -89,5 +89,6 @@ Returns a Promise that resolves with a GET request JSON data.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | endpoint | <code>string</code> |  | AEM path for persisted query, format: configuration_name/endpoint_name |
+| [variables] | <code>object</code> | <code>{}</code> | query variables |
 | [options] | <code>object</code> | <code>{}</code> | additional GET request options |
 

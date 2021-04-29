@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 -->
-# API Reference
+# AEM HEADLESS SDK API Reference
 
 <a name="AEMHeadless"></a>
 
@@ -22,10 +22,10 @@ with GraphQL endpoint, GraphQL host and auth if needed
 
 * [AEMHeadless](#AEMHeadless)
     * [new AEMHeadless(endpoint, [host], [auth])](#new_AEMHeadless_new)
-    * [.postQuery(query, [options])](#AEMHeadless+postQuery) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.saveQuery(query, endpoint, [options])](#AEMHeadless+saveQuery) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.listQueries([options])](#AEMHeadless+listQueries) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.getQuery(endpoint, [options])](#AEMHeadless+getQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.runQuery(query, [options])](#AEMHeadless+runQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.persistQuery(query, endpoint, [options])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.listPersistedQueries([options])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.runPersistedQuery(endpoint, [options])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
 
 <a name="new_AEMHeadless_new"></a>
 
@@ -39,9 +39,9 @@ Constructor.
 | [host] | <code>string</code> | GraphQL host, if not defined absolute endpoint path will be passed to fetch |
 | [auth] | <code>string</code> \| <code>Array</code> | Bearer token string or [user,pass] pair array |
 
-<a name="AEMHeadless+postQuery"></a>
+<a name="AEMHeadless+runQuery"></a>
 
-### aemHeadless.postQuery(query, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.runQuery(query, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a POST request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -52,9 +52,9 @@ Returns a Promise that resolves with a POST request JSON data.
 | query | <code>string</code> |  | the query string |
 | [options] | <code>object</code> | <code>{}</code> | additional POST request options |
 
-<a name="AEMHeadless+saveQuery"></a>
+<a name="AEMHeadless+persistQuery"></a>
 
-### aemHeadless.saveQuery(query, endpoint, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.persistQuery(query, endpoint, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a PUT request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -66,9 +66,9 @@ Returns a Promise that resolves with a PUT request JSON data.
 | endpoint | <code>string</code> |  | AEM path to save query, format: configuration_name/endpoint_name |
 | [options] | <code>object</code> | <code>{}</code> | additional PUT request options |
 
-<a name="AEMHeadless+listQueries"></a>
+<a name="AEMHeadless+listPersistedQueries"></a>
 
-### aemHeadless.listQueries([options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.listPersistedQueries([options]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a GET request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -78,9 +78,9 @@ Returns a Promise that resolves with a GET request JSON data.
 | --- | --- | --- | --- |
 | [options] | <code>object</code> | <code>{}</code> | additional GET request options |
 
-<a name="AEMHeadless+getQuery"></a>
+<a name="AEMHeadless+runPersistedQuery"></a>
 
-### aemHeadless.getQuery(endpoint, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.runPersistedQuery(endpoint, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a GET request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  

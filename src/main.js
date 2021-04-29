@@ -42,7 +42,7 @@ class AEMHeadless {
    * @param {object} [options={}] - additional POST request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  postQuery (query, options = {}) {
+  runQuery (query, options = {}) {
     return this.__handleRequest(this.endpoint, JSON.stringify({ query }), options)
   }
 
@@ -54,7 +54,7 @@ class AEMHeadless {
    * @param {object} [options={}] - additional PUT request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  saveQuery (query, endpoint, options = {}) {
+  persistQuery (query, endpoint, options = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.persist}/${endpoint}`
     return this.__handleRequest(url, query, { method: 'PUT', ...options })
   }
@@ -65,7 +65,7 @@ class AEMHeadless {
    * @param {object} [options={}] - additional GET request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  listQueries (options = {}) {
+  listPersistedQueries (options = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.list}`
     return this.__handleRequest(url, '', { method: 'GET', ...options })
   }
@@ -77,7 +77,7 @@ class AEMHeadless {
    * @param {object} [options={}] - additional GET request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  getQuery (endpoint, options = {}) {
+  runPersistedQuery (endpoint, options = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.execute}/${endpoint}`
     return this.__handleRequest(url, '', { method: 'GET', ...options })
   }

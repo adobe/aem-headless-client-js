@@ -34,43 +34,43 @@ beforeAll(() => {
   sdk = new AEMHeadless(AEM_GRAPHQL_ENDPOINT || 'content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
 })
 
-test('e2e test saveQuery API Success', () => {
+test('e2e test persistQuery API Success', () => {
   // check success response
-  const promise = sdk.saveQuery(queryString, `${persistedName}-${Date.now()}`)
+  const promise = sdk.persistQuery(queryString, `${persistedName}-${Date.now()}`)
   return expect(promise).resolves.toBeTruthy()
 })
 
-test('e2e test saveQuery API Error', () => {
+test('e2e test persistQuery API Error', () => {
   // check error response
-  const promise = sdk.saveQuery(queryString, persistedName)
+  const promise = sdk.persistQuery(queryString, persistedName)
   return expect(promise).rejects.toThrow()
 })
 
-test('e2e test listQueries API Success', () => {
+test('e2e test listPersistedQueries API Success', () => {
   const promise = sdk.listQueries()
   return expect(promise).resolves.toBeTruthy()
 })
 
-test('e2e test postQuery API Success', () => {
+test('e2e test runQuery API Success', () => {
   // check success response
-  const promise = sdk.postQuery(queryString)
+  const promise = sdk.runQuery(queryString)
   return expect(promise).resolves.toBeTruthy()
 })
 
-test('e2e test postQuery API Error', () => {
+test('e2e test runQuery API Error', () => {
   // check error response
-  const promise = sdk.postQuery()
+  const promise = sdk.runQuery()
   return expect(promise).rejects.toThrow()
 })
 
-test('e2e test getQuery API Success', () => {
+test('e2e test runPersistedQuery API Success', () => {
   // check success response
-  const promise = sdk.getQuery(persistedName)
+  const promise = sdk.runPersistedQuery(persistedName)
   return expect(promise).resolves.toBeTruthy()
 })
 
-test('e2e test getQuery API Error', () => {
+test('e2e test runPersistedQuery API Error', () => {
   // check error response
-  const promise = sdk.getQuery('/test')
+  const promise = sdk.runPersistedQuery('/test')
   return expect(promise).rejects.toThrow()
 })

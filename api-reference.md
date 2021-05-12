@@ -21,23 +21,26 @@ with GraphQL endpoint, GraphQL host and auth if needed
 **Kind**: global class  
 
 * [AEMHeadless](#AEMHeadless)
-    * [new AEMHeadless(endpoint, [host], [auth])](#new_AEMHeadless_new)
+    * [new AEMHeadless(config)](#new_AEMHeadless_new)
     * [.runQuery(query, [options])](#AEMHeadless+runQuery) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.persistQuery(query, endpoint, [options])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.persistQuery(query, path, [options])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.listPersistedQueries([options])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.runPersistedQuery(endpoint, [options])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.runPersistedQuery(path, [options])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
 
 <a name="new_AEMHeadless_new"></a>
 
-### new AEMHeadless(endpoint, [host], [auth])
+### new AEMHeadless(config)
 Constructor.
+If param is a string, it's treated as AEM server URL, default GraphQL endpoint is used.
+For granular params, use config object
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| endpoint | <code>string</code> | GraphQL endpoint |
-| [host] | <code>string</code> | GraphQL host, if not defined absolute endpoint path will be passed to fetch |
-| [auth] | <code>string</code> \| <code>Array</code> | Bearer token string or [user,pass] pair array |
+| config | <code>object</code> \| <code>string</code> | Configuration object, or AEM server URL string |
+| [config.serviceURL] | <code>string</code> | AEM server URL |
+| [config.endpoint] | <code>string</code> | GraphQL endpoint, full URL or absolute path |
+| [config.auth] | <code>string</code> \| <code>Array</code> | Bearer token string or [user,pass] pair array |
 
 <a name="AEMHeadless+runQuery"></a>
 
@@ -54,7 +57,7 @@ Returns a Promise that resolves with a POST request JSON data.
 
 <a name="AEMHeadless+persistQuery"></a>
 
-### aemHeadless.persistQuery(query, endpoint, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.persistQuery(query, path, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a PUT request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -63,7 +66,7 @@ Returns a Promise that resolves with a PUT request JSON data.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | query | <code>string</code> |  | the query string |
-| endpoint | <code>string</code> |  | AEM path to save query, format: configuration_name/endpoint_name |
+| path | <code>string</code> |  | AEM path to save query, format: configuration_name/endpoint_name |
 | [options] | <code>object</code> | <code>{}</code> | additional PUT request options |
 
 <a name="AEMHeadless+listPersistedQueries"></a>
@@ -80,7 +83,7 @@ Returns a Promise that resolves with a GET request JSON data.
 
 <a name="AEMHeadless+runPersistedQuery"></a>
 
-### aemHeadless.runPersistedQuery(endpoint, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.runPersistedQuery(path, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a GET request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -88,6 +91,6 @@ Returns a Promise that resolves with a GET request JSON data.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| endpoint | <code>string</code> |  | AEM path for persisted query, format: configuration_name/endpoint_name |
+| path | <code>string</code> |  | AEM path for persisted query, format: configuration_name/endpoint_name |
 | [options] | <code>object</code> | <code>{}</code> | additional GET request options |
 

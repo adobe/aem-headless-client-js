@@ -34,9 +34,17 @@ const AEMHeadless = require('@adobe/aem-headless-client-js');
 ```
 Configure SDK with Host and Auth data (if needed)
 ```javascript
-const aemHeadlessClient = new AEMHeadless('<graphql_endpoint>', '<aem_host>', '<aem_token>' || ['<aem_user>', '<aem_pass>'])
+const aemHeadlessClient = new AEMHeadless({
+    serviceURL: '<aem_host>',
+    endpoint: '<graphql_endpoint>',
+    auth: '<aem_token>' || ['<aem_user>', '<aem_pass>']
+})
 // Eg:
-const aemHeadlessClient = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
+const aemHeadlessClient = new AEMHeadless({
+    serviceURL: AEM_HOST_URI,
+    endpoint: 'content/graphql/endpoint.gql',
+    auth: [AEM_USER, AEM_PASS]
+})
 ```
 ### Use AEMHeadless client 
 

@@ -39,7 +39,7 @@ For granular params, use config object
 | --- | --- | --- |
 | config | <code>object</code> \| <code>string</code> | Configuration object, or AEM server URL string |
 | [config.serviceURL] | <code>string</code> | AEM server URL |
-| [config.endpoint] | <code>string</code> | GraphQL endpoint, full URL or absolute path |
+| [config.endpoint] | <code>string</code> | GraphQL endpoint |
 | [config.auth] | <code>string</code> \| <code>Array</code> | Bearer token string or [user,pass] pair array |
 
 <a name="AEMHeadless+runQuery"></a>

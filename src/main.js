@@ -26,7 +26,7 @@ class AEMHeadless {
    *
    * @param {object|string} config Configuration object, or AEM server URL string
    * @param {string} [config.serviceURL] AEM server URL
-   * @param {string} [config.endpoint] GraphQL endpoint, full URL or absolute path
+   * @param {string} [config.endpoint] GraphQL endpoint
    * @param {string|Array} [config.auth] Bearer token string or [user,pass] pair array
    */
   constructor (config) {

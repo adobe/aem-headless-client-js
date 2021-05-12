@@ -26,11 +26,13 @@ const queryString = `
 const persistedName = 'wknd/persist-query-name'
 let sdk = {}
 
-beforeAll(() => {
-  sdk = new AEMHeadless('endpoint/path.gql', 'http://localhost', ['user', 'pass'])
-})
-
 beforeEach(() => {
+  sdk = new AEMHeadless({
+    endpoint: 'endpoint/path.gql',
+    serviceURL: 'http://localhost',
+    auth: ['user', 'pass']
+  })
+
   fetch.resetMocks()
   fetch.mockResolvedValue({
     ok: true,
@@ -39,6 +41,30 @@ beforeEach(() => {
       data
     })
   })
+})
+
+test('sdk valid params', () => {
+  // check success response
+  const config = { serviceURL: 'test', auth: 'test' }
+  sdk = new AEMHeadless(config)
+  expect(sdk).toHaveProperty('serviceURL')
+  expect(sdk).toHaveProperty('endpoint')
+})
+
+test('sdk missing params', () => {
+  // check success response
+  const config = {}
+  sdk = new AEMHeadless(config)
+  expect(sdk).toHaveProperty('serviceURL')
+  expect(sdk).toHaveProperty('endpoint')
+})
+
+test('sdk missing param serviceURL', () => {
+  // check success response
+  const config = { endpoint: 'test' }
+  sdk = new AEMHeadless(config)
+  expect(sdk).toHaveProperty('serviceURL')
+  expect(sdk).toHaveProperty('endpoint')
 })
 
 test('persistQuery API Success', () => {

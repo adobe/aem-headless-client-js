@@ -30,8 +30,36 @@ const queryString = `
 let sdk = {}
 const persistedName = 'wknd/persist-query-name'
 
-beforeAll(() => {
-  sdk = new AEMHeadless(AEM_GRAPHQL_ENDPOINT || 'content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
+beforeEach(() => {
+  sdk = new AEMHeadless({
+    serviceURL: AEM_HOST_URI,
+    endpoint: AEM_GRAPHQL_ENDPOINT,
+    auth: AEM_TOKEN || [AEM_USER, AEM_PASS]
+  })
+})
+
+test('e2e test sdk valid params', () => {
+  // check success response
+  const config = { serviceURL: AEM_HOST_URI, auth: AEM_TOKEN || [AEM_USER, AEM_PASS] }
+  sdk = new AEMHeadless(config)
+  expect(sdk).toHaveProperty('serviceURL')
+  expect(sdk).toHaveProperty('endpoint')
+})
+
+test('e2e test sdk missing params', () => {
+  // check success response
+  const config = {}
+  sdk = new AEMHeadless(config)
+  expect(sdk).toHaveProperty('serviceURL')
+  expect(sdk).toHaveProperty('endpoint')
+})
+
+test('e2e test sdk missing param serviceURL', () => {
+  // check success response
+  const config = { endpoint: 'test' }
+  sdk = new AEMHeadless(config)
+  expect(sdk).toHaveProperty('serviceURL')
+  expect(sdk).toHaveProperty('endpoint')
 })
 
 test('e2e test persistQuery API Success', () => {
@@ -47,7 +75,7 @@ test('e2e test persistQuery API Error', () => {
 })
 
 test('e2e test listPersistedQueries API Success', () => {
-  const promise = sdk.listQueries()
+  const promise = sdk.listPersistedQueries()
   return expect(promise).resolves.toBeTruthy()
 })
 

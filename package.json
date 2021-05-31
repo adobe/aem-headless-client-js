@@ -4,8 +4,7 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "@adobe/aemcs-api-client-lib": "git+https://github.com/adobe/aemcs-api-client-lib.git#main",
-    "cross-fetch": "^3.0.6"
+    "@adobe/aemcs-api-client-lib": "git+https://github.com/adobe/aemcs-api-client-lib.git#main"
   },
   "deprecated": false,
   "description": "AEM Headless SDK Client",

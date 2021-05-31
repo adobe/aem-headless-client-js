@@ -17,7 +17,8 @@ governing permissions and limitations under the License.
 
 # AEM Headless Client for JavaScript
 
-See [aem-headless-client-java](https://github.com/adobe/aem-headless-client-java) for the Java version of this client.
+See [aem-headless-client-java](https://github.com/adobe/aem-headless-client-java) for the Java variant of this client
+and [aem-headless-client-nodejs](https://github.com/adobe/aem-headless-client-nodejs) for the server-side Node.js variant.
 
 ## Installation
 

@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 const { SDKError, SDKErrorWrapper } = require('./utils/errors')
 const { AEM_GRAPHQL_ACTIONS } = require('./utils/config')
+const { isBrowser } = require('./utils/isBrowser')
 
 /**
  * This class provides methods to call AEM GraphQL APIs.
@@ -40,7 +41,7 @@ class AEMHeadless {
 
     this.serviceURL = this.__getDomain(serviceURL)
     this.endpoint = this.__getPath(endpoint)
-    this.fetch = config.fetch || window.fetch
+    this.fetch = this.__getFetch(config.fetch)
   }
 
   /**
@@ -229,6 +230,21 @@ class AEMHeadless {
    */
   __getDomain (domain = '') {
     return domain[domain.length - 1] === '/' ? domain : `${domain}/`
+  }
+
+  /**
+   * get Fetch instance
+   *
+   * @private
+   * @param {object} [fetch]
+   * @returns {object} fetch instance
+   */
+  __getFetch (fetch) {
+    if (!isBrowser && !fetch) {
+      throw new SDKError('InvalidParameter', 'SDKError', '', 'Required param missing: config.fetch')
+    }
+
+    return fetch || window.fetch
   }
 
   /**

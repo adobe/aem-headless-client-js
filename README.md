@@ -103,26 +103,13 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name')
 
 If `auth` param is a string, it's treated as a Bearer token
 
-If `auth` param is an array, expected data is ['user', 'pass'] pair, and Basic Authorization will be ued
+If `auth` param is an array, expected data is ['user', 'pass'] pair, and Basic Authorization will be used
 
 If `auth` is not defined, Authorization header will not be set
 
-### DEV token and service credentials
-
-SDK contains helper function to get Auth token from credentials config file
-
-```javascript
-const {getToken} = require('@adobe/aem-headless-client-js')
-(async () => {
-    const {accessToken, type, expires} = await getToken('path/to/service-config.json')
-    const sdkNode = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, accessToken)
-    const data = sdkNode.runQuery(queryString)
-})()
-```
 ## API Reference
 
 See generated [API Reference](./api-reference.md)
-
 
 ## Contributing
 

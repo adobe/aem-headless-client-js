@@ -15,19 +15,20 @@ const { AEM_GRAPHQL_ACTIONS } = require('./utils/config')
 /**
  * This class provides methods to call AEM GraphQL APIs.
  * Before calling any method initialize the instance
- * with GraphQL endpoint, GraphQL host and auth if needed
+ * with GraphQL endpoint, GraphQL serviceURL and auth if needed
  */
 class AEMHeadless {
   /**
    * Constructor.
+   *
    * If param is a string, it's treated as AEM server URL, default GraphQL endpoint is used.
    * For granular params, use config object
    *
-   * @param {object|string} config Configuration object, or AEM server URL string
-   * @param {string} [config.serviceURL] AEM server URL
-   * @param {string} [config.endpoint] GraphQL endpoint
-   * @param {string|Array} [config.auth] Bearer token string or [user,pass] pair array
-   * @param {object} [config.fetch] Fetch instance - for NodeJS only, eg node-fetch/cross-fetch
+   * @param {string|object} config - Configuration object, or AEM server URL string
+   * @param {string} [config.serviceURL] - AEM server URL
+   * @param {string} [config.endpoint] - GraphQL endpoint
+   * @param {(string|Array)} [config.auth] - Bearer token string or [user,pass] pair array
+   * @param {object} [config.fetch] - Fetch instance - for NodeJS only, eg node-fetch/cross-fetch
    */
   constructor (config) {
     let endpoint = AEM_GRAPHQL_ACTIONS.endpoint

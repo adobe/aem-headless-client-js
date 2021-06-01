@@ -34,7 +34,7 @@
   "scripts": {
     "docs": "jsdoc2md -t ./docs/readme_template.md src/main.js > api-reference.md",
     "lint": "eslint src test",
-    "unit-tests": "jest --config test/jest.config.js --maxWorkers=2",
+    "unit-tests": "jest --config test/jest.config.js --maxWorkers=2 --verbose",
     "test": "npm run lint && npm run unit-tests",
     "e2e": "jest --config e2e/jest.config.js"
   },

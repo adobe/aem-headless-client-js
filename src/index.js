@@ -28,7 +28,7 @@ class AEMHeadless {
    * @param {string} [config.serviceURL] - AEM server URL
    * @param {string} [config.endpoint] - GraphQL endpoint
    * @param {(string|Array)} [config.auth] - Bearer token string or [user,pass] pair array
-   * @param {object} [config.fetch] - Fetch instance - for NodeJS only, eg node-fetch/cross-fetch
+   * @param {object} [config.fetch] - Fetch instance - required for NodeJS only, eg node-fetch/cross-fetch
    */
   constructor (config) {
     let endpoint = AEM_GRAPHQL_ACTIONS.endpoint

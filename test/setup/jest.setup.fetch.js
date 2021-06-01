@@ -9,25 +9,4 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-module.exports = {
-  rootDir: '..',
-  collectCoverage: true,
-  collectCoverageFrom: [
-    '<rootDir>/src/**/*.js'
-  ],
-  coverageThreshold: {
-    global: {
-      branches: 10,
-      lines: 10,
-      statements: 10
-    }
-  },
-  reporters: [
-    'default',
-    'jest-junit'
-  ],
-  setupFilesAfterEnv: [
-    '<rootDir>/test/setup/jest.setup.js',
-    '<rootDir>/test/setup/jest.setup.fetch.js'
-  ]
-}
+require('jest-fetch-mock').enableMocks()

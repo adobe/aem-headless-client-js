@@ -11,7 +11,6 @@ governing permissions and limitations under the License.
 
 const { SDKError, SDKErrorWrapper } = require('./utils/errors')
 const { AEM_GRAPHQL_ACTIONS } = require('./utils/config')
-const { isBrowser } = require('./utils/isBrowser')
 
 /**
  * This class provides methods to call AEM GraphQL APIs.
@@ -28,12 +27,15 @@ class AEMHeadless {
    * @param {string} [config.serviceURL] AEM server URL
    * @param {string} [config.endpoint] GraphQL endpoint
    * @param {string|Array} [config.auth] Bearer token string or [user,pass] pair array
-   * @param {object} [config.fetch] Fetch instance - native for Browser, node-fetch for NodeJS
+   * @param {object} [config.fetch] Fetch instance - for NodeJS only, eg node-fetch/cross-fetch
    */
   constructor (config) {
     let endpoint = AEM_GRAPHQL_ACTIONS.endpoint
-    let serviceURL = config
-    if (typeof config !== 'string') {
+    let serviceURL = AEM_GRAPHQL_ACTIONS.serviceURL
+
+    if (typeof config === 'string') {
+      serviceURL = config
+    } else {
       serviceURL = config.serviceURL || serviceURL
       endpoint = config.endpoint || endpoint
       this.auth = config.auth
@@ -99,10 +101,6 @@ class AEMHeadless {
    * @returns {string} Authorization Header value
    */
   __getAuthHeader (auth) {
-    if (!auth) {
-      return ''
-    }
-
     let authType = 'Bearer'
     let authToken = auth
     // If auth is user, pass pair
@@ -122,7 +120,7 @@ class AEMHeadless {
    * @param {object} [options] Additional Request options
    * @returns {object} the Request options object
    */
-  __getRequestOptions (body = '', options = {}) {
+  __getRequestOptions (body, options) {
     const { method = 'POST' } = options
 
     const requestOptions = {
@@ -156,7 +154,7 @@ class AEMHeadless {
    * @param {object} [options={}] - Request options
    * @returns {Promise<any>} the response body wrapped inside a Promise
    */
-  async __handleRequest (endpoint, body = '', options = {}) {
+  async __handleRequest (endpoint, body, options) {
     const requestOptions = this.__getRequestOptions(body, options)
     const url = this.__getUrl(this.serviceURL, endpoint)
     this.__validateUrl(url)
@@ -217,7 +215,7 @@ class AEMHeadless {
    * @param {string} path
    * @returns {string} path
    */
-  __getPath (path = '') {
+  __getPath (path) {
     return path[0] === '/' ? path.substring(1) : path
   }
 
@@ -228,7 +226,7 @@ class AEMHeadless {
    * @param {string} domain
    * @returns {string} valid domain
    */
-  __getDomain (domain = '') {
+  __getDomain (domain) {
     return domain[domain.length - 1] === '/' ? domain : `${domain}/`
   }
 
@@ -240,11 +238,31 @@ class AEMHeadless {
    * @returns {object} fetch instance
    */
   __getFetch (fetch) {
-    if (!isBrowser && !fetch) {
-      throw new SDKError('InvalidParameter', 'SDKError', '', 'Required param missing: config.fetch')
+    if (!fetch) {
+      const browserFetch = this.__getBrowserFetch()
+      if (!browserFetch) {
+        throw new SDKError('InvalidParameter', 'SDKError', '', 'Required param missing: config.fetch')
+      }
+
+      return browserFetch
     }
 
-    return fetch || window.fetch
+    return fetch
+  }
+
+  /**
+   * get Browser Fetch instance
+   *
+   * @private
+   * @returns {object} fetch instance
+   */
+  __getBrowserFetch () {
+    const top =
+      (typeof window !== 'undefined' && window) ||
+      (typeof self !== 'undefined' && self) || // eslint-disable-line
+      {}
+
+    return top.fetch
   }
 
   /**
@@ -255,11 +273,6 @@ class AEMHeadless {
    * @returns void
    */
   __validateUrl (url) {
-    console.log('URLZ', url)
-    if (!url) {
-      throw new SDKError('InvalidParameter', 'SDKError', '', 'Required param missing: endpoint')
-    }
-
     const fullUrl = url[0] === '/' ? `https://domain${url}` : url
 
     try {

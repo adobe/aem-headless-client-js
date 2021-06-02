@@ -17,7 +17,7 @@ require('dotenv').config({ path: path.join(__dirname, '.env') })
 
 const AEMHeadless = require('../src')
 
-const { AEM_TOKEN, AEM_USER, AEM_PASS, AEM_HOST_URI, AEM_GRAPHQL_ENDPOINT } = process.env
+const { AEM_TOKEN, AEM_USER = 'admin', AEM_PASS = 'admin', AEM_HOST_URI = 'http://localhost:4502', AEM_GRAPHQL_ENDPOINT = 'content/graphql/global/endpoint.json' } = process.env
 
 const queryString = `
 {

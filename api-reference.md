@@ -25,7 +25,7 @@ with GraphQL endpoint, GraphQL serviceURL and auth if needed
     * [.runQuery(query, [options])](#AEMHeadless+runQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.persistQuery(query, path, [options])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.listPersistedQueries([options])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.runPersistedQuery(path, [options])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.runPersistedQuery(path, [variables], [options])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
 
 <a name="new_AEMHeadless_new"></a>
 
@@ -55,7 +55,7 @@ For granular params, use config object
     <td>[config.auth]</td><td><code>string</code> | <code>Array</code></td><td><p>Bearer token string or [user,pass] pair array</p>
 </td>
     </tr><tr>
-    <td>[config.fetch]</td><td><code>object</code></td><td><p>Fetch instance - for NodeJS only, eg node-fetch/cross-fetch</p>
+    <td>[config.fetch]</td><td><code>object</code></td><td><p>Fetch instance - required for NodeJS only, eg node-fetch/cross-fetch</p>
 </td>
     </tr>  </tbody>
 </table>
@@ -131,7 +131,7 @@ Returns a Promise that resolves with a GET request JSON data.
 
 <a name="AEMHeadless+runPersistedQuery"></a>
 
-### aemHeadless.runPersistedQuery(path, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.runPersistedQuery(path, [variables], [options]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a GET request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -145,6 +145,9 @@ Returns a Promise that resolves with a GET request JSON data.
   <tbody>
 <tr>
     <td>path</td><td><code>string</code></td><td></td><td><p>AEM path for persisted query, format: configuration_name/endpoint_name</p>
+</td>
+    </tr><tr>
+    <td>[variables]</td><td><code>object</code></td><td><code>{}</code></td><td><p>query variables</p>
 </td>
     </tr><tr>
     <td>[options]</td><td><code>object</code></td><td><code>{}</code></td><td><p>additional GET request options</p>

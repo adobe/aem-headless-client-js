@@ -25,7 +25,7 @@ with GraphQL endpoint, GraphQL host and auth if needed
     * [.runQuery(query, [options])](#AEMHeadless+runQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.persistQuery(query, path, [options])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.listPersistedQueries([options])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.runPersistedQuery(path, [options])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.runPersistedQuery(path, [variables], [options])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
 
 <a name="new_AEMHeadless_new"></a>
 
@@ -83,7 +83,7 @@ Returns a Promise that resolves with a GET request JSON data.
 
 <a name="AEMHeadless+runPersistedQuery"></a>
 
-### aemHeadless.runPersistedQuery(path, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.runPersistedQuery(path, [variables], [options]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a GET request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -92,5 +92,6 @@ Returns a Promise that resolves with a GET request JSON data.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | path | <code>string</code> |  | AEM path for persisted query, format: configuration_name/endpoint_name |
+| [variables] | <code>object</code> | <code>{}</code> | query variables |
 | [options] | <code>object</code> | <code>{}</code> | additional GET request options |
 

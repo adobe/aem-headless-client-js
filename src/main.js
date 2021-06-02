@@ -31,8 +31,11 @@ class AEMHeadless {
    */
   constructor (config) {
     let endpoint = AEM_GRAPHQL_ACTIONS.endpoint
-    let serviceURL = config
-    if (typeof config !== 'string') {
+    let serviceURL = AEM_GRAPHQL_ACTIONS.serviceURL
+
+    if (typeof config === 'string') {
+      serviceURL = config
+    } else {
       serviceURL = config.serviceURL || serviceURL
       endpoint = config.endpoint || endpoint
       this.auth = config.auth
@@ -249,7 +252,6 @@ class AEMHeadless {
    * @returns void
    */
   __validateUrl (url) {
-    console.log('URLZ', url)
     if (!url) {
       throw new SDKError('InvalidParameter', 'SDKError', '', 'Required param missing: endpoint')
     }

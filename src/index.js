@@ -299,3 +299,4 @@ class AEMHeadless {
 }
 
 module.exports = AEMHeadless
+module.exports.AEMHeadless = AEMHeadless

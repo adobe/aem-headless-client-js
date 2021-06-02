@@ -63,7 +63,7 @@ aemHeadlessClient.persistQuery(queryString, 'wknd/persist-query-name')
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
 
-aemHeadlessClient.runPersistedQuery('wknd/persist-query-name')
+aemHeadlessClient.runPersistedQuery('wknd/persist-query-name', { variable1: 'variable1Value' })
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
 
@@ -116,7 +116,7 @@ If `auth` is not defined, Authorization header will not be set
 SDK contains helper function to get Auth token from credentials config file
 
 ```javascript
-const {getToken} = require('@adobe/aem-headless-client-js')
+const { getToken } = require('@adobe/aem-headless-client-js')
 (async () => {
     const {accessToken, type, expires} = await getToken('path/to/service-config.json')
     const sdkNode = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, accessToken)

@@ -26,7 +26,7 @@ test('SDK Constructor: string as a constructor param is used as serviceURL', () 
 test('SDK Constructor: Fetch is not required param "config.fetch" in Browser env', () => {
   const config = {}
   sdk = new AEMHeadless(config)
-  expect(sdk).toHaveProperty('fetch', window.fetch)
+  expect(sdk).toHaveProperty('fetch')
 })
 
 test('SDK Constructor: if no config is provided default params are used', () => {
@@ -34,7 +34,7 @@ test('SDK Constructor: if no config is provided default params are used', () => 
   sdk = new AEMHeadless(config)
   expect(sdk).toHaveProperty('serviceURL', AEM_GRAPHQL_ACTIONS.serviceURL)
   expect(sdk).toHaveProperty('endpoint', AEM_GRAPHQL_ACTIONS.endpoint)
-  expect(sdk).toHaveProperty('fetch', window.fetch)
+  expect(sdk).toHaveProperty('fetch')
 })
 
 test('SDK Constructor: all custom params should match', () => {

@@ -269,12 +269,15 @@ class AEMHeadless {
    * @returns {object} fetch instance
    */
   __getBrowserFetch () {
-    const top =
-      (typeof window !== 'undefined' && window) ||
-      (typeof self !== 'undefined' && self) || // eslint-disable-line
-      {}
+    if (typeof window !== 'undefined') {
+      return window.fetch.bind(window)
+    }
 
-    return top.fetch
+    if (typeof self !== 'undefined') {
+      return self.fetch.bind(self) // eslint-disable-line
+    }
+
+    return null
   }
 
   /**

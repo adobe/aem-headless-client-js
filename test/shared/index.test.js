@@ -91,6 +91,12 @@ test('API: runPersistedQuery API Success', () => {
   return expect(promise).resolves.toBeTruthy()
 })
 
+test('API: runPersistedQuery with variables API Success', () => {
+  // check success response
+  const promise = sdk.runPersistedQuery(persistedName, { name: 'test' }, { method: 'POST' })
+  return expect(promise).resolves.toBeTruthy()
+})
+
 test('API: runPersistedQuery API Error', () => {
   fetch.mockRejectedValue({
     ok: false

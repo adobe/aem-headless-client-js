@@ -26,11 +26,13 @@ const queryString = `
 const persistedName = 'wknd/persist-query-name'
 let sdk = {}
 
-beforeAll(() => {
-  sdk = new AEMHeadless('endpoint/path.gql', 'http://localhost', ['user', 'pass'])
-})
-
 beforeEach(() => {
+  sdk = new AEMHeadless({
+    endpoint: 'endpoint/path.gql',
+    serviceURL: 'http://localhost',
+    auth: ['user', 'pass']
+  })
+
   fetch.resetMocks()
   fetch.mockResolvedValue({
     ok: true,
@@ -41,52 +43,76 @@ beforeEach(() => {
   })
 })
 
-test('saveQuery API Success', () => {
+test('sdk valid params', () => {
   // check success response
-  const promise = sdk.saveQuery(queryString, `${persistedName}-${Date.now()}`)
+  const config = { serviceURL: 'test', auth: 'test' }
+  sdk = new AEMHeadless(config)
+  expect(sdk).toHaveProperty('serviceURL')
+  expect(sdk).toHaveProperty('endpoint')
+})
+
+test('sdk missing params', () => {
+  // check success response
+  const config = {}
+  sdk = new AEMHeadless(config)
+  expect(sdk).toHaveProperty('serviceURL')
+  expect(sdk).toHaveProperty('endpoint')
+})
+
+test('sdk missing param serviceURL', () => {
+  // check success response
+  const config = { endpoint: 'test' }
+  sdk = new AEMHeadless(config)
+  expect(sdk).toHaveProperty('serviceURL')
+  expect(sdk).toHaveProperty('endpoint')
+})
+
+test('persistQuery API Success', () => {
+  // check success response
+  const promise = sdk.persistQuery(queryString, `${persistedName}-${Date.now()}`)
   return expect(promise).resolves.toBeTruthy()
 })
 
-test('saveQuery API Error', () => {
+test('persistQuery API Error', () => {
   fetch.mockRejectedValue({
     ok: false
   })
   // check error response
-  const promise = sdk.saveQuery(queryString, persistedName)
+  const promise = sdk.persistQuery(queryString, persistedName)
   return expect(promise).rejects.toThrow()
 })
 
-test('listQueries API Success', () => {
-  const promise = sdk.listQueries()
+test('listPersistedQueries API Success', () => {
+  const promise = sdk.listPersistedQueries()
   return expect(promise).resolves.toBeTruthy()
 })
 
-test('postQuery API Success', () => {
+test('runQuery API Success', () => {
   // check success response
-  const promise = sdk.postQuery(queryString)
+  const promise = sdk.runQuery(queryString)
   return expect(promise).resolves.toBeTruthy()
 })
 
-test('postQuery API Error', () => {
+test('runQuery API Error', () => {
   fetch.mockRejectedValue({
     ok: false
   })
   // check error response
-  const promise = sdk.postQuery()
+  const promise = sdk.runQuery()
   return expect(promise).rejects.toThrow()
 })
 
-test('getQuery API Success', () => {
+test('runPersistedQuery API Success', () => {
   // check success response
-  const promise = sdk.getQuery(persistedName)
+  const promise = sdk.runPersistedQuery(persistedName)
   return expect(promise).resolves.toBeTruthy()
 })
 
-test('getQuery API Error', () => {
+test('runPersistedQuery API Error', () => {
   fetch.mockRejectedValue({
     ok: false
   })
   // check error response
-  const promise = sdk.getQuery('/test')
+  const promise = sdk.runPersistedQuery('/test')
   return expect(promise).rejects.toThrow()
 })

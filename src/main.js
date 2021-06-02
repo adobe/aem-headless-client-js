@@ -21,18 +21,25 @@ const { AEM_GRAPHQL_ACTIONS } = require('./utils/config')
 class AEMHeadless {
   /**
    * Constructor.
+   * If param is a string, it's treated as AEM server URL, default GraphQL endpoint is used.
+   * For granular params, use config object
    *
-   *
-   * @param {string} endpoint GraphQL endpoint
-   * @param {string} [host] GraphQL host, if not defined absolute endpoint path will be passed to fetch
-   * @param {string|Array} [auth] Bearer token string or [user,pass] pair array
+   * @param {object|string} config Configuration object, or AEM server URL string
+   * @param {string} [config.serviceURL] AEM server URL
+   * @param {string} [config.endpoint] GraphQL endpoint
+   * @param {string|Array} [config.auth] Bearer token string or [user,pass] pair array
    */
-  constructor (endpoint, host, auth) {
-    this.endpoint = endpoint
-    this.host = host
-    this.__validateParams(host, endpoint)
-    this.token = this.__getToken(auth)
-    this.authType = Array.isArray(auth) ? 'Basic' : 'Bearer'
+  constructor (config) {
+    let endpoint = AEM_GRAPHQL_ACTIONS.endpoint
+    let serviceURL = config
+    if (typeof config !== 'string') {
+      serviceURL = config.serviceURL || serviceURL
+      endpoint = config.endpoint || endpoint
+      this.auth = config.auth
+    }
+
+    this.serviceURL = this.__getDomain(serviceURL)
+    this.endpoint = this.__getPath(endpoint)
   }
 
   /**
@@ -42,7 +49,7 @@ class AEMHeadless {
    * @param {object} [options={}] - additional POST request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  postQuery (query, options = {}) {
+  runQuery (query, options = {}) {
     return this.__handleRequest(this.endpoint, JSON.stringify({ query }), options)
   }
 
@@ -50,12 +57,12 @@ class AEMHeadless {
    * Returns a Promise that resolves with a PUT request JSON data.
    *
    * @param {string} query - the query string
-   * @param {string} endpoint - AEM path to save query, format: configuration_name/endpoint_name
+   * @param {string} path - AEM path to save query, format: configuration_name/endpoint_name
    * @param {object} [options={}] - additional PUT request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  saveQuery (query, endpoint, options = {}) {
-    const url = `${AEM_GRAPHQL_ACTIONS.persist}/${endpoint}`
+  persistQuery (query, path, options = {}) {
+    const url = `${AEM_GRAPHQL_ACTIONS.persist}/${path}`
     return this.__handleRequest(url, query, { method: 'PUT', ...options })
   }
 
@@ -65,7 +72,7 @@ class AEMHeadless {
    * @param {object} [options={}] - additional GET request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  listQueries (options = {}) {
+  listPersistedQueries (options = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.list}`
     return this.__handleRequest(url, '', { method: 'GET', ...options })
   }
@@ -73,12 +80,13 @@ class AEMHeadless {
   /**
    * Returns a Promise that resolves with a GET request JSON data.
    *
-   * @param {string} endpoint - AEM path for persisted query, format: configuration_name/endpoint_name
+   * @param {string} path - AEM path for persisted query, format: configuration_name/endpoint_name
    * @param {object} [variables={}] - query variables
    * @param {object} [options={}] - additional GET request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  getQuery (endpoint, variables = {}, options = {}) {
+
+  runPersistedQuery (path, variables = {}, options = {}) {
     const method = (options.method || 'GET').toUpperCase()
     let body = ''
     let variablesString = Object.keys(variables).map(key => `;${key}=${encodeURIComponent(variables[key])}`).join()
@@ -88,53 +96,31 @@ class AEMHeadless {
       variablesString = ''
     }
 
-    const url = `${AEM_GRAPHQL_ACTIONS.execute}/${endpoint}${variablesString}`
+    const url = `${AEM_GRAPHQL_ACTIONS.execute}/${path}${variablesString}`
     return this.__handleRequest(url, body, { method, ...options })
   }
 
   /**
-   * Returns token for Authorization.
+   * Returns Authorization Header value.
    *
    * @private
    * @param {string|array} auth - Bearer token string or [user,pass] pair array
-   * @returns {string} token for auth
+   * @returns {string} Authorization Header value
    */
-  __getToken (auth) {
+  __getAuthHeader (auth) {
     if (!auth) {
       return ''
     }
+
+    let authType = 'Bearer'
+    let authToken = auth
     // If auth is user, pass pair
     if (Array.isArray(auth) && auth[0] && auth[1]) {
-      return Buffer.from(`${auth[0]}:${auth[1]}`, 'utf8').toString('base64')
+      authType = 'Basic'
+      authToken = Buffer.from(`${auth[0]}:${auth[1]}`, 'utf8').toString('base64')
     }
 
-    return auth
-  }
-
-  /**
-   * Returns valid url or path.
-   *
-   * @private
-   * @param {string} path
-   * @returns {string} valid url
-   */
-  __getUrl (path) {
-    let url = {}
-    try {
-      url = new URL(path)
-    } catch (e) {}
-
-    if (url.hostname) {
-      return url
-    }
-
-    const absPath = path[0] === '/' ? path : `/${path}`
-
-    if (!this.host) {
-      return absPath
-    }
-
-    return `${this.host}${absPath}`
+    return `${authType} ${authToken}`
   }
 
   /**
@@ -154,10 +140,10 @@ class AEMHeadless {
       }
     }
 
-    if (this.token) {
+    if (this.auth) {
       requestOptions.headers = {
         ...requestOptions.headers,
-        Authorization: `${this.authType} ${this.token}`
+        Authorization: this.__getAuthHeader(this.auth)
       }
       requestOptions.credentials = 'include'
     }
@@ -181,7 +167,8 @@ class AEMHeadless {
    */
   async __handleRequest (endpoint, body = '', options = {}) {
     const requestOptions = this.__getRequestOptions(body, options)
-    const url = this.__getUrl(endpoint)
+    const url = this.__getUrl(this.serviceURL, endpoint)
+    this.__validateUrl(url)
 
     let response
     // 1. Handle Request
@@ -221,76 +208,59 @@ class AEMHeadless {
   }
 
   /**
-   * Check required params.
+   * Returns valid url.
    *
    * @private
-   * @param {Object} params
-   * @returns void
+   * @param {string} domain
+   * @param {string} path
+   * @returns {string} valid url
    */
-  __validateRequiredParams (params = {}) {
-    const paramsArr = Object.keys(params)
-    const invalidParams = []
-    paramsArr.forEach(name => {
-      if (!params[name]) {
-        invalidParams.push(name)
-      }
-    })
-
-    if (invalidParams.length > 0) {
-      throw new SDKError('InvalidParameter', 'SDKError', '', `Required params missing: ${invalidParams.join(', ')}`)
-    }
+  __getUrl (domain, path) {
+    return `${domain}${path}`
   }
 
   /**
-   * Check valid url
+   * Removes first / in a path
+   *
+   * @private
+   * @param {string} path
+   * @returns {string} path
+   */
+  __getPath (path = '') {
+    return path[0] === '/' ? path.substring(1) : path
+  }
+
+  /**
+   * Add last / in domain
+   *
+   * @private
+   * @param {string} domain
+   * @returns {string} valid domain
+   */
+  __getDomain (domain = '') {
+    return domain[domain.length - 1] === '/' ? domain : `${domain}/`
+  }
+
+  /**
+   * Check valid url or absolute path
    *
    * @private
    * @param {string} url
    * @returns void
    */
   __validateUrl (url) {
-    // Validate only provided values
+    console.log('URLZ', url)
     if (!url) {
-      return
+      throw new SDKError('InvalidParameter', 'SDKError', '', 'Required param missing: endpoint')
     }
+
+    const fullUrl = url[0] === '/' ? `https://domain${url}` : url
 
     try {
-      new URL(url) // eslint-disable-line
+      new URL(fullUrl) // eslint-disable-line
     } catch (e) {
-      throw new SDKError('InvalidParameter', 'SDKError', '', `Invalid URL: ${url}`)
+      throw new SDKError('InvalidParameter', 'SDKError', '', `Invalid URL/path: ${url}`)
     }
-  }
-
-  /**
-   * Check valid url path
-   *
-   * @private
-   * @param {string} path
-   * @returns void
-   */
-  __validateUrlPath (path) {
-    const absPath = path[0] === '/' ? path : `/${path}`
-    const absUrl = `http://domain${absPath}`
-
-    try {
-      new URL(absUrl) // eslint-disable-line
-    } catch (e) {
-      throw new SDKError('InvalidParameter', 'SDKError', '', `Invalid URL path: ${path}`)
-    }
-  }
-
-  /**
-   * Check valid params
-   *
-   * @private
-   * @param {string} [host]
-   * @param {string} endpoint
-   * @returns void
-   */
-  __validateParams (host, endpoint) {
-    this.__validateRequiredParams({ endpoint })
-    this.__validateUrlPath(endpoint)
-    this.__validateUrl(host)
   }
 }
 

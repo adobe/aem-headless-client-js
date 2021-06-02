@@ -17,7 +17,8 @@ governing permissions and limitations under the License.
 
 # AEM Headless Client for JavaScript
 
-See [aem-headless-client-java](https://github.com/adobe/aem-headless-client-java) for the Java version of this client.
+See [aem-headless-client-java](https://github.com/adobe/aem-headless-client-java) for the Java variant of this client
+and [aem-headless-client-nodejs](https://github.com/adobe/aem-headless-client-nodejs) for the server-side Node.js variant.
 
 ## Installation
 
@@ -34,9 +35,17 @@ const AEMHeadless = require('@adobe/aem-headless-client-js');
 ```
 Configure SDK with Host and Auth data (if needed)
 ```javascript
-const aemHeadlessClient = new AEMHeadless('<graphql_endpoint>', '<aem_host>', '<aem_token>' || ['<aem_user>', '<aem_pass>'])
+const aemHeadlessClient = new AEMHeadless({
+    serviceURL: '<aem_host>',
+    endpoint: '<graphql_endpoint>',
+    auth: '<aem_token>' || ['<aem_user>', '<aem_pass>']
+})
 // Eg:
-const aemHeadlessClient = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, AEM_TOKEN || [AEM_USER, AEM_PASS])
+const aemHeadlessClient = new AEMHeadless({
+    serviceURL: AEM_HOST_URI,
+    endpoint: 'content/graphql/endpoint.gql',
+    auth: [AEM_USER, AEM_PASS]
+})
 ```
 ### Use AEMHeadless client 
 
@@ -46,15 +55,15 @@ aemHeadlessClient.postQuery(queryString)
   .then(data => console.log(data))
   .catch(e => console.error(e.toJSON()))
 
-aemHeadlessClient.listQueries()
+aemHeadlessClient.listPersistedQueries()
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
 
-aemHeadlessClient.saveQuery(queryString, 'wknd/persist-query-name')
+aemHeadlessClient.persistQuery(queryString, 'wknd/persist-query-name')
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
 
-aemHeadlessClient.getQuery('wknd/persist-query-name')
+aemHeadlessClient.runPersistedQuery('wknd/persist-query-name')
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
 
@@ -74,20 +83,20 @@ aemHeadlessClient.getQuery('wknd/persist-query-name-with-variables', { name: 'Jo
     
     let list
     try {
-        list = aemHeadlessClient.listQueries()
+        list = aemHeadlessClient.listPersistedQueries()
     } catch (e) {
         console.error(e.toJSON())
     }
 
     try {
-        aemHeadlessClient.saveQuery(queryString, 'wknd/persist-query-name')
+        aemHeadlessClient.persistQuery(queryString, 'wknd/persist-query-name')
     } catch (e) {
         console.error(e.toJSON())
     }
     
     let getData
     try {
-        getData = aemHeadlessClient.getQuery('wknd/persist-query-name')
+        getData = aemHeadlessClient.runPersistedQuery('wknd/persist-query-name')
     } catch (e) {
         console.error(e.toJSON())
     }
@@ -107,11 +116,11 @@ If `auth` is not defined, Authorization header will not be set
 SDK contains helper function to get Auth token from credentials config file
 
 ```javascript
-const { getToken } = require('@adobe/aem-headless-client-js')
+const {getToken} = require('@adobe/aem-headless-client-js')
 (async () => {
-    const { accessToken, type, expires } = await getToken('path/to/service-config.json')
+    const {accessToken, type, expires} = await getToken('path/to/service-config.json')
     const sdkNode = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, accessToken)
-    const data = sdkNode.postQuery(queryString)
+    const data = sdkNode.runQuery(queryString)
 })()
 ```
 ## API Reference

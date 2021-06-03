@@ -76,27 +76,27 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
 (async () => {
     let postData
     try {
-        postData = aemHeadlessClient.postQuery(queryString)
+        postData = await aemHeadlessClient.postQuery(queryString)
     } catch (e) {
         console.error(e.toJSON())
     }
     
     let list
     try {
-        list = aemHeadlessClient.listPersistedQueries()
+        list = await aemHeadlessClient.listPersistedQueries()
     } catch (e) {
         console.error(e.toJSON())
     }
 
     try {
-        aemHeadlessClient.persistQuery(queryString, 'wknd/persist-query-name')
+        await aemHeadlessClient.persistQuery(queryString, 'wknd/persist-query-name')
     } catch (e) {
         console.error(e.toJSON())
     }
     
     let getData
     try {
-        getData = aemHeadlessClient.runPersistedQuery('wknd/persist-query-name')
+        getData = await aemHeadlessClient.runPersistedQuery('wknd/persist-query-name')
     } catch (e) {
         console.error(e.toJSON())
     }

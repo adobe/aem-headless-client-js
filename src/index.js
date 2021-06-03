@@ -54,7 +54,7 @@ class AEMHeadless {
    * @param {object} [options={}] - additional POST request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  runQuery (query, options = {}) {
+  async runQuery (query, options = {}) {
     return this.__handleRequest(this.endpoint, JSON.stringify({ query }), options)
   }
 
@@ -66,7 +66,7 @@ class AEMHeadless {
    * @param {object} [options={}] - additional PUT request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  persistQuery (query, path, options = {}) {
+  async persistQuery (query, path, options = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.persist}/${path}`
     return this.__handleRequest(url, query, { method: 'PUT', ...options })
   }
@@ -77,7 +77,7 @@ class AEMHeadless {
    * @param {object} [options={}] - additional GET request options
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  listPersistedQueries (options = {}) {
+  async listPersistedQueries (options = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.list}`
     return this.__handleRequest(url, '', { method: 'GET', ...options })
   }
@@ -91,7 +91,7 @@ class AEMHeadless {
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
 
-  runPersistedQuery (path, variables = {}, options = {}) {
+  async runPersistedQuery (path, variables = {}, options = {}) {
     const method = (options.method || 'GET').toUpperCase()
     let body = ''
     let variablesString = Object.keys(variables).map(key => `;${key}=${encodeURIComponent(variables[key])}`).join()

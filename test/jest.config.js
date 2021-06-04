@@ -26,9 +26,8 @@ module.exports = {
     'default',
     'jest-junit'
   ],
-  testEnvironment: 'node',
   setupFilesAfterEnv: [
-    '<rootDir>/test/jest/jest.setup.js',
-    '<rootDir>/test/jest/jest.fetch.setup.js'
+    '<rootDir>/test/setup/jest.setup.js',
+    '<rootDir>/test/setup/jest.setup.fetch.js'
   ]
 }

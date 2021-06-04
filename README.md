@@ -63,11 +63,11 @@ aemHeadlessClient.persistQuery(queryString, 'wknd/persist-query-name')
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
 
-aemHeadlessClient.runPersistedQuery('wknd/persist-query-name', { variable1: 'variable1Value' })
+aemHeadlessClient.runPersistedQuery('wknd/persist-query-name')
    .then(data => console.log(data))
    .catch(e => console.error(e.toJSON()))
 
-aemHeadlessClient.getQuery('wknd/persist-query-name-with-variables', { name: 'John Doe'})
+aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { name: 'John Doe'})
     .then(data => console.log(data))
     .catch(e => console.error(e.toJSON()))
 ```
@@ -76,27 +76,27 @@ aemHeadlessClient.getQuery('wknd/persist-query-name-with-variables', { name: 'Jo
 (async () => {
     let postData
     try {
-        postData = aemHeadlessClient.postQuery(queryString)
+        postData = await aemHeadlessClient.postQuery(queryString)
     } catch (e) {
         console.error(e.toJSON())
     }
     
     let list
     try {
-        list = aemHeadlessClient.listPersistedQueries()
+        list = await aemHeadlessClient.listPersistedQueries()
     } catch (e) {
         console.error(e.toJSON())
     }
 
     try {
-        aemHeadlessClient.persistQuery(queryString, 'wknd/persist-query-name')
+        await aemHeadlessClient.persistQuery(queryString, 'wknd/persist-query-name')
     } catch (e) {
         console.error(e.toJSON())
     }
     
     let getData
     try {
-        getData = aemHeadlessClient.runPersistedQuery('wknd/persist-query-name')
+        getData = await aemHeadlessClient.runPersistedQuery('wknd/persist-query-name')
     } catch (e) {
         console.error(e.toJSON())
     }
@@ -107,26 +107,13 @@ aemHeadlessClient.getQuery('wknd/persist-query-name-with-variables', { name: 'Jo
 
 If `auth` param is a string, it's treated as a Bearer token
 
-If `auth` param is an array, expected data is ['user', 'pass'] pair, and Basic Authorization will be ued
+If `auth` param is an array, expected data is ['user', 'pass'] pair, and Basic Authorization will be used
 
 If `auth` is not defined, Authorization header will not be set
 
-### DEV token and service credentials
-
-SDK contains helper function to get Auth token from credentials config file
-
-```javascript
-const { getToken } = require('@adobe/aem-headless-client-js')
-(async () => {
-    const {accessToken, type, expires} = await getToken('path/to/service-config.json')
-    const sdkNode = new AEMHeadless('content/graphql/endpoint.gql', AEM_HOST_URI, accessToken)
-    const data = sdkNode.runQuery(queryString)
-})()
-```
 ## API Reference
 
 See generated [API Reference](./api-reference.md)
-
 
 ## Contributing
 

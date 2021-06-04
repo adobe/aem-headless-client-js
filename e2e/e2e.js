@@ -10,11 +10,12 @@ governing permissions and limitations under the License.
 */
 
 const path = require('path')
+const fetch = require('cross-fetch')
 
 // load .env values in the e2e folder, if any
 require('dotenv').config({ path: path.join(__dirname, '.env') })
 
-const { AEMHeadless } = require('../src')
+const AEMHeadless = require('../src')
 
 const { AEM_TOKEN, AEM_USER = 'admin', AEM_PASS = 'admin', AEM_HOST_URI = 'http://localhost:4502', AEM_GRAPHQL_ENDPOINT = 'content/graphql/global/endpoint.json' } = process.env
 
@@ -34,21 +35,19 @@ beforeEach(() => {
   sdk = new AEMHeadless({
     serviceURL: AEM_HOST_URI,
     endpoint: AEM_GRAPHQL_ENDPOINT,
-    auth: AEM_TOKEN || [AEM_USER, AEM_PASS]
+    auth: AEM_TOKEN || [AEM_USER, AEM_PASS],
+    fetch
   })
 })
 
 test('e2e test sdk valid params', () => {
-  // check success response
-  const config = { serviceURL: AEM_HOST_URI, auth: AEM_TOKEN || [AEM_USER, AEM_PASS] }
-  sdk = new AEMHeadless(config)
   expect(sdk).toHaveProperty('serviceURL')
   expect(sdk).toHaveProperty('endpoint')
 })
 
 test('e2e test sdk missing params', () => {
   // check success response
-  const config = {}
+  const config = { fetch }
   sdk = new AEMHeadless(config)
   expect(sdk).toHaveProperty('serviceURL')
   expect(sdk).toHaveProperty('endpoint')
@@ -56,7 +55,7 @@ test('e2e test sdk missing params', () => {
 
 test('e2e test sdk missing param serviceURL', () => {
   // check success response
-  const config = { endpoint: 'test' }
+  const config = { endpoint: 'test', fetch }
   sdk = new AEMHeadless(config)
   expect(sdk).toHaveProperty('serviceURL')
   expect(sdk).toHaveProperty('endpoint')

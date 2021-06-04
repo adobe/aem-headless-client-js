@@ -3,27 +3,23 @@
     "url": "https://github.com/adobe/aem-headless-client-js/issues"
   },
   "bundleDependencies": false,
-  "dependencies": {
-    "@adobe/aemcs-api-client-lib": "git+https://github.com/adobe/aemcs-api-client-lib.git#main"
-  },
   "deprecated": false,
   "description": "AEM Headless SDK Client",
   "devDependencies": {
     "@adobe/eslint-config-aio-lib-config": "^1.2.1",
     "cross-fetch": "^3.1.4",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jest": "^23.20.0",
     "eslint-plugin-jsdoc": "^21.0.0",
     "eslint-plugin-node": "^10.0.0",
-    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^4.1.0",
-    "jest": "^26.6.3",
+    "jest": "^27.0.4",
     "jest-fetch-mock": "^3.0.3",
-    "jest-junit": "^12.0.0",
-    "jsdoc": "^3.6.3",
+    "jest-junit": "^12.1.0",
     "jsdoc-to-markdown": "^7.0.1",
     "stdout-stderr": "^0.1.13"
   },

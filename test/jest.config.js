@@ -10,6 +10,7 @@ governing permissions and limitations under the License.
 */
 
 module.exports = {
+  testEnvironment: 'jsdom',
   rootDir: '..',
   collectCoverage: true,
   collectCoverageFrom: [

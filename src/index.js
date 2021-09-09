@@ -29,7 +29,7 @@ class AEMHeadless {
    * @param {string} [config.serviceURL] - AEM server URL
    * @param {string} [config.endpoint] - GraphQL endpoint
    * @param {(string|Array)} [config.auth] - Bearer token string or [user,pass] pair array
-   * @param {object} [config.fetch] - Fetch instance - required for NodeJS only, eg node-fetch/cross-fetch
+   * @param {object} [config.fetch] - custom Fetch instance
    */
   constructor (config) {
     let endpoint = AEM_GRAPHQL_ACTIONS.endpoint
@@ -53,9 +53,10 @@ class AEMHeadless {
    *
    * @param {string} query - the query string
    * @param {object} [options={}] - additional POST request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  async runQuery (query, options = {}) {
+  async runQuery (query, options = {}, retryOptions = {}) {
     return this.__handleRequest(this.endpoint, JSON.stringify({ query }), options)
   }
 
@@ -65,9 +66,10 @@ class AEMHeadless {
    * @param {string} query - the query string
    * @param {string} path - AEM path to save query, format: configuration_name/endpoint_name
    * @param {object} [options={}] - additional PUT request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  async persistQuery (query, path, options = {}) {
+  async persistQuery (query, path, options = {}, retryOptions = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.persist}/${path}`
     return this.__handleRequest(url, query, { method: 'PUT', ...options })
   }
@@ -76,9 +78,10 @@ class AEMHeadless {
    * Returns a Promise that resolves with a GET request JSON data.
    *
    * @param {object} [options={}] - additional GET request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  async listPersistedQueries (options = {}) {
+  async listPersistedQueries (options = {}, retryOptions = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.list}`
     return this.__handleRequest(url, '', { method: 'GET', ...options })
   }
@@ -89,10 +92,11 @@ class AEMHeadless {
    * @param {string} path - AEM path for persisted query, format: configuration_name/endpoint_name
    * @param {object} [variables={}] - query variables
    * @param {object} [options={}] - additional GET request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
 
-  async runPersistedQuery (path, variables = {}, options = {}) {
+  async runPersistedQuery (path, variables = {}, options = {}, retryOptions = {}) {
     const method = (options.method || 'GET').toUpperCase()
     let body = ''
     let variablesString = Object.keys(variables).map(key => `;${key}=${encodeURIComponent(variables[key])}`).join()

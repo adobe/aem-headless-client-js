@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const AEMHeadless = require('../../src')
+const { AEMHeadless, ErrorCodes } = require('../../src')
 // /////////////////////////////////////////////
 const queryString = `
 {
@@ -117,7 +117,7 @@ test('API: custom error message', () => {
   })
   // check error response
   const promise = sdk.runPersistedQuery('/test')
-  return expect(promise).rejects.toThrow('API custom error')
+  return expect(promise).rejects.toThrow(ErrorCodes.API_ERROR)
 })
 // #175 2.3 Response error: Couldn't parse JSON - no error defined in API response
 test('API: Failed response JSON parsing error', () => {
@@ -130,7 +130,7 @@ test('API: Failed response JSON parsing error', () => {
   })
 
   const promise = sdk.runPersistedQuery('/test')
-  return expect(promise).rejects.toThrow(JsonError)
+  return expect(promise).rejects.toThrow(ErrorCodes.RESPONSE_ERROR)
 })
 // #191 3.2. Response ok: Data error - Couldn't parse the JSON from OK response
 test('API: Successful response JSON parsing error', () => {
@@ -143,7 +143,7 @@ test('API: Successful response JSON parsing error', () => {
   })
 
   const promise = sdk.runPersistedQuery('/test')
-  return expect(promise).rejects.toThrow(JsonError)
+  return expect(promise).rejects.toThrow(ErrorCodes.RESPONSE_ERROR)
 })
 
 test('ERROR: Error helper', () => {
@@ -186,7 +186,7 @@ test('API: params validation', () => {
   })
   // check error response
   const promise = sdk.runQuery('/test')
-  return expect(promise).rejects.toThrow('API custom error')
+  return expect(promise).rejects.toThrow(ErrorCodes.API_ERROR)
 })
 
 test('API: custom API error missing', () => {

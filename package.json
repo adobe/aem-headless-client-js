@@ -47,5 +47,8 @@
     "CODE_OF_CONDUCT.md",
     "COPYRIGHT"
   ],
-  "version": "3.0.0"
+  "version": "3.0.0",
+  "dependencies": {
+    "@adobe/aio-lib-core-errors": "^3.0.1"
+  }
 }

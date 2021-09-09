@@ -9,8 +9,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const { SDKError, SDKErrorWrapper } = require('./utils/errors')
+const ErrorCodes = require('./utils/SDKErrors').codes
 const { AEM_GRAPHQL_ACTIONS } = require('./utils/config')
+const { REQUEST_ERROR, RESPONSE_ERROR, API_ERROR, INVALID_PARAM } = ErrorCodes
 
 /**
  * This class provides methods to call AEM GraphQL APIs.
@@ -177,7 +178,13 @@ class AEMHeadless {
       response = await this.fetch(url, requestOptions)
     } catch (error) {
       // 1.1 Request error: general
-      throw SDKErrorWrapper(error, 'RequestError', '')
+      throw new REQUEST_ERROR({
+        sdkDetails: {
+          serviceURL: this.serviceURL,
+          endpoint
+        },
+        messageValues: error.message
+      })
     }
     let apiError
     // 2. Handle Response error
@@ -187,14 +194,25 @@ class AEMHeadless {
         apiError = await response.json()
       } catch (error) {
         // 2.3 Response error: Couldn't parse JSON - no error defined in API response
-        throw SDKErrorWrapper(error, 'ResponseError', response.status)
+        throw new RESPONSE_ERROR({
+          sdkDetails: {
+            serviceURL: this.serviceURL,
+            endpoint
+          },
+          messageValues: error.message
+        })
       }
     }
 
     if (apiError) {
       // 2.2 Response error: JSON parsed - valid error defined in API response
-      const { name, errorType, type, message, details } = apiError.error || (apiError.errors ? apiError.errors[0] : {})
-      throw new SDKError(errorType || name, type || 'APIError', response.status, message, details)
+      throw new API_ERROR({
+        sdkDetails: {
+          serviceURL: this.serviceURL,
+          endpoint
+        },
+        messageValues: apiError
+      })
     }
     // 3. Handle ok response
     let data
@@ -202,7 +220,13 @@ class AEMHeadless {
       data = await response.json()
     } catch (error) {
       // 3.2. Response ok: Data error - Couldn't parse the JSON from OK response
-      throw SDKErrorWrapper(error, 'ResponseDataError', response.status)
+      throw new RESPONSE_ERROR({
+        sdkDetails: {
+          serviceURL: this.serviceURL,
+          endpoint
+        },
+        messageValues: error.message
+      })
     }
 
     return data
@@ -253,7 +277,12 @@ class AEMHeadless {
     if (!fetch) {
       const browserFetch = this.__getBrowserFetch()
       if (!browserFetch) {
-        throw new SDKError('InvalidParameter', 'SDKError', '', 'Required param missing: config.fetch')
+        throw new INVALID_PARAM({
+          sdkDetails: {
+            serviceURL: this.serviceURL
+          },
+          messageValues: 'Required param missing: config.fetch'
+        })
       }
 
       return browserFetch
@@ -293,10 +322,16 @@ class AEMHeadless {
     try {
       new URL(fullUrl) // eslint-disable-line
     } catch (e) {
-      throw new SDKError('InvalidParameter', 'SDKError', '', `Invalid URL/path: ${url}`)
+      throw new INVALID_PARAM({
+        sdkDetails: {
+          serviceURL: this.serviceURL
+        },
+        messageValues: `Invalid URL/path: ${url}`
+      })
     }
   }
 }
 
 module.exports = AEMHeadless
 module.exports.AEMHeadless = AEMHeadless
+module.exports.ErrorCodes = ErrorCodes

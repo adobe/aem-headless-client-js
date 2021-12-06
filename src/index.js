@@ -94,7 +94,7 @@ class AEMHeadless {
   async runPersistedQuery (path, variables = {}, options = {}) {
     const method = (options.method || 'GET').toUpperCase()
     let body = ''
-    let variablesString = Object.keys(variables).map(key => `;${key}=${encodeURIComponent(variables[key])}`).join()
+    let variablesString = encodeURIComponent(Object.keys(variables).map(key => `;${key}=${(variables[key])}`).join(''))
 
     if (method === 'POST') {
       body = JSON.stringify({ variables })

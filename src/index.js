@@ -57,7 +57,7 @@ class AEMHeadless {
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
   async runQuery (query, options = {}, retryOptions = {}) {
-    return this.__handleRequest(this.endpoint, JSON.stringify({ query }), options)
+    return this.__handleRequest(this.endpoint, JSON.stringify({ query }), options, retryOptions)
   }
 
   /**
@@ -71,7 +71,7 @@ class AEMHeadless {
    */
   async persistQuery (query, path, options = {}, retryOptions = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.persist}/${path}`
-    return this.__handleRequest(url, query, { method: 'PUT', ...options })
+    return this.__handleRequest(url, query, { method: 'PUT', ...options }, retryOptions)
   }
 
   /**
@@ -83,7 +83,7 @@ class AEMHeadless {
    */
   async listPersistedQueries (options = {}, retryOptions = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.list}`
-    return this.__handleRequest(url, '', { method: 'GET', ...options })
+    return this.__handleRequest(url, '', { method: 'GET', ...options }, retryOptions)
   }
 
   /**
@@ -107,7 +107,7 @@ class AEMHeadless {
     }
 
     const url = `${AEM_GRAPHQL_ACTIONS.execute}/${path}${variablesString}`
-    return this.__handleRequest(url, body, { method, ...options })
+    return this.__handleRequest(url, body, { method, ...options }, retryOptions)
   }
 
   /**
@@ -169,9 +169,10 @@ class AEMHeadless {
    * @param {string} endpoint - Request endpoint
    * @param {string} [body=''] - Request body (the query string)
    * @param {object} [options={}] - Request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @returns {Promise<any>} the response body wrapped inside a Promise
    */
-  async __handleRequest (endpoint, body, options) {
+  async __handleRequest (endpoint, body, options, retryOptions) {
     const requestOptions = this.__getRequestOptions(body, options)
     const url = this.__getUrl(this.serviceURL, endpoint)
     this.__validateUrl(url)
@@ -179,7 +180,7 @@ class AEMHeadless {
     let response
     // 1. Handle Request
     try {
-      response = await this.fetch(url, requestOptions)
+      response = await this.fetch(url, requestOptions, retryOptions)
     } catch (error) {
       // 1.1 Request error: general
       throw new REQUEST_ERROR({

@@ -13,14 +13,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const AEMHeadless = require('../../src')
+const { AEMHeadless, ErrorCodes } = require('../../src')
 const { AEM_GRAPHQL_ACTIONS } = require('../../src/utils/config')
 // /////////////////////////////////////////////
 let sdk = {}
 
 test('SDK Constructor: string as a constructor param fails in NodeJS env', () => {
   const config = 'http://localhost'
-  expect(() => new AEMHeadless(config)).toThrow('Required param missing: config.fetch')
+  expect(() => new AEMHeadless(config)).toThrowError(ErrorCodes.REQUIRED_PARAMS)
 })
 
 test('SDK Constructor: Fetch is a required param "config.fetch" in NodeJS env', () => {

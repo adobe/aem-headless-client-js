@@ -22,10 +22,10 @@ with GraphQL endpoint, GraphQL serviceURL and auth if needed
 
 * [AEMHeadless](#AEMHeadless)
     * [new AEMHeadless(config)](#new_AEMHeadless_new)
-    * [.runQuery(query, [options])](#AEMHeadless+runQuery) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.persistQuery(query, path, [options])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.listPersistedQueries([options])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.runPersistedQuery(path, [variables], [options])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.runQuery(query, [options], [retryOptions])](#AEMHeadless+runQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.persistQuery(query, path, [options], [retryOptions])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.listPersistedQueries([options], [retryOptions])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.runPersistedQuery(path, [variables], [options], [retryOptions])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
 
 <a name="new_AEMHeadless_new"></a>
 
@@ -55,14 +55,14 @@ For granular params, use config object
     <td>[config.auth]</td><td><code>string</code> | <code>Array</code></td><td><p>Bearer token string or [user,pass] pair array</p>
 </td>
     </tr><tr>
-    <td>[config.fetch]</td><td><code>object</code></td><td><p>Fetch instance - required for NodeJS only, eg node-fetch/cross-fetch</p>
+    <td>[config.fetch]</td><td><code>object</code></td><td><p>custom Fetch instance</p>
 </td>
     </tr>  </tbody>
 </table>
 
 <a name="AEMHeadless+runQuery"></a>
 
-### aemHeadless.runQuery(query, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.runQuery(query, [options], [retryOptions]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a POST request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -80,12 +80,15 @@ Returns a Promise that resolves with a POST request JSON data.
     </tr><tr>
     <td>[options]</td><td><code>object</code></td><td><code>{}</code></td><td><p>additional POST request options</p>
 </td>
+    </tr><tr>
+    <td>[retryOptions]</td><td><code>object</code></td><td><code>{}</code></td><td><p>retry options for @adobe/aio-lib-core-networking</p>
+</td>
     </tr>  </tbody>
 </table>
 
 <a name="AEMHeadless+persistQuery"></a>
 
-### aemHeadless.persistQuery(query, path, [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.persistQuery(query, path, [options], [retryOptions]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a PUT request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -106,12 +109,15 @@ Returns a Promise that resolves with a PUT request JSON data.
     </tr><tr>
     <td>[options]</td><td><code>object</code></td><td><code>{}</code></td><td><p>additional PUT request options</p>
 </td>
+    </tr><tr>
+    <td>[retryOptions]</td><td><code>object</code></td><td><code>{}</code></td><td><p>retry options for @adobe/aio-lib-core-networking</p>
+</td>
     </tr>  </tbody>
 </table>
 
 <a name="AEMHeadless+listPersistedQueries"></a>
 
-### aemHeadless.listPersistedQueries([options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.listPersistedQueries([options], [retryOptions]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a GET request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -126,12 +132,15 @@ Returns a Promise that resolves with a GET request JSON data.
 <tr>
     <td>[options]</td><td><code>object</code></td><td><code>{}</code></td><td><p>additional GET request options</p>
 </td>
+    </tr><tr>
+    <td>[retryOptions]</td><td><code>object</code></td><td><code>{}</code></td><td><p>retry options for @adobe/aio-lib-core-networking</p>
+</td>
     </tr>  </tbody>
 </table>
 
 <a name="AEMHeadless+runPersistedQuery"></a>
 
-### aemHeadless.runPersistedQuery(path, [variables], [options]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.runPersistedQuery(path, [variables], [options], [retryOptions]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a GET request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -151,6 +160,9 @@ Returns a Promise that resolves with a GET request JSON data.
 </td>
     </tr><tr>
     <td>[options]</td><td><code>object</code></td><td><code>{}</code></td><td><p>additional GET request options</p>
+</td>
+    </tr><tr>
+    <td>[retryOptions]</td><td><code>object</code></td><td><code>{}</code></td><td><p>retry options for @adobe/aio-lib-core-networking</p>
 </td>
     </tr>  </tbody>
 </table>

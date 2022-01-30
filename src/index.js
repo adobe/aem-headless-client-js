@@ -9,8 +9,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const { SDKError, SDKErrorWrapper } = require('./utils/errors')
+const ErrorCodes = require('./utils/SDKErrors').codes
 const { AEM_GRAPHQL_ACTIONS } = require('./utils/config')
+const { REQUEST_ERROR, RESPONSE_ERROR, API_ERROR, INVALID_PARAM } = ErrorCodes
 
 /**
  * This class provides methods to call AEM GraphQL APIs.
@@ -28,7 +29,7 @@ class AEMHeadless {
    * @param {string} [config.serviceURL] - AEM server URL
    * @param {string} [config.endpoint] - GraphQL endpoint
    * @param {(string|Array)} [config.auth] - Bearer token string or [user,pass] pair array
-   * @param {object} [config.fetch] - Fetch instance - required for NodeJS only, eg node-fetch/cross-fetch
+   * @param {object} [config.fetch] - custom Fetch instance
    */
   constructor (config) {
     let endpoint = AEM_GRAPHQL_ACTIONS.endpoint
@@ -52,9 +53,10 @@ class AEMHeadless {
    *
    * @param {string} query - the query string
    * @param {object} [options={}] - additional POST request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  async runQuery (query, options = {}) {
+  async runQuery (query, options = {}, retryOptions = {}) {
     return this.__handleRequest(this.endpoint, JSON.stringify({ query }), options)
   }
 
@@ -64,9 +66,10 @@ class AEMHeadless {
    * @param {string} query - the query string
    * @param {string} path - AEM path to save query, format: configuration_name/endpoint_name
    * @param {object} [options={}] - additional PUT request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  async persistQuery (query, path, options = {}) {
+  async persistQuery (query, path, options = {}, retryOptions = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.persist}/${path}`
     return this.__handleRequest(url, query, { method: 'PUT', ...options })
   }
@@ -75,9 +78,10 @@ class AEMHeadless {
    * Returns a Promise that resolves with a GET request JSON data.
    *
    * @param {object} [options={}] - additional GET request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  async listPersistedQueries (options = {}) {
+  async listPersistedQueries (options = {}, retryOptions = {}) {
     const url = `${AEM_GRAPHQL_ACTIONS.list}`
     return this.__handleRequest(url, '', { method: 'GET', ...options })
   }
@@ -88,10 +92,11 @@ class AEMHeadless {
    * @param {string} path - AEM path for persisted query, format: configuration_name/endpoint_name
    * @param {object} [variables={}] - query variables
    * @param {object} [options={}] - additional GET request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
 
-  async runPersistedQuery (path, variables = {}, options = {}) {
+  async runPersistedQuery (path, variables = {}, options = {}, retryOptions = {}) {
     const method = (options.method || 'GET').toUpperCase()
     let body = ''
     let variablesString = encodeURIComponent(Object.keys(variables).map(key => `;${key}=${(variables[key])}`).join(''))
@@ -177,7 +182,13 @@ class AEMHeadless {
       response = await this.fetch(url, requestOptions)
     } catch (error) {
       // 1.1 Request error: general
-      throw SDKErrorWrapper(error, 'RequestError', '')
+      throw new REQUEST_ERROR({
+        sdkDetails: {
+          serviceURL: this.serviceURL,
+          endpoint
+        },
+        messageValues: error.message
+      })
     }
     let apiError
     // 2. Handle Response error
@@ -187,14 +198,25 @@ class AEMHeadless {
         apiError = await response.json()
       } catch (error) {
         // 2.3 Response error: Couldn't parse JSON - no error defined in API response
-        throw SDKErrorWrapper(error, 'ResponseError', response.status)
+        throw new RESPONSE_ERROR({
+          sdkDetails: {
+            serviceURL: this.serviceURL,
+            endpoint
+          },
+          messageValues: error.message
+        })
       }
     }
 
     if (apiError) {
       // 2.2 Response error: JSON parsed - valid error defined in API response
-      const { name, errorType, type, message, details } = apiError.error || (apiError.errors ? apiError.errors[0] : {})
-      throw new SDKError(errorType || name, type || 'APIError', response.status, message, details)
+      throw new API_ERROR({
+        sdkDetails: {
+          serviceURL: this.serviceURL,
+          endpoint
+        },
+        messageValues: apiError
+      })
     }
     // 3. Handle ok response
     let data
@@ -202,7 +224,13 @@ class AEMHeadless {
       data = await response.json()
     } catch (error) {
       // 3.2. Response ok: Data error - Couldn't parse the JSON from OK response
-      throw SDKErrorWrapper(error, 'ResponseDataError', response.status)
+      throw new RESPONSE_ERROR({
+        sdkDetails: {
+          serviceURL: this.serviceURL,
+          endpoint
+        },
+        messageValues: error.message
+      })
     }
 
     return data
@@ -253,7 +281,12 @@ class AEMHeadless {
     if (!fetch) {
       const browserFetch = this.__getBrowserFetch()
       if (!browserFetch) {
-        throw new SDKError('InvalidParameter', 'SDKError', '', 'Required param missing: config.fetch')
+        throw new INVALID_PARAM({
+          sdkDetails: {
+            serviceURL: this.serviceURL
+          },
+          messageValues: 'Required param missing: config.fetch'
+        })
       }
 
       return browserFetch
@@ -293,10 +326,16 @@ class AEMHeadless {
     try {
       new URL(fullUrl) // eslint-disable-line
     } catch (e) {
-      throw new SDKError('InvalidParameter', 'SDKError', '', `Invalid URL/path: ${url}`)
+      throw new INVALID_PARAM({
+        sdkDetails: {
+          serviceURL: this.serviceURL
+        },
+        messageValues: `Invalid URL/path: ${url}`
+      })
     }
   }
 }
 
 module.exports = AEMHeadless
 module.exports.AEMHeadless = AEMHeadless
+module.exports.ErrorCodes = ErrorCodes

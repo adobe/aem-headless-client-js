@@ -51,7 +51,7 @@ const aemHeadlessClient = new AEMHeadless({
 
 #### Promise syntax:
 ```javascript
-aemHeadlessClient.postQuery(queryString)
+aemHeadlessClient.runQuery(queryString)
   .then(data => console.log(data))
   .catch(e => console.error(e.toJSON()))
 
@@ -76,7 +76,7 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
 (async () => {
     let postData
     try {
-        postData = await aemHeadlessClient.postQuery(queryString)
+        postData = await aemHeadlessClient.runQuery(queryString)
     } catch (e) {
         console.error(e.toJSON())
     }

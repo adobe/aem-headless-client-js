@@ -29,6 +29,7 @@ class AEMHeadless {
    * @param {string} [config.serviceURL] - AEM server URL
    * @param {string} [config.endpoint] - GraphQL endpoint
    * @param {(string|Array)} [config.auth] - Bearer token string or [user,pass] pair array
+   * @param {(Array)} [config.headers] - header [name,value] pair array
    * @param {object} [config.fetch] - custom Fetch instance
    */
   constructor (config) {
@@ -41,6 +42,7 @@ class AEMHeadless {
       serviceURL = config.serviceURL || serviceURL
       endpoint = config.endpoint || endpoint
       this.auth = config.auth
+      this.headers = config.headers
     }
 
     this.serviceURL = this.__getDomain(serviceURL)
@@ -143,6 +145,13 @@ class AEMHeadless {
     const requestOptions = {
       headers: {
         'Content-Type': 'application/json'
+      }
+    }
+
+    if (this.headers) {
+      requestOptions.headers = {
+        ...requestOptions.headers,
+        ...this.headers
       }
     }
 

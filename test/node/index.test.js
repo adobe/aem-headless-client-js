@@ -50,6 +50,14 @@ test('SDK Constructor: all custom params should match', () => {
   expect(sdk).toHaveProperty('endpoint')
 })
 
+test('SDK Constructor: headers is optional', () => {
+  const config = {
+    fetch
+  }
+  sdk = new AEMHeadless(config)
+  expect(sdk).toHaveProperty('headers', undefined)
+})
+
 test('SDK Constructor: auth is optional', () => {
   const config = {
     fetch

@@ -150,8 +150,8 @@ class AEMHeadless {
 
     if (this.headers) {
       requestOptions.headers = {
-        ...requestOptions.headers,
-        ...this.headers
+        ...this.headers,
+        ...requestOptions.headers
       }
     }
 

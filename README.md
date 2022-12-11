@@ -38,13 +38,15 @@ Configure SDK with Host and Auth data (if needed)
 const aemHeadlessClient = new AEMHeadless({
     serviceURL: '<aem_host>',
     endpoint: '<graphql_endpoint>',
-    auth: '<aem_token>' || ['<aem_user>', '<aem_pass>']
+    auth: '<aem_token>' || ['<aem_user>', '<aem_pass>'],
+    headers: {'<headername>': '<headervalue>', ...}
 })
 // Eg:
 const aemHeadlessClient = new AEMHeadless({
     serviceURL: AEM_HOST_URI,
     endpoint: 'content/graphql/endpoint.gql',
-    auth: [AEM_USER, AEM_PASS]
+    auth: [AEM_USER, AEM_PASS],
+    header: {'customerheadername': 'customerheadervalue'}
 })
 ```
 ### Use AEMHeadless client 

@@ -41,12 +41,14 @@ test('SDK Constructor: all custom params should match', () => {
   const config = {
     serviceURL: 'test/',
     endpoint: '/test',
-    auth: 'test'
+    auth: 'test',
+    headers: { test1: 'test1', test2: 'test2' }
   }
   sdk = new AEMHeadless(config)
   expect(sdk).toHaveProperty('serviceURL', 'test/')
   expect(sdk).toHaveProperty('endpoint', 'test')
   expect(sdk).toHaveProperty('auth', 'test')
+  expect(sdk).toHaveProperty('headers', { test1: 'test1', test2: 'test2' })
 })
 
 test('SDK Constructor: auth is optional', () => {

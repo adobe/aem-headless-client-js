@@ -7,7 +7,7 @@
   "description": "AEM Headless SDK Client",
   "devDependencies": {
     "@adobe/eslint-config-aio-lib-config": "^1.2.1",
-    "cross-fetch": "^3.1.4",
+    "cross-fetch": "^3.1.5",
     "dotenv": "^10.0.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
@@ -49,6 +49,6 @@
   ],
   "version": "3.1.1",
   "dependencies": {
-    "@adobe/aio-lib-core-errors": "^3.0.1"
+    "@adobe/aio-lib-core-errors": "^3.1.1"
   }
 }

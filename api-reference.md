@@ -55,6 +55,9 @@ For granular params, use config object
     <td>[config.auth]</td><td><code>string</code> | <code>Array</code></td><td><p>Bearer token string or [user,pass] pair array</p>
 </td>
     </tr><tr>
+    <td>[config.headers]</td><td><code>object</code></td><td><p>header { name: value, name: value, ... }</p>
+</td>
+    </tr><tr>
     <td>[config.fetch]</td><td><code>object</code></td><td><p>custom Fetch instance</p>
 </td>
     </tr>  </tbody>

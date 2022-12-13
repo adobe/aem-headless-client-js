@@ -17,7 +17,7 @@ require('dotenv').config({ path: path.join(__dirname, '.env') })
 
 const AEMHeadless = require('../src')
 
-const { AEM_TOKEN, AEM_USER = 'admin', AEM_PASS = 'admin', AEM_HOST_URI = 'http://localhost:4502', AEM_GRAPHQL_ENDPOINT = 'content/graphql/global/endpoint.json' } = process.env
+const { AEM_TOKEN, AEM_USER = 'admin', AEM_PASS = 'admin', AEM_HOST_URI = 'http://localhost:4502', AEM_GRAPHQL_ENDPOINT = 'content/_cq_graphql/global/endpoint.json' } = process.env
 
 const queryString = `
 {
@@ -29,8 +29,8 @@ const queryString = `
 }
 `
 let sdk = {}
-const persistedName = 'wknd/persist-query-name'
-const existingQueryName = 'wknd/adventures-all'
+const persistedName = 'global/persist-query-name'
+const existingQueryName = 'global/adventures-all'
 
 beforeEach(() => {
   sdk = new AEMHeadless({

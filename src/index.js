@@ -59,14 +59,7 @@ class AEMHeadless {
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
   async runQuery (body, options = {}, retryOptions = {}) {
-    let postBody = { query: body }
-    if (typeof body === 'object') {
-      const { query, variables } = body
-      postBody = {
-        ...query ? { query } : {},
-        ...variables ? { variables } : {}
-      }
-    }
+    const postBody = typeof body === 'object' ? body : { query: body }
     return this.__handleRequest(this.endpoint, JSON.stringify(postBody), options, retryOptions)
   }
 

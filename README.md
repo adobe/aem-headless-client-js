@@ -46,7 +46,7 @@ const aemHeadlessClient = new AEMHeadless({
     serviceURL: AEM_HOST_URI,
     endpoint: 'content/graphql/endpoint.gql',
     auth: [AEM_USER, AEM_PASS],
-    header: {'customerheadername': 'customerheadervalue'}
+    headers: {'customerheadername': 'customerheadervalue'}
 })
 ```
 ### Use AEMHeadless client 

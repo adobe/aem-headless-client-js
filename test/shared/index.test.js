@@ -76,6 +76,12 @@ test('API: runQuery API Success', () => {
   return expect(promise).resolves.toBeTruthy()
 })
 
+test('API: runQuery with variables API Success', () => {
+  // check success response
+  const promise = sdk.runQuery({ query: queryString, variables: { name: 'Ado' } })
+  return expect(promise).resolves.toBeTruthy()
+})
+
 test('API: runQuery API Error', () => {
   fetch.mockRejectedValue({
     ok: false
@@ -173,6 +179,13 @@ test('API: additional request options', () => {
   sdk = new AEMHeadless(config)
   const promise = sdk.runQuery(queryString, { method: 'GET' })
   return expect(promise).resolves.toStrictEqual({ data: 'test' })
+})
+
+test('API: runQuery with custom headers API Success', () => {
+  const config = { headers: { 'global-header': 'global-value' } }
+  sdk = new AEMHeadless(config)
+  const promise = sdk.runQuery(queryString, { headers: { 'custom-header': 'custom-value' } })
+  return expect(promise).resolves.toBeTruthy()
 })
 
 test('API: params validation', () => {

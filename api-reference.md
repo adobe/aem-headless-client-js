@@ -22,7 +22,7 @@ with GraphQL endpoint, GraphQL serviceURL and auth if needed
 
 * [AEMHeadless](#AEMHeadless)
     * [new AEMHeadless(config)](#new_AEMHeadless_new)
-    * [.runQuery(query, [options], [retryOptions])](#AEMHeadless+runQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.runQuery(body, [options], [retryOptions])](#AEMHeadless+runQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.persistQuery(query, path, [options], [retryOptions])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.listPersistedQueries([options], [retryOptions])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.runPersistedQuery(path, [variables], [options], [retryOptions])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
@@ -65,7 +65,7 @@ For granular params, use config object
 
 <a name="AEMHeadless+runQuery"></a>
 
-### aemHeadless.runQuery(query, [options], [retryOptions]) ⇒ <code>Promise.&lt;any&gt;</code>
+### aemHeadless.runQuery(body, [options], [retryOptions]) ⇒ <code>Promise.&lt;any&gt;</code>
 Returns a Promise that resolves with a POST request JSON data.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -78,7 +78,7 @@ Returns a Promise that resolves with a POST request JSON data.
   </thead>
   <tbody>
 <tr>
-    <td>query</td><td><code>string</code></td><td></td><td><p>the query string</p>
+    <td>body</td><td><code>string</code> | <code>object</code></td><td></td><td><p>the query string or an object with query (and optionally variables) as a property</p>
 </td>
     </tr><tr>
     <td>[options]</td><td><code>object</code></td><td><code>{}</code></td><td><p>additional POST request options</p>

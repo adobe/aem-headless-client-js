@@ -2,18 +2,18 @@ name: on-push-publish-to-npm
 on:
   push:
     branches:
-      - main # Change this if not your default branch
+      - main
     paths:
       - 'package.json'
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm install
+      - run: npm ci
       - run: npm test
       - uses: JS-DevTools/npm-publish@v1
         with:

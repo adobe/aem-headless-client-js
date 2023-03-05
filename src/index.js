@@ -126,10 +126,24 @@ class AEMHeadless {
     // If auth is user, pass pair
     if (Array.isArray(auth) && auth[0] && auth[1]) {
       authType = 'Basic'
-      authToken = Buffer.from(`${auth[0]}:${auth[1]}`, 'utf8').toString('base64')
+      authToken = this.__str2base64(`${auth[0]}:${auth[1]}`)
     }
 
     return `${authType} ${authToken}`
+  }
+
+  /**
+   * simple string to base64 implementation
+   *
+   * @private
+   * @param {string} str
+   */
+  __str2base64 (str) {
+    try {
+      return btoa(str)
+    } catch (err) {
+      return Buffer.from(str, 'utf8').toString('base64')
+    }
   }
 
   /**

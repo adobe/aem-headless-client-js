@@ -53,13 +53,14 @@ class AEMHeadless {
   /**
    * Returns a Promise that resolves with a POST request JSON data.
    *
-   * @param {string} query - the query string
+   * @param {string|object} body - the query string or an object with query (and optionally variables) as a property
    * @param {object} [options={}] - additional POST request options
    * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @returns {Promise<any>} - the response body wrapped inside a Promise
    */
-  async runQuery (query, options = {}, retryOptions = {}) {
-    return this.__handleRequest(this.endpoint, JSON.stringify({ query }), options, retryOptions)
+  async runQuery (body, options = {}, retryOptions = {}) {
+    const postBody = typeof body === 'object' ? body : { query: body }
+    return this.__handleRequest(this.endpoint, JSON.stringify(postBody), options, retryOptions)
   }
 
   /**

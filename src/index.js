@@ -64,11 +64,7 @@ class AEMHeadless {
     return graphQLQueryBuilder(model, itemQuery, args)
   }
 
-  async * initPaginatedQuery (model, itemQuery, args, options, retryOptions) {
-    if (!this.hasNext) {
-      return null
-    }
-
+  __getPagingArgs (args) {
     const queryType = getQueryType(args)
     let pagingArgs = args
 
@@ -81,21 +77,43 @@ class AEMHeadless {
       pagingArgs = this.endCursor ? { ...args, after: this.endCursor } : args
     }
 
-    const { query, type } = this.buildQuery(model, itemQuery, pagingArgs)
+    return pagingArgs
+  }
+
+  /**
+   * Returns a Generator Function.
+   *
+   * @generator
+   * @param {string} model - contentFragment model name
+   * @param {string} fields - query string for item fields
+   * @param {object} [args={}] - paginated query arguments
+   * @param {object} [options={}] - additional POST request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
+   * @yields {null | Promise<object | Array>} - the response items wrapped inside a Promise
+   */
+  async * initPaginatedQuery (model, fields, args = {}, options, retryOptions) {
+    if (!this.hasNext) {
+      return null
+    }
+
+    const pagingArgs = this.__getPagingArgs(args)
+    const { query, type } = this.buildQuery(model, fields, pagingArgs)
+
     while (this.hasNext) {
       const { data } = await this.runQuery(query, options, retryOptions)
 
       if (!data || (data && data.length === 0)) {
         this.hasNext = false
         this.endCursor = ''
+        this.offset = 0
         return data
       }
 
       let response
       switch (type) {
-        // case AEM_GRAPHQL_TYPES.BY_PATH:
-        //   yield data[`${model}${type}`].item
-        //   break
+        case AEM_GRAPHQL_TYPES.BY_PATH:
+          yield data[`${model}${type}`].item
+          break
         case AEM_GRAPHQL_TYPES.PAGINATED:
           response = data[`${model}${type}`]
           this.hasNext = response.pageInfo.hasNextPage

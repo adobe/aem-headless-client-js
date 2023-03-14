@@ -1,12 +1,12 @@
-require('../types')
-const { AEM_GRAPHQL_TYPES } = require('./config');
+const types = require('../types') // eslint-disable-line
+const { AEM_GRAPHQL_TYPES } = require('./config')
 
 /**
  * Returns a Query for model by path
  *
  * @private
- * @param {String} model - contentFragment Model Name
- * @param {String} itemQuery - GraphQL query for one item
+ * @param {string} model - contentFragment Model Name
+ * @param {string} itemQuery - GraphQL query for one item
  * @param {ModelByPathArgs} args - Query arguments
  * @returns {QueryBuilderResult}
  */
@@ -33,8 +33,8 @@ const __modelByPath = (model, itemQuery, args) => {
  * Returns a Query for model list
  *
  * @private
- * @param {String} model - contentFragment Model Name
- * @param {String} itemQuery - GraphQL query for one item
+ * @param {string} model - contentFragment Model Name
+ * @param {string} itemQuery - GraphQL query for one item
  * @param {ModelListArgs} [args={}] - Query arguments
  * @returns {QueryBuilderResult}
  */
@@ -58,8 +58,8 @@ const __modelList = (model, itemQuery, args = {}) => {
  * Returns a Query for model list
  *
  * @private
- * @param {String} model - contentFragment Model Name
- * @param {String} itemQuery - GraphQL query for one item
+ * @param {string} model - contentFragment Model Name
+ * @param {string} itemQuery - GraphQL query for one item
  * @param {ModelPaginatedArgs} [args={}] - Query arguments
  * @returns {QueryBuilderResult}
  */
@@ -103,10 +103,10 @@ const getQueryType = (args) => {
 /**
  * Returns a Query for a model and type
  *
- * @param {String} model - contentFragment Model Name
- * @param {String} itemQuery - GraphQL query for one item
- * @param {ModelArgs} [args={}] - Query arguments
- * @returns {QueryBuilderResult}
+ * @param {string} model - contentFragment Model Name
+ * @param {string} itemQuery - GraphQL query for one item
+ * @param {types.ModelArgs} [args={}] - Query arguments
+ * @returns {types.QueryBuilderResult} - returns query string
  */
 const graphQLQueryBuilder = (model, itemQuery, args = {}) => {
   if (args._path) {

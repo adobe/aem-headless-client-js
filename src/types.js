@@ -1,77 +1,81 @@
 /**
- * @typedef {String} QueryString
- * @property
+ * Query string type
+ *
+ * @typedef {string} QueryString
+ * @property {any} * - placeholder property
  */
 
 /**
- * @typedef {Object} Model
- * @property
+ * GraphQL Model type
+ *
+ * @typedef {object} Model
+ * @property {any} * - placeholder property
  */
 
 /**
- * @typedef {Object} ModelResult
- * @property {Model} item
+ * @typedef {object} ModelResult
+ * @property {Model} item - response item
  */
 
 /**
- * @typedef {Object} ModelResults
- * @property {Model[]} items
+ * @typedef {object} ModelResults
+ * @property {Model[]} items - response items
  */
 
 /**
- * @typedef {Object} ModelEdge
- * @property {string} cursor
- * @property {Model} node
+ * @typedef {object} ModelEdge
+ * @property {string} cursor - item cursor
+ * @property {Model} node - item node
  */
 
 /**
- * @typedef {Object} PageInfo
- * @property {string} endCursor
- * @property {boolean} hasNextPage
- * @property {boolean} hasPreviousPage
- * @property {string} startCursor
+ * @typedef {object} PageInfo
+ * @property {string} endCursor - endCursor
+ * @property {boolean} hasNextPage - hasNextPage
+ * @property {boolean} hasPreviousPage - hasPreviousPage
+ * @property {string} startCursor - startCursor
  */
 
 /**
- * @typedef {Object} ModelConnection
- * @property {ModelEdge[]} edges
- * @property {PageInfo} pageInfo
+ * @typedef {object} ModelConnection
+ * @property {ModelEdge[]} edges - edges
+ * @property {PageInfo} pageInfo - pageInfo
  */
 
 /**
- * @typedef {Object} ModelByPathArgs
- * @property {String} _path - contentFragment path
- * @property {String} variation - contentFragment variation
+ * @typedef {object} ModelByPathArgs
+ * @property {string} _path - contentFragment path
+ * @property {string} variation - contentFragment variation
  */
 
 /**
- * @typedef {Object} ModelListArgs
- * @property {String} [_locale] - contentFragment locale
- * @property {String} [variation] - contentFragment variation
- * @property {Object} [filter] - list filter options
- * @property {String} [sort] - list sort options
- * @property {Number} [offset] - list offset
- * @property {Number} [limit] - list limit
+ * @typedef {object} ModelListArgs
+ * @property {string} [_locale] - contentFragment locale
+ * @property {string} [variation] - contentFragment variation
+ * @property {object} [filter] - list filter options
+ * @property {string} [sort] - list sort options
+ * @property {number} [offset] - list offset
+ * @property {number} [limit] - list limit
  */
 
 /**
- * @typedef {Object} ModelPaginatedArgs
- * @property {String} [_locale] - contentFragment locale
- * @property {String} [variation] - contentFragment variation
- * @property {Object} [filter] - list filter options
- * @property {String} [sort] - list sort options
- * @property {Number} [first] - number of list items
- * @property {String} [after] - list starting cursor
+ * @typedef {object} ModelPaginatedArgs
+ * @property {string} [_locale] - contentFragment locale
+ * @property {string} [variation] - contentFragment variation
+ * @property {object} [filter] - list filter options
+ * @property {string} [sort] - list sort options
+ * @property {number} [first] - number of list items
+ * @property {string} [after] - list starting cursor
  */
 
 /**
  * @typedef {ModelByPathArgs|ModelListArgs|ModelPaginatedArgs} ModelArgs
- *
+ * @property {any} * - placeholder property
  */
 
 /**
- * @typedef {Object} QueryBuilderResult
- * @property {String} type - Query type
+ * @typedef {object} QueryBuilderResult
+ * @property {string} type - Query type
  * @property {QueryString} query - Query string
  */
 

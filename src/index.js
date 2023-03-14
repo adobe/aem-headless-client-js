@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 
 const ErrorCodes = require('./utils/SDKErrors').codes
 const { AEM_GRAPHQL_ACTIONS, AEM_GRAPHQL_TYPES } = require('./utils/config')
-const { graphQLQueryBuilder, getQueryType } = require('./utils/GraphQLQueryBuilder');
+const { graphQLQueryBuilder, getQueryType } = require('./utils/GraphQLQueryBuilder')
 const { REQUEST_ERROR, RESPONSE_ERROR, API_ERROR, INVALID_PARAM } = ErrorCodes
 
 /**

@@ -88,7 +88,7 @@ const __modelPaginated = (model, itemQuery, args = {}) => {
   }
 }
 
-const getQueryType = (args) => {
+const getQueryType = (args = {}) => {
   if (args._path) {
     return AEM_GRAPHQL_TYPES.BY_PATH
   }

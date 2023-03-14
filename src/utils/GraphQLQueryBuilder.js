@@ -9,7 +9,7 @@ function objToStringArgs (obj) {
   let str = ''
   for (const [key, value] of Object.entries(obj)) {
     let val = typeof value === 'string' ? `"${value}"` : value
-    val = typeof value === 'object' ? `{ ${objToStringArgs(value)} }` : value
+    val = typeof value === 'object' ? `{ ${objToStringArgs(value)} }` : val
     str += `${key}:${val}\n`
   }
   return str

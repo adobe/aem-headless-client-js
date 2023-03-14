@@ -108,8 +108,19 @@ class AEMHeadless {
         this.offset = 0
         return data
       }
-      const filteredData = this.__filterData(model, type, data)
-      if (!filteredData || filteredData.length === 0) {
+      let filteredData
+      try {
+        filteredData = this.__filterData(model, type, data)
+      } catch (e) {
+        throw new API_ERROR({
+          sdkDetails: {
+            serviceURL: this.serviceURL
+          },
+          messageValues: `Error while filtering response data. ${e.message}`
+        })
+      }
+
+      if (!filteredData || filteredData.length === 0 || type === AEM_GRAPHQL_TYPES.BY_PATH) {
         this.hasNext = false
         this.endCursor = ''
         this.offset = 0
@@ -117,6 +128,10 @@ class AEMHeadless {
       }
 
       if (type === AEM_GRAPHQL_TYPES.LIST && filteredData.length < (args.limit || 10)) {
+        return filteredData
+      }
+
+      if (type === AEM_GRAPHQL_TYPES.PAGINATED && filteredData.length < (args.first || 10)) {
         return filteredData
       }
 

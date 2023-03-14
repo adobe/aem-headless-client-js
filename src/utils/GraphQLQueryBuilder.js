@@ -8,7 +8,9 @@ const { AEM_GRAPHQL_TYPES } = require('./config')
 function objToStringArgs (obj) {
   let str = ''
   for (const [key, value] of Object.entries(obj)) {
-    str += `${key}:${value}\n`
+    let val = typeof value === 'string' ? `"${value}"` : value
+    val = typeof value === 'object' ? `{ ${objToStringArgs(value)} }` : value
+    str += `${key}:${val}\n`
   }
   return str
 }

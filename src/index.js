@@ -106,12 +106,17 @@ class AEMHeadless {
         this.offset = 0
         return data
       }
-
-      yield this.__prepareData(model, type, data)
+      const filteredData = this.__filterData(model, type, data)
+      if (!filteredData || filteredData.length === 0) {
+        this.hasNext = false
+        this.endCursor = ''
+        this.offset = 0
+      }
+      yield filteredData
     }
   }
 
-  __prepareData (model, type, data) {
+  __filterData (model, type, data) {
     let response
     switch (type) {
       case AEM_GRAPHQL_TYPES.BY_PATH:

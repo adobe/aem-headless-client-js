@@ -54,12 +54,6 @@ class AEMHeadless {
     this.offset = 0
   }
 
-  resetPagination () {
-    this.hasNext = true
-    this.endCursor = ''
-    this.offset = 0
-  }
-
   buildQuery (model, itemQuery, args) {
     return graphQLQueryBuilder(model, itemQuery, args)
   }
@@ -92,17 +86,13 @@ class AEMHeadless {
    * @yields {null | Promise<object | Array>} - the response items wrapped inside a Promise
    */
   async * initPaginatedQuery (model, fields, args = {}, options, retryOptions) {
-    if (!fields) {
+    if (!model || !fields) {
       throw new INVALID_PARAM({
         sdkDetails: {
           serviceURL: this.serviceURL
         },
         messageValues: 'Required param missing: @param {string} fields - query string for item fields'
       })
-    }
-
-    if (!this.hasNext) {
-      return null
     }
 
     const pagingArgs = this.__getPagingArgs(args)
@@ -118,20 +108,22 @@ class AEMHeadless {
         return data
       }
 
-      let response
-      switch (type) {
-        case AEM_GRAPHQL_TYPES.BY_PATH:
-          yield data[`${model}${type}`].item
-          break
-        case AEM_GRAPHQL_TYPES.PAGINATED:
-          response = data[`${model}${type}`]
-          this.hasNext = response.pageInfo.hasNextPage
-          this.endCursor = response.pageInfo.endCursor
-          yield response.edges.map(item => item.node)
-          break
-        default:
-          yield data[`${model}${type}`].items
-      }
+      yield this.__prepareData(model, type, data)
+    }
+  }
+
+  __prepareData (model, type, data) {
+    let response
+    switch (type) {
+      case AEM_GRAPHQL_TYPES.BY_PATH:
+        return data[`${model}${type}`].item
+      case AEM_GRAPHQL_TYPES.PAGINATED:
+        response = data[`${model}${type}`]
+        this.hasNext = response.pageInfo.hasNextPage
+        this.endCursor = response.pageInfo.endCursor
+        return response.edges.map(item => item.node)
+      default:
+        return data[`${model}${type}`].items
     }
   }
 

@@ -2,7 +2,7 @@ const types = require('../types') // eslint-disable-line
 const { AEM_GRAPHQL_TYPES } = require('./config')
 
 /**
- * @param {object} obj
+ * @param {object} obj - object representing query arguments
  * @returns {string} - query args as a string
  */
 function objToStringArgs (obj) {

@@ -63,7 +63,7 @@ class AEMHeadless {
     let pagingArgs = args
 
     if (queryType === AEM_GRAPHQL_TYPES.LIST) {
-      this.offset = this.offset !== 0 ? this.offset + (args.limit || 10) : 0
+      this.offset = this.offset !== 0 ? this.offset + (args.limit || 10) : (args.offset || 0)
       pagingArgs = { ...args, offset: this.offset }
     }
 
@@ -95,9 +95,9 @@ class AEMHeadless {
       })
     }
 
-    const pagingArgs = this.__getPagingArgs(args)
-    const { query, type } = this.buildQuery(model, fields, pagingArgs)
     while (this.hasNext) {
+      const pagingArgs = this.__getPagingArgs(args)
+      const { query, type } = this.buildQuery(model, fields, pagingArgs)
       const { data } = await this.runQuery(query, options, retryOptions)
 
       if (!data || (data && data.length === 0)) {

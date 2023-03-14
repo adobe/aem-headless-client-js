@@ -361,6 +361,16 @@ class AEMHeadless {
         messageValues: error.message
       })
     }
+    // 3.2. Response ok: containing errors info
+    if (data && data.errors) {
+      throw new RESPONSE_ERROR({
+        sdkDetails: {
+          serviceURL: this.serviceURL,
+          endpoint
+        },
+        messageValues: data.errors.map((error) => error.message).join('. ')
+      })
+    }
 
     return data
   }

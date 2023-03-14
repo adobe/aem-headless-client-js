@@ -10,7 +10,8 @@ governing permissions and limitations under the License.
 */
 
 const ErrorCodes = require('./utils/SDKErrors').codes
-const { AEM_GRAPHQL_ACTIONS } = require('./utils/config')
+const { AEM_GRAPHQL_ACTIONS, AEM_GRAPHQL_TYPES } = require('./utils/config')
+const { graphQLQueryBuilder, getQueryType } = require('./utils/GraphQLQueryBuilder');
 const { REQUEST_ERROR, RESPONSE_ERROR, API_ERROR, INVALID_PARAM } = ErrorCodes
 
 /**
@@ -48,6 +49,63 @@ class AEMHeadless {
     this.serviceURL = this.__getDomain(serviceURL)
     this.endpoint = this.__getPath(endpoint)
     this.fetch = this.__getFetch(config.fetch)
+    this.hasNext = true
+    this.endCursor = ''
+    this.offset = 0
+  }
+
+  resetPagination () {
+    this.hasNext = true
+    this.endCursor = ''
+    this.offset = 0
+  }
+
+  buildQuery (model, itemQuery, args) {
+    return graphQLQueryBuilder(model, itemQuery, args)
+  }
+
+  async * initPaginatedQuery (model, itemQuery, args, options, retryOptions) {
+    if (!this.hasNext) {
+      return null
+    }
+
+    const queryType = getQueryType(args)
+    let pagingArgs = args
+
+    if (queryType === AEM_GRAPHQL_TYPES.LIST) {
+      this.offset = this.offset !== 0 ? this.offset + (args.limit || 10) : 0
+      pagingArgs = { ...args, offset: this.offset }
+    }
+
+    if (queryType === AEM_GRAPHQL_TYPES.PAGINATED) {
+      pagingArgs = this.endCursor ? { ...args, after: this.endCursor } : args
+    }
+
+    const { query, type } = this.buildQuery(model, itemQuery, pagingArgs)
+    while (this.hasNext) {
+      const { data } = await this.runQuery(query, options, retryOptions)
+
+      if (!data || (data && data.length === 0)) {
+        this.hasNext = false
+        this.endCursor = ''
+        return data
+      }
+
+      let response
+      switch (type) {
+        // case AEM_GRAPHQL_TYPES.BY_PATH:
+        //   yield data[`${model}${type}`].item
+        //   break
+        case AEM_GRAPHQL_TYPES.PAGINATED:
+          response = data[`${model}${type}`]
+          this.hasNext = response.pageInfo.hasNextPage
+          this.endCursor = response.pageInfo.endCursor
+          yield response.edges.map(item => item.node)
+          break
+        default:
+          yield data[`${model}${type}`].items
+      }
+    }
   }
 
   /**

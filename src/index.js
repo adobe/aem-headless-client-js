@@ -94,6 +94,7 @@ class AEMHeadless {
         messageValues: 'Required param missing: @param {string} fields - query string for item fields'
       })
     }
+
     let i = 0
     while (this.hasNext) {
       const pagingArgs = this.__getPagingArgs(args, i)
@@ -112,7 +113,13 @@ class AEMHeadless {
         this.hasNext = false
         this.endCursor = ''
         this.offset = 0
+        return filteredData
       }
+
+      if (type === AEM_GRAPHQL_TYPES.LIST && filteredData.length < (args.limit || 10)) {
+        return filteredData
+      }
+
       yield filteredData
     }
   }

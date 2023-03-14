@@ -92,7 +92,7 @@ class AEMHeadless {
    * @yields {null | Promise<object | Array>} - the response items wrapped inside a Promise
    */
   async * initPaginatedQuery (model, fields, args = {}, options, retryOptions) {
-    if (!this.hasNext) {
+    if (!this.hasNext || !fields) {
       return null
     }
 

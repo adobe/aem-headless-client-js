@@ -58,12 +58,12 @@ class AEMHeadless {
     return graphQLQueryBuilder(model, itemQuery, args)
   }
 
-  __getPagingArgs (args) {
+  __getPagingArgs (args, index) {
     const queryType = getQueryType(args)
     let pagingArgs = args
 
     if (queryType === AEM_GRAPHQL_TYPES.LIST) {
-      this.offset = this.offset !== 0 ? this.offset + (args.limit || 10) : (args.offset || 0)
+      this.offset = index !== 0 ? this.offset + (args.limit || 10) : (args.offset || 0)
       pagingArgs = { ...args, offset: this.offset }
     }
 
@@ -94,9 +94,10 @@ class AEMHeadless {
         messageValues: 'Required param missing: @param {string} fields - query string for item fields'
       })
     }
-
+    let i = 0
     while (this.hasNext) {
-      const pagingArgs = this.__getPagingArgs(args)
+      const pagingArgs = this.__getPagingArgs(args, i)
+      i += 1
       const { query, type } = this.buildQuery(model, fields, pagingArgs)
       const { data } = await this.runQuery(query, options, retryOptions)
 

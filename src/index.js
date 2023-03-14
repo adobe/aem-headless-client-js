@@ -97,7 +97,6 @@ class AEMHeadless {
 
     const pagingArgs = this.__getPagingArgs(args)
     const { query, type } = this.buildQuery(model, fields, pagingArgs)
-
     while (this.hasNext) {
       const { data } = await this.runQuery(query, options, retryOptions)
 

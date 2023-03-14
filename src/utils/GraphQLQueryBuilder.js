@@ -2,6 +2,18 @@ const types = require('../types') // eslint-disable-line
 const { AEM_GRAPHQL_TYPES } = require('./config')
 
 /**
+ * @param {object} obj
+ * @returns {string} - query args as a string
+ */
+function objToStringArgs (obj) {
+  let str = ''
+  for (const [key, value] of Object.entries(obj)) {
+    str += `${key}:${value}\n`
+  }
+  return str
+}
+
+/**
  * Returns a Query for model by path
  *
  * @private
@@ -17,7 +29,7 @@ const __modelByPath = (model, itemQuery, args) => {
   const type = AEM_GRAPHQL_TYPES.BY_PATH
   const query = `{
     ${model}${type}(
-      ${{ ...args }}
+      ${objToStringArgs(args)}
     ) {
       item ${itemQuery}
     }
@@ -42,7 +54,7 @@ const __modelList = (model, itemQuery, args = {}) => {
   const type = AEM_GRAPHQL_TYPES.LIST
   const query = `{
     ${model}${type}(
-      ${{ ...args }}
+      ${objToStringArgs(args)}
     ) {
       items ${itemQuery}
     }
@@ -67,7 +79,7 @@ const __modelPaginated = (model, itemQuery, args = {}) => {
   const type = AEM_GRAPHQL_TYPES.PAGINATED
   const query = `{
     ${model}${type}(
-      ${{ ...args }}
+      ${objToStringArgs(args)}
     ) {
       pageInfo {
         startCursor

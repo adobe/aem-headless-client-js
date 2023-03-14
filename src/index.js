@@ -92,7 +92,16 @@ class AEMHeadless {
    * @yields {null | Promise<object | Array>} - the response items wrapped inside a Promise
    */
   async * initPaginatedQuery (model, fields, args = {}, options, retryOptions) {
-    if (!this.hasNext || !fields) {
+    if (!fields) {
+      throw new INVALID_PARAM({
+        sdkDetails: {
+          serviceURL: this.serviceURL
+        },
+        messageValues: 'Required param missing: @param {string} fields - query string for item fields'
+      })
+    }
+
+    if (!this.hasNext) {
       return null
     }
 

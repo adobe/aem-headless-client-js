@@ -22,6 +22,7 @@ with GraphQL endpoint, GraphQL serviceURL and auth if needed
 
 * [AEMHeadless](#AEMHeadless)
     * [new AEMHeadless(config)](#new_AEMHeadless_new)
+    * [.initPaginatedQuery(model, fields, [args], [options], [retryOptions])](#AEMHeadless+initPaginatedQuery)
     * [.runQuery(body, [options], [retryOptions])](#AEMHeadless+runQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.persistQuery(query, path, [options], [retryOptions])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.listPersistedQueries([options], [retryOptions])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
@@ -59,6 +60,37 @@ For granular params, use config object
 </td>
     </tr><tr>
     <td>[config.fetch]</td><td><code>object</code></td><td><p>custom Fetch instance</p>
+</td>
+    </tr>  </tbody>
+</table>
+
+<a name="AEMHeadless+initPaginatedQuery"></a>
+
+### aemHeadless.initPaginatedQuery(model, fields, [args], [options], [retryOptions])
+Returns a Generator Function.
+
+**Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
+<table>
+  <thead>
+    <tr>
+      <th>Param</th><th>Type</th><th>Default</th><th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+<tr>
+    <td>model</td><td><code>string</code></td><td></td><td><p>contentFragment model name</p>
+</td>
+    </tr><tr>
+    <td>fields</td><td><code>string</code></td><td></td><td><p>query string for item fields</p>
+</td>
+    </tr><tr>
+    <td>[args]</td><td><code>object</code></td><td><code>{}</code></td><td><p>paginated query arguments</p>
+</td>
+    </tr><tr>
+    <td>[options]</td><td><code>object</code></td><td><code>{}</code></td><td><p>additional POST request options</p>
+</td>
+    </tr><tr>
+    <td>[retryOptions]</td><td><code>object</code></td><td><code>{}</code></td><td><p>retry options for @adobe/aio-lib-core-networking</p>
 </td>
     </tr>  </tbody>
 </table>

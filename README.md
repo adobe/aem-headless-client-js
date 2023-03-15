@@ -105,6 +105,51 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
 })()    
 ```
 
+#### Pagination:
+```javascript
+(async () => {
+    const model = 'article'
+    const fields = `{
+        title
+        _path
+        authorFragment {
+            firstName
+            profilePicture {
+                ...on ImageRef {
+                    _authorUrl
+                }
+            }
+        }
+    }`
+    
+    try {
+        const offsetQuery = await aemHeadlessClient.initPaginatedQuery(model, fields, { limit: 3 })
+        
+        let isDone = false
+        while (!isDone) {
+            const { done, value } = await offsetQuery.next();
+            isDone = done
+            console.log(value)
+        }
+    } catch (e) {
+        console.warn(e)
+    }
+    
+    try {
+        const cursorQuery = await aemHeadlessClient.initPaginatedQuery(model, fields, { first: 4 })
+        
+        let isDone = false
+        while (!isDone) {
+            const { done, value } = await cursorQuery.next();
+            isDone = done
+            console.log(value)
+        }
+    } catch (e) {
+        console.warn(e)
+    }
+})()    
+```
+
 ## Authorization
 
 If `auth` param is a string, it's treated as a Bearer token

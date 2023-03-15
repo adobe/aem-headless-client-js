@@ -62,9 +62,6 @@ const __validateUrl = (url) => {
     new URL(fullUrl) // eslint-disable-line
   } catch (e) {
     throw new INVALID_PARAM({
-      sdkDetails: {
-        serviceURL: this.serviceURL
-      },
       messageValues: `Invalid URL/path: ${url}`
     })
   }
@@ -100,9 +97,6 @@ const __getFetch = (fetch) => {
     const browserFetch = __getBrowserFetch()
     if (!browserFetch) {
       throw new INVALID_PARAM({
-        sdkDetails: {
-          serviceURL: this.serviceURL
-        },
         messageValues: 'Required param missing: config.fetch'
       })
     }

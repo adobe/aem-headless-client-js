@@ -127,14 +127,6 @@ class AEMHeadless {
         return filteredData
       }
 
-      if (type === AEM_GRAPHQL_TYPES.LIST && filteredData.length < (args.limit || 10)) {
-        return filteredData
-      }
-
-      if (type === AEM_GRAPHQL_TYPES.PAGINATED && filteredData.length < (args.first || 10)) {
-        return filteredData
-      }
-
       yield filteredData
     }
   }

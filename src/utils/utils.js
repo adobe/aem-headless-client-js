@@ -7,9 +7,9 @@ const { INVALID_PARAM } = require('./SDKErrors').codes
  * @param {string} str
  */
 const __str2base64 = (str) => {
-  try {
+  if (typeof btoa === 'function') {
     return btoa(str)
-  } catch (err) {
+  } else {
     return Buffer.from(str, 'utf8').toString('base64')
   }
 }

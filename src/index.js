@@ -138,13 +138,13 @@ class AEMHeadless {
 
     let isInitial = true
     let hasNext = true
-    let endCursor = args.after || ''
+    let after = args.after || ''
     const limit = args.limit || 10
     let pagingArgs = args
     while (hasNext) {
       const offset = pagingArgs.offset || 0
       if (!isInitial) {
-        pagingArgs = this.__updatePagingArgs(args, { offset, limit, endCursor })
+        pagingArgs = this.__updatePagingArgs(args, { offset, limit, after })
       }
 
       isInitial = false
@@ -165,7 +165,7 @@ class AEMHeadless {
       }
 
       hasNext = filteredData.hasNext
-      endCursor = filteredData.endCursor
+      after = filteredData.endCursor
 
       yield filteredData.data
     }

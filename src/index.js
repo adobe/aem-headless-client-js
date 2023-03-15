@@ -174,9 +174,9 @@ class AEMHeadless {
   /**
    * Builds a GraphQL query string for the given parameters.
    *
-   * @param {string} model - The contentFragment model name.
-   * @param {string} fields - The query string for item fields.
-   * @param {object} [args={}] - The paginated query arguments.
+   * @param {string} model - The contentFragment model name
+   * @param {string} fields - The query string for item fields
+   * @param {object} [args={}] - Query arguments
    * @returns {QueryBuilderResult} object with The GraphQL query string and type
    */
   buildQuery (model, fields, args = {}) {

@@ -22,11 +22,11 @@ function objToStringArgs (obj) {
  *
  * @private
  * @param {string} model - contentFragment Model Name
- * @param {string} itemQuery - GraphQL query for one item
+ * @param {string} fields - The query string for item fields.
  * @param {ModelByPathArgs} args - Query arguments
  * @returns {QueryBuilderResult}
  */
-const __modelByPath = (model, itemQuery, args) => {
+const __modelByPath = (model, fields, args) => {
   if (!args || !args._path) {
     throw new Error('Missing required param "_path"')
   }
@@ -35,7 +35,7 @@ const __modelByPath = (model, itemQuery, args) => {
     ${model}${type}(
       ${objToStringArgs(args)}
     ) {
-      item ${itemQuery}
+      item ${fields}
     }
   }`
 
@@ -50,17 +50,17 @@ const __modelByPath = (model, itemQuery, args) => {
  *
  * @private
  * @param {string} model - contentFragment Model Name
- * @param {string} itemQuery - GraphQL query for one item
+ * @param {string} fields - The query string for item fields.
  * @param {ModelListArgs} [args={}] - Query arguments
  * @returns {QueryBuilderResult}
  */
-const __modelList = (model, itemQuery, args = {}) => {
+const __modelList = (model, fields, args = {}) => {
   const type = AEM_GRAPHQL_TYPES.LIST
   const query = `{
     ${model}${type}(
       ${objToStringArgs(args)}
     ) {
-      items ${itemQuery}
+      items ${fields}
     }
   }`
 
@@ -75,11 +75,11 @@ const __modelList = (model, itemQuery, args = {}) => {
  *
  * @private
  * @param {string} model - contentFragment Model Name
- * @param {string} itemQuery - GraphQL query for one item
+ * @param {string} fields - The query string for item fields.
  * @param {ModelPaginatedArgs} [args={}] - Query arguments
  * @returns {QueryBuilderResult}
  */
-const __modelPaginated = (model, itemQuery, args = {}) => {
+const __modelPaginated = (model, fields, args = {}) => {
   const type = AEM_GRAPHQL_TYPES.PAGINATED
   const query = `{
     ${model}${type}(
@@ -92,7 +92,7 @@ const __modelPaginated = (model, itemQuery, args = {}) => {
         hasPreviousPage
       }
       edges {
-        node ${itemQuery}
+        node ${fields}
         cursor
       }
     }
@@ -120,20 +120,20 @@ const getQueryType = (args = {}) => {
  * Returns a Query for a model and type
  *
  * @param {string} model - contentFragment Model Name
- * @param {string} itemQuery - GraphQL query for one item
+ * @param {string} fields - The query string for item fields
  * @param {ModelArgs} [args={}] - Query arguments
  * @returns {QueryBuilderResult} - returns object with query string and type
  */
-const graphQLQueryBuilder = (model, itemQuery, args = {}) => {
+const graphQLQueryBuilder = (model, fields, args = {}) => {
   if (args._path) {
-    return __modelByPath(model, itemQuery, args)
+    return __modelByPath(model, fields, args)
   }
 
   if (args.first || args.after) {
-    return __modelPaginated(model, itemQuery, args)
+    return __modelPaginated(model, fields, args)
   }
 
-  return __modelList(model, itemQuery, args)
+  return __modelList(model, fields, args)
 }
 
 module.exports = {

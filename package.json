@@ -12,7 +12,7 @@
   "name": "@adobe/aem-headless-client-js",
   "repository": "https://github.com/adobe/aem-headless-client-js",
   "scripts": {
-    "docs": "jsdoc2md --no-gfm -t ./docs/readme_template.md src/index.js > api-reference.md",
+    "docs": "jsdoc2md --no-gfm -t ./docs/readme_template.md src/types.js src/index.js > api-reference.md",
     "lint": "eslint src test",
     "unit-tests": "jest --config test/jest.config.js --maxWorkers=2 --verbose",
     "test": "npm run lint && npm run unit-tests",

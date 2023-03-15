@@ -1,15 +1,15 @@
 /**
  * Query string type
  *
+ * @private
  * @typedef {string} QueryString
- * @property {any} * - placeholder property
  */
 
 /**
  * GraphQL Model type
  *
  * @typedef {object} Model
- * @property {any} * - placeholder property
+ * @property {any} * - model properties
  */
 
 /**

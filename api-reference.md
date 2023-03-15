@@ -22,11 +22,12 @@ with GraphQL endpoint, GraphQL serviceURL and auth if needed
 
 * [AEMHeadless](#AEMHeadless)
     * [new AEMHeadless(config)](#new_AEMHeadless_new)
-    * [.initPaginatedQuery(model, fields, [args], [options], [retryOptions])](#AEMHeadless+initPaginatedQuery)
     * [.runQuery(body, [options], [retryOptions])](#AEMHeadless+runQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.persistQuery(query, path, [options], [retryOptions])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.listPersistedQueries([options], [retryOptions])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.runPersistedQuery(path, [variables], [options], [retryOptions])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
+    * [.runPaginatedQuery(model, fields, [args], [options], [retryOptions])](#AEMHeadless+runPaginatedQuery)
+    * [.buildQuery(model, fields, [args])](#AEMHeadless+buildQuery) ⇒ <code>string</code>
 
 <a name="new_AEMHeadless_new"></a>
 
@@ -60,37 +61,6 @@ For granular params, use config object
 </td>
     </tr><tr>
     <td>[config.fetch]</td><td><code>object</code></td><td><p>custom Fetch instance</p>
-</td>
-    </tr>  </tbody>
-</table>
-
-<a name="AEMHeadless+initPaginatedQuery"></a>
-
-### aemHeadless.initPaginatedQuery(model, fields, [args], [options], [retryOptions])
-Returns a Generator Function.
-
-**Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
-<table>
-  <thead>
-    <tr>
-      <th>Param</th><th>Type</th><th>Default</th><th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-<tr>
-    <td>model</td><td><code>string</code></td><td></td><td><p>contentFragment model name</p>
-</td>
-    </tr><tr>
-    <td>fields</td><td><code>string</code></td><td></td><td><p>query string for item fields</p>
-</td>
-    </tr><tr>
-    <td>[args]</td><td><code>object</code></td><td><code>{}</code></td><td><p>paginated query arguments</p>
-</td>
-    </tr><tr>
-    <td>[options]</td><td><code>object</code></td><td><code>{}</code></td><td><p>additional POST request options</p>
-</td>
-    </tr><tr>
-    <td>[retryOptions]</td><td><code>object</code></td><td><code>{}</code></td><td><p>retry options for @adobe/aio-lib-core-networking</p>
 </td>
     </tr>  </tbody>
 </table>
@@ -198,6 +168,63 @@ Returns a Promise that resolves with a GET request JSON data.
 </td>
     </tr><tr>
     <td>[retryOptions]</td><td><code>object</code></td><td><code>{}</code></td><td><p>retry options for @adobe/aio-lib-core-networking</p>
+</td>
+    </tr>  </tbody>
+</table>
+
+<a name="AEMHeadless+runPaginatedQuery"></a>
+
+### aemHeadless.runPaginatedQuery(model, fields, [args], [options], [retryOptions])
+Returns a Generator Function.
+
+**Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
+<table>
+  <thead>
+    <tr>
+      <th>Param</th><th>Type</th><th>Default</th><th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+<tr>
+    <td>model</td><td><code>string</code></td><td></td><td><p>contentFragment model name</p>
+</td>
+    </tr><tr>
+    <td>fields</td><td><code>string</code></td><td></td><td><p>query string for item fields</p>
+</td>
+    </tr><tr>
+    <td>[args]</td><td><code>object</code></td><td><code>{}</code></td><td><p>paginated query arguments</p>
+</td>
+    </tr><tr>
+    <td>[options]</td><td><code>object</code></td><td><code>{}</code></td><td><p>additional POST request options</p>
+</td>
+    </tr><tr>
+    <td>[retryOptions]</td><td><code>object</code></td><td><code>{}</code></td><td><p>retry options for @adobe/aio-lib-core-networking</p>
+</td>
+    </tr>  </tbody>
+</table>
+
+<a name="AEMHeadless+buildQuery"></a>
+
+### aemHeadless.buildQuery(model, fields, [args]) ⇒ <code>string</code>
+Builds a GraphQL query string for the given parameters.
+
+**Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
+**Returns**: <code>string</code> - The GraphQL query string.  
+<table>
+  <thead>
+    <tr>
+      <th>Param</th><th>Type</th><th>Default</th><th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+<tr>
+    <td>model</td><td><code>string</code></td><td></td><td><p>The contentFragment model name.</p>
+</td>
+    </tr><tr>
+    <td>fields</td><td><code>string</code></td><td></td><td><p>The query string for item fields.</p>
+</td>
+    </tr><tr>
+    <td>[args]</td><td><code>object</code></td><td><code>{}</code></td><td><p>The paginated query arguments.</p>
 </td>
     </tr>  </tbody>
 </table>

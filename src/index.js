@@ -52,129 +52,6 @@ class AEMHeadless {
   }
 
   /**
-   * Builds a GraphQL query string for the given parameters.
-   *
-   * @param {string} model - The contentFragment model name.
-   * @param {string} itemQuery - The query string for item fields.
-   * @param {object} [args={}] - The paginated query arguments.
-   * @returns {string} The GraphQL query string.
-   */
-  buildQuery (model, itemQuery, args = {}) {
-    return graphQLQueryBuilder(model, itemQuery, args)
-  }
-
-  /**
-   * Returns the updated paging arguments based on the current arguments and the response data.
-   *
-   * @param {object} args - The current paging arguments.
-   * @param {string} [args.after] - The cursor to start after.
-   * @param {number} [args.offset] - The offset to start from.
-   * @param {number} [args.limit=10] - The maximum number of items to return per page.
-   * @param {object} data - The GraphQL response data.
-   * @param data.after
-   * @param data.offset
-   * @param data.limit
-   * @returns {object} The updated paging arguments.
-   */
-  __updatePagingArgs (args = {}, { after, offset, limit = 10 }) {
-    const queryType = getQueryType(args)
-    const pagingArgs = { ...args }
-    if (queryType === AEM_GRAPHQL_TYPES.LIST) {
-      pagingArgs.offset = offset + limit
-    }
-
-    if (queryType === AEM_GRAPHQL_TYPES.PAGINATED) {
-      pagingArgs.after = after
-    }
-
-    return pagingArgs
-  }
-
-  /**
-   * Returns a Generator Function.
-   *
-   * @generator
-   * @param {string} model - contentFragment model name
-   * @param {string} fields - query string for item fields
-   * @param {object} [args={}] - paginated query arguments
-   * @param {object} [options={}] - additional POST request options
-   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
-   * @yields {null | Promise<object | Array>} - the response items wrapped inside a Promise
-   */
-  async * initPaginatedQuery (model, fields, args = {}, options, retryOptions) {
-    if (!model || !fields) {
-      throw new INVALID_PARAM({
-        sdkDetails: {
-          serviceURL: this.serviceURL
-        },
-        messageValues: 'Required param missing: @param {string} fields - query string for item fields'
-      })
-    }
-
-    let isInitial = true
-    let hasNext = true
-    let endCursor = args.after || ''
-    const limit = args.limit || 10
-    let pagingArgs = args
-    while (hasNext) {
-      const offset = pagingArgs.offset || 0
-      if (!isInitial) {
-        pagingArgs = this.__updatePagingArgs(args, { offset, limit, endCursor })
-      }
-
-      isInitial = false
-
-      const { query, type } = this.buildQuery(model, fields, pagingArgs)
-      const { data } = await this.runQuery(query, options, retryOptions)
-
-      let filteredData = {}
-      try {
-        filteredData = this.__filterData(model, type, data)
-      } catch (e) {
-        throw new API_ERROR({
-          sdkDetails: {
-            serviceURL: this.serviceURL
-          },
-          messageValues: `Error while filtering response data. ${e.message}`
-        })
-      }
-
-      hasNext = filteredData.hasNext
-      endCursor = filteredData.endCursor
-
-      yield filteredData.data
-    }
-  }
-
-  __filterData (model, type, data) {
-    let response
-    let filteredData
-    let hasNext
-    let endCursor
-    switch (type) {
-      case AEM_GRAPHQL_TYPES.BY_PATH:
-        filteredData = data[`${model}${type}`].item
-        hasNext = false
-        break
-      case AEM_GRAPHQL_TYPES.PAGINATED:
-        response = data[`${model}${type}`]
-        hasNext = response.pageInfo.hasNextPage
-        endCursor = response.pageInfo.endCursor
-        filteredData = response.edges.map(item => item.node)
-        break
-      default:
-        filteredData = data[`${model}${type}`].items
-        hasNext = filteredData && filteredData.length > 0
-    }
-
-    return {
-      data: filteredData,
-      hasNext,
-      endCursor
-    }
-  }
-
-  /**
    * Returns a Promise that resolves with a POST request JSON data.
    *
    * @param {string|object} body - the query string or an object with query (and optionally variables) as a property
@@ -235,6 +112,127 @@ class AEMHeadless {
 
     const url = `${AEM_GRAPHQL_ACTIONS.execute}/${path}${variablesString}`
     return this.__handleRequest(url, body, { method, ...options }, retryOptions)
+  }
+
+  /**
+   * Returns a Generator Function.
+   *
+   * @generator
+   * @param {string} model - contentFragment model name
+   * @param {string} fields - query string for item fields
+   * @param {object} [args={}] - paginated query arguments
+   * @param {object} [options={}] - additional POST request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
+   * @yields {null | Promise<object | Array>} - the response items wrapped inside a Promise
+   */
+  async * runPaginatedQuery (model, fields, args = {}, options, retryOptions) {
+    if (!model || !fields) {
+      throw new INVALID_PARAM({
+        sdkDetails: {
+          serviceURL: this.serviceURL
+        },
+        messageValues: 'Required param missing: @param {string} fields - query string for item fields'
+      })
+    }
+
+    let isInitial = true
+    let hasNext = true
+    let endCursor = args.after || ''
+    const limit = args.limit || 10
+    let pagingArgs = args
+    while (hasNext) {
+      const offset = pagingArgs.offset || 0
+      if (!isInitial) {
+        pagingArgs = this.__updatePagingArgs(args, { offset, limit, endCursor })
+      }
+
+      isInitial = false
+
+      const { query, type } = this.buildQuery(model, fields, pagingArgs)
+      const { data } = await this.runQuery(query, options, retryOptions)
+
+      let filteredData = {}
+      try {
+        filteredData = this.__filterData(model, type, data)
+      } catch (e) {
+        throw new API_ERROR({
+          sdkDetails: {
+            serviceURL: this.serviceURL
+          },
+          messageValues: `Error while filtering response data. ${e.message}`
+        })
+      }
+
+      hasNext = filteredData.hasNext
+      endCursor = filteredData.endCursor
+
+      yield filteredData.data
+    }
+  }
+
+  /**
+   * Builds a GraphQL query string for the given parameters.
+   *
+   * @param {string} model - The contentFragment model name.
+   * @param {string} fields - The query string for item fields.
+   * @param {object} [args={}] - The paginated query arguments.
+   * @returns {string} The GraphQL query string.
+   */
+  buildQuery (model, fields, args = {}) {
+    return graphQLQueryBuilder(model, fields, args)
+  }
+
+  /**
+   * Returns the updated paging arguments based on the current arguments and the response data.
+   *
+   * @private
+   * @param {object} args - The current paging arguments.
+   * @param {object} data - Current page arguments.
+   * @param {string} data.after - The cursor to start after.
+   * @param {number} data.offset - The offset to start from.
+   * @param {number} [data.limit = 10] - The maximum number of items to return per page.
+   * @returns {object} The updated paging arguments.
+   */
+  __updatePagingArgs (args = {}, { after, offset, limit = 10 }) {
+    const queryType = getQueryType(args)
+    const pagingArgs = { ...args }
+    if (queryType === AEM_GRAPHQL_TYPES.LIST) {
+      pagingArgs.offset = offset + limit
+    }
+
+    if (queryType === AEM_GRAPHQL_TYPES.PAGINATED) {
+      pagingArgs.after = after
+    }
+
+    return pagingArgs
+  }
+
+  __filterData (model, type, data) {
+    let response
+    let filteredData
+    let hasNext
+    let endCursor
+    switch (type) {
+      case AEM_GRAPHQL_TYPES.BY_PATH:
+        filteredData = data[`${model}${type}`].item
+        hasNext = false
+        break
+      case AEM_GRAPHQL_TYPES.PAGINATED:
+        response = data[`${model}${type}`]
+        hasNext = response.pageInfo.hasNextPage
+        endCursor = response.pageInfo.endCursor
+        filteredData = response.edges.map(item => item.node)
+        break
+      default:
+        filteredData = data[`${model}${type}`].items
+        hasNext = filteredData && filteredData.length > 0
+    }
+
+    return {
+      data: filteredData,
+      hasNext,
+      endCursor
+    }
   }
 
   /**

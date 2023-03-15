@@ -124,7 +124,7 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
     
     // Cursor based: Loop all pages
     try {
-        const cursorQueryAll = await aemHeadlessClient.initPaginatedQuery(model, fields, { first: 4 })
+        const cursorQueryAll = await aemHeadlessClient.runPaginatedQuery(model, fields, { first: 4 })
         for await (let value of cursorQueryAll) {
             console.log('cursorQueryAll', value)
         }
@@ -133,7 +133,7 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
     }
     // Cursor based: Manually get next page
     try {
-        const cursorQuery = await aemHeadlessClient.initPaginatedQuery(model, fields, { first: 4 })
+        const cursorQuery = await aemHeadlessClient.runPaginatedQuery(model, fields, { first: 4 })
         let isDone = false
         while (!isDone) {
             const { done, value } = await cursorQuery.next();
@@ -145,7 +145,7 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
     }
     // Offset based: Loop all pages
     try {
-        const offsetQueryAll = await aemHeadlessClient.initPaginatedQuery(model, fields, { limit: 3 })
+        const offsetQueryAll = await aemHeadlessClient.runPaginatedQuery(model, fields, { limit: 3 })
         for await (let value of offsetQueryAll) {
             console.log('offsetQueryAll', value)
         }
@@ -154,7 +154,7 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
     }
     // Offset based: Manually get next page
     try {
-        const offsetQuery = await aemHeadlessClient.initPaginatedQuery(model, fields, { limit: 3 })
+        const offsetQuery = await aemHeadlessClient.runPaginatedQuery(model, fields, { limit: 3 })
         
         let isDone = false
         while (!isDone) {
@@ -167,7 +167,7 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
     }
     // By path
     try {
-        const pathQuery = await aemHeadlessClient.initPaginatedQuery(model, fields, { _path: '/content/dam/wknd-shared/en/magazine/alaska-adventure/alaskan-adventures' })
+        const pathQuery = await aemHeadlessClient.runPaginatedQuery(model, fields, { _path: '/content/dam/wknd-shared/en/magazine/alaska-adventure/alaskan-adventures' })
         const result = pathQuery.next()
         console.log('pathQuery', result)
     } catch (e) {

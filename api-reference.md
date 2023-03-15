@@ -27,7 +27,7 @@ with GraphQL endpoint, GraphQL serviceURL and auth if needed
     * [.listPersistedQueries([options], [retryOptions])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.runPersistedQuery(path, [variables], [options], [retryOptions])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.runPaginatedQuery(model, fields, [args], [options], [retryOptions])](#AEMHeadless+runPaginatedQuery)
-    * [.buildQuery(model, fields, [args])](#AEMHeadless+buildQuery) ⇒ <code>string</code>
+    * [.buildQuery(model, fields, [args])](#AEMHeadless+buildQuery) ⇒ <code>QueryBuilderResult</code>
 
 <a name="new_AEMHeadless_new"></a>
 
@@ -205,11 +205,11 @@ Returns a Generator Function.
 
 <a name="AEMHeadless+buildQuery"></a>
 
-### aemHeadless.buildQuery(model, fields, [args]) ⇒ <code>string</code>
+### aemHeadless.buildQuery(model, fields, [args]) ⇒ <code>QueryBuilderResult</code>
 Builds a GraphQL query string for the given parameters.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
-**Returns**: <code>string</code> - The GraphQL query string.  
+**Returns**: <code>QueryBuilderResult</code> - object with The GraphQL query string and type  
 <table>
   <thead>
     <tr>

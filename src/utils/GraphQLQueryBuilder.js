@@ -2,6 +2,8 @@ require('../types') // eslint-disable-line
 const { AEM_GRAPHQL_TYPES } = require('./config')
 
 /**
+ *
+ * @private
  * @param {object} obj - object representing query arguments
  * @returns {string} - query args as a string
  */
@@ -120,7 +122,7 @@ const getQueryType = (args = {}) => {
  * @param {string} model - contentFragment Model Name
  * @param {string} itemQuery - GraphQL query for one item
  * @param {ModelArgs} [args={}] - Query arguments
- * @returns {QueryBuilderResult} - returns query string
+ * @returns {QueryBuilderResult} - returns object with query string and type
  */
 const graphQLQueryBuilder = (model, itemQuery, args = {}) => {
   if (args._path) {

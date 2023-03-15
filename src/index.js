@@ -177,7 +177,7 @@ class AEMHeadless {
    * @param {string} model - The contentFragment model name.
    * @param {string} fields - The query string for item fields.
    * @param {object} [args={}] - The paginated query arguments.
-   * @returns {QueryBuilderResult} The GraphQL query string.
+   * @returns {QueryBuilderResult} object with The GraphQL query string and type
    */
   buildQuery (model, fields, args = {}) {
     return graphQLQueryBuilder(model, fields, args)
@@ -211,6 +211,7 @@ class AEMHeadless {
   /**
    * Returns items list and paging info.
    *
+   * @private
    * @param {string} model - contentFragment model name
    * @param {string} type - model query type: byPath, List, Paginated
    * @param {object} data - raw response data

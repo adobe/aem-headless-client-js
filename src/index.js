@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 const ErrorCodes = require('./utils/SDKErrors').codes
 const { AEM_GRAPHQL_ACTIONS, AEM_GRAPHQL_TYPES } = require('./utils/config')
 const { graphQLQueryBuilder, getQueryType } = require('./utils/GraphQLQueryBuilder')
+const { __getUrl, __getPath, __getDomain, __validateUrl, __getFetch, __getAuthHeader } = require('./utils/utils')
 const { REQUEST_ERROR, RESPONSE_ERROR, API_ERROR, INVALID_PARAM } = ErrorCodes
 
 /**
@@ -46,9 +47,9 @@ class AEMHeadless {
       this.headers = config.headers
     }
 
-    this.serviceURL = this.__getDomain(serviceURL)
-    this.endpoint = this.__getPath(endpoint)
-    this.fetch = this.__getFetch(config.fetch)
+    this.serviceURL = __getDomain(serviceURL)
+    this.endpoint = __getPath(endpoint)
+    this.fetch = __getFetch(config.fetch)
   }
 
   /**
@@ -176,7 +177,7 @@ class AEMHeadless {
    * @param {string} model - The contentFragment model name.
    * @param {string} fields - The query string for item fields.
    * @param {object} [args={}] - The paginated query arguments.
-   * @returns {string} The GraphQL query string.
+   * @returns {QueryBuilderResult} The GraphQL query string.
    */
   buildQuery (model, fields, args = {}) {
     return graphQLQueryBuilder(model, fields, args)
@@ -207,6 +208,14 @@ class AEMHeadless {
     return pagingArgs
   }
 
+  /**
+   * Returns items list and paging info.
+   *
+   * @param {string} model - contentFragment model name
+   * @param {string} type - model query type: byPath, List, Paginated
+   * @param {object} data - raw response data
+   * @returns {object} - object with filtered data and paging info
+   */
   __filterData (model, type, data) {
     let response
     let filteredData
@@ -232,39 +241,6 @@ class AEMHeadless {
       data: filteredData,
       hasNext,
       endCursor
-    }
-  }
-
-  /**
-   * Returns Authorization Header value.
-   *
-   * @private
-   * @param {string|array} auth - Bearer token string or [user,pass] pair array
-   * @returns {string} Authorization Header value
-   */
-  __getAuthHeader (auth) {
-    let authType = 'Bearer'
-    let authToken = auth
-    // If auth is user, pass pair
-    if (Array.isArray(auth) && auth[0] && auth[1]) {
-      authType = 'Basic'
-      authToken = this.__str2base64(`${auth[0]}:${auth[1]}`)
-    }
-
-    return `${authType} ${authToken}`
-  }
-
-  /**
-   * simple string to base64 implementation
-   *
-   * @private
-   * @param {string} str
-   */
-  __str2base64 (str) {
-    try {
-      return btoa(str)
-    } catch (err) {
-      return Buffer.from(str, 'utf8').toString('base64')
     }
   }
 
@@ -295,7 +271,7 @@ class AEMHeadless {
     if (this.auth) {
       requestOptions.headers = {
         ...requestOptions.headers,
-        Authorization: this.__getAuthHeader(this.auth)
+        Authorization: __getAuthHeader(this.auth)
       }
       requestOptions.credentials = 'include'
     }
@@ -320,8 +296,8 @@ class AEMHeadless {
    */
   async __handleRequest (endpoint, body, options, retryOptions) {
     const requestOptions = this.__getRequestOptions(body, options)
-    const url = this.__getUrl(this.serviceURL, endpoint)
-    this.__validateUrl(url)
+    const url = __getUrl(this.serviceURL, endpoint)
+    __validateUrl(url)
 
     let response
     // 1. Handle Request
@@ -391,105 +367,6 @@ class AEMHeadless {
     }
 
     return data
-  }
-
-  /**
-   * Returns valid url.
-   *
-   * @private
-   * @param {string} domain
-   * @param {string} path
-   * @returns {string} valid url
-   */
-  __getUrl (domain, path) {
-    return `${domain}${path}`
-  }
-
-  /**
-   * Removes first / in a path
-   *
-   * @private
-   * @param {string} path
-   * @returns {string} path
-   */
-  __getPath (path) {
-    return path[0] === '/' ? path.substring(1) : path
-  }
-
-  /**
-   * Add last / in domain
-   *
-   * @private
-   * @param {string} domain
-   * @returns {string} valid domain
-   */
-  __getDomain (domain) {
-    return domain[domain.length - 1] === '/' ? domain : `${domain}/`
-  }
-
-  /**
-   * get Fetch instance
-   *
-   * @private
-   * @param {object} [fetch]
-   * @returns {object} fetch instance
-   */
-  __getFetch (fetch) {
-    if (!fetch) {
-      const browserFetch = this.__getBrowserFetch()
-      if (!browserFetch) {
-        throw new INVALID_PARAM({
-          sdkDetails: {
-            serviceURL: this.serviceURL
-          },
-          messageValues: 'Required param missing: config.fetch'
-        })
-      }
-
-      return browserFetch
-    }
-
-    return fetch
-  }
-
-  /**
-   * get Browser Fetch instance
-   *
-   * @private
-   * @returns {object} fetch instance
-   */
-  __getBrowserFetch () {
-    if (typeof window !== 'undefined') {
-      return window.fetch.bind(window)
-    }
-
-    if (typeof self !== 'undefined') {
-      return self.fetch.bind(self) // eslint-disable-line
-    }
-
-    return null
-  }
-
-  /**
-   * Check valid url or absolute path
-   *
-   * @private
-   * @param {string} url
-   * @returns void
-   */
-  __validateUrl (url) {
-    const fullUrl = url[0] === '/' ? `https://domain${url}` : url
-
-    try {
-      new URL(fullUrl) // eslint-disable-line
-    } catch (e) {
-      throw new INVALID_PARAM({
-        sdkDetails: {
-          serviceURL: this.serviceURL
-        },
-        messageValues: `Invalid URL/path: ${url}`
-      })
-    }
   }
 }
 

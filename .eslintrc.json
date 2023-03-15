@@ -1,6 +1,7 @@
 {
   "extends": ["@adobe/eslint-config-aio-lib-config"],
   "rules": {
+    "jsdoc/no-undefined-types": 0,
     "jsdoc/check-tag-names": [
       "error",
       {

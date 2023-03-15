@@ -96,18 +96,14 @@ class AEMHeadless {
     }
 
     let i = 0
-    while (this.hasNext) {
+    let hasNext = true
+    let endCursor = ''
+    while (hasNext) {
       const pagingArgs = this.__getPagingArgs(args, i)
       i += 1
       const { query, type } = this.buildQuery(model, fields, pagingArgs)
       const { data } = await this.runQuery(query, options, retryOptions)
 
-      if (!data || (data && data.length === 0)) {
-        this.hasNext = false
-        this.endCursor = ''
-        this.offset = 0
-        return data
-      }
       let filteredData
       try {
         filteredData = this.__filterData(model, type, data)
@@ -121,8 +117,8 @@ class AEMHeadless {
       }
 
       if (!filteredData || filteredData.length === 0 || type === AEM_GRAPHQL_TYPES.BY_PATH) {
-        this.hasNext = false
-        this.endCursor = ''
+        hasNext = false
+        endCursor = ''
         this.offset = 0
         return filteredData
       }
@@ -133,16 +129,27 @@ class AEMHeadless {
 
   __filterData (model, type, data) {
     let response
+    let filteredData
+    let hasNext
+    let endCursor
     switch (type) {
       case AEM_GRAPHQL_TYPES.BY_PATH:
-        return data[`${model}${type}`].item
+        filteredData = data[`${model}${type}`].item
+        break
       case AEM_GRAPHQL_TYPES.PAGINATED:
         response = data[`${model}${type}`]
-        this.hasNext = response.pageInfo.hasNextPage
-        this.endCursor = response.pageInfo.endCursor
-        return response.edges.map(item => item.node)
+        hasNext = response.pageInfo.hasNextPage
+        endCursor = response.pageInfo.endCursor
+        filteredData = response.edges.map(item => item.node)
+        break
       default:
-        return data[`${model}${type}`].items
+        filteredData = data[`${model}${type}`].items
+    }
+
+    return {
+      filteredData,
+      hasNext,
+      endCursor
     }
   }
 

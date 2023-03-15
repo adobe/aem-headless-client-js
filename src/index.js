@@ -49,26 +49,21 @@ class AEMHeadless {
     this.serviceURL = this.__getDomain(serviceURL)
     this.endpoint = this.__getPath(endpoint)
     this.fetch = this.__getFetch(config.fetch)
-    this.hasNext = true
-    this.endCursor = ''
-    this.offset = 0
   }
 
   buildQuery (model, itemQuery, args) {
     return graphQLQueryBuilder(model, itemQuery, args)
   }
 
-  __getPagingArgs (args, index) {
+  __updatePagingArgs (args = {}, { endCursor, offset, limit = 10 }) {
     const queryType = getQueryType(args)
-    let pagingArgs = args
-
+    const pagingArgs = { ...args }
     if (queryType === AEM_GRAPHQL_TYPES.LIST) {
-      this.offset = index !== 0 ? this.offset + (args.limit || 10) : (args.offset || 0)
-      pagingArgs = { ...args, offset: this.offset }
+      pagingArgs.offset = offset + limit
     }
 
     if (queryType === AEM_GRAPHQL_TYPES.PAGINATED) {
-      pagingArgs = this.endCursor ? { ...args, after: this.endCursor } : args
+      pagingArgs.after = endCursor
     }
 
     return pagingArgs
@@ -95,16 +90,23 @@ class AEMHeadless {
       })
     }
 
-    let i = 0
+    let isInitial = true
     let hasNext = true
-    let endCursor = ''
+    let endCursor = args.after || ''
+    const limit = args.limit || 10
+    let pagingArgs = args
     while (hasNext) {
-      const pagingArgs = this.__getPagingArgs(args, i)
-      i += 1
+      const offset = pagingArgs.offset || 0
+      if (!isInitial) {
+        pagingArgs = this.__updatePagingArgs(args, { offset, limit, endCursor })
+      }
+
+      isInitial = false
+
       const { query, type } = this.buildQuery(model, fields, pagingArgs)
       const { data } = await this.runQuery(query, options, retryOptions)
 
-      let filteredData
+      let filteredData = {}
       try {
         filteredData = this.__filterData(model, type, data)
       } catch (e) {
@@ -116,14 +118,10 @@ class AEMHeadless {
         })
       }
 
-      if (!filteredData || filteredData.length === 0 || type === AEM_GRAPHQL_TYPES.BY_PATH) {
-        hasNext = false
-        endCursor = ''
-        this.offset = 0
-        return filteredData
-      }
+      hasNext = filteredData.hasNext
+      endCursor = filteredData.endCursor
 
-      yield filteredData
+      yield filteredData.data
     }
   }
 
@@ -135,6 +133,7 @@ class AEMHeadless {
     switch (type) {
       case AEM_GRAPHQL_TYPES.BY_PATH:
         filteredData = data[`${model}${type}`].item
+        hasNext = false
         break
       case AEM_GRAPHQL_TYPES.PAGINATED:
         response = data[`${model}${type}`]
@@ -144,10 +143,11 @@ class AEMHeadless {
         break
       default:
         filteredData = data[`${model}${type}`].items
+        hasNext = filteredData && filteredData.length > 0
     }
 
     return {
-      filteredData,
+      data: filteredData,
       hasNext,
       endCursor
     }

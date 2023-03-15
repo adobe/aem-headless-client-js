@@ -135,14 +135,23 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
         console.warn(e)
     }
     
+    // Loop all pages
+    try {
+        const cursorQueryAll = await aemHeadlessClient.initPaginatedQuery(model, fields, { first: 4 })
+        for await (let value of cursorQueryAll) {
+            console.log('cursorQueryAll', value)
+        }
+    } catch (e) {
+        console.warn(e)
+    }
+    // Manually get next page
     try {
         const cursorQuery = await aemHeadlessClient.initPaginatedQuery(model, fields, { first: 4 })
-        
         let isDone = false
         while (!isDone) {
             const { done, value } = await cursorQuery.next();
             isDone = done
-            console.log(value)
+            console.log('cursorQuery', value)
         }
     } catch (e) {
         console.warn(e)

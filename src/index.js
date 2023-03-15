@@ -140,6 +140,7 @@ class AEMHeadless {
     let hasNext = true
     let after = args.after || ''
     const limit = args.limit || 10
+    const size = args.first || limit
     let pagingArgs = args
     while (hasNext) {
       const offset = pagingArgs.offset || 0
@@ -154,7 +155,7 @@ class AEMHeadless {
 
       let filteredData = {}
       try {
-        filteredData = this.__filterData(model, type, data)
+        filteredData = this.__filterData(model, type, data, size)
       } catch (e) {
         throw new API_ERROR({
           sdkDetails: {
@@ -215,13 +216,15 @@ class AEMHeadless {
    * @param {string} model - contentFragment model name
    * @param {string} type - model query type: byPath, List, Paginated
    * @param {object} data - raw response data
+   * @param {number} size - page size
    * @returns {object} - object with filtered data and paging info
    */
-  __filterData (model, type, data) {
+  __filterData (model, type, data, size = 0) {
     let response
     let filteredData
     let hasNext
     let endCursor
+    let len
     switch (type) {
       case AEM_GRAPHQL_TYPES.BY_PATH:
         filteredData = data[`${model}${type}`].item
@@ -229,13 +232,15 @@ class AEMHeadless {
         break
       case AEM_GRAPHQL_TYPES.PAGINATED:
         response = data[`${model}${type}`]
-        hasNext = response.pageInfo.hasNextPage
-        endCursor = response.pageInfo.endCursor
         filteredData = response.edges.map(item => item.node)
+        len = (filteredData && filteredData.length) || 0
+        hasNext = response.pageInfo.hasNextPage && len > 0 && len >= size
+        endCursor = response.pageInfo.endCursor
         break
       default:
         filteredData = data[`${model}${type}`].items
-        hasNext = filteredData && filteredData.length > 0
+        len = (filteredData && filteredData.length) || 0
+        hasNext = len > 0 && len >= size
     }
 
     return {

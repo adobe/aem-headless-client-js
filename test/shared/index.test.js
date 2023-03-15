@@ -224,3 +224,42 @@ test('API: multiple API custom errors', () => {
   const promise = sdk.runPersistedQuery('/test')
   return expect(promise).rejects.toThrow('Invalid URL/path:')
 })
+
+describe('initPaginatedQuery', () => {
+  const mockModel = 'mockModel'
+  const mockFields = 'mockFields'
+  const mockArgs = { limit: 10 }
+  const mockOptions = {}
+  const mockRetryOptions = {}
+
+  it('should throw an error if model is missing', async () => {
+    const gen = sdk.initPaginatedQuery(null, mockFields, mockArgs, mockOptions, mockRetryOptions)
+    await expect(gen.next()).rejects.toThrow(ErrorCodes.INVALID_PARAM)
+  })
+
+  it('should throw an error if fields are missing', async () => {
+    const gen = sdk.initPaginatedQuery(mockModel, null, mockArgs, mockOptions, mockRetryOptions)
+    await expect(gen.next()).rejects.toThrow(ErrorCodes.INVALID_PARAM)
+  })
+
+  it('should yield the filtered data', async () => {
+    const mockData = [{ id: '1', name: 'foo' }]
+    fetch.resetMocks()
+    fetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        data: {
+          mockModelList: {
+            items: mockData
+          }
+        }
+      })
+    })
+
+    const gen = sdk.initPaginatedQuery(mockModel, mockFields, mockArgs, mockOptions, mockRetryOptions)
+    const result = await gen.next()
+
+    expect(result).toEqual({ done: false, value: mockData })
+  })
+})

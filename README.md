@@ -116,26 +116,13 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
             firstName
             profilePicture {
                 ...on ImageRef {
-                    _authorUrl
+                  _authorUrl
                 }
             }
         }
     }`
     
-    try {
-        const offsetQuery = await aemHeadlessClient.initPaginatedQuery(model, fields, { limit: 3 })
-        
-        let isDone = false
-        while (!isDone) {
-            const { done, value } = await offsetQuery.next();
-            isDone = done
-            console.log(value)
-        }
-    } catch (e) {
-        console.warn(e)
-    }
-    
-    // Loop all pages
+    // Cursor based: Loop all pages
     try {
         const cursorQueryAll = await aemHeadlessClient.initPaginatedQuery(model, fields, { first: 4 })
         for await (let value of cursorQueryAll) {
@@ -144,7 +131,7 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
     } catch (e) {
         console.warn(e)
     }
-    // Manually get next page
+    // Cursor based: Manually get next page
     try {
         const cursorQuery = await aemHeadlessClient.initPaginatedQuery(model, fields, { first: 4 })
         let isDone = false
@@ -156,7 +143,37 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
     } catch (e) {
         console.warn(e)
     }
-})()    
+    // Offset based: Loop all pages
+    try {
+        const offsetQueryAll = await aemHeadlessClient.initPaginatedQuery(model, fields, { limit: 3 })
+        for await (let value of offsetQueryAll) {
+            console.log('offsetQueryAll', value)
+        }
+    } catch (e) {
+        console.warn(e)
+    }
+    // Offset based: Manually get next page
+    try {
+        const offsetQuery = await aemHeadlessClient.initPaginatedQuery(model, fields, { limit: 3 })
+        
+        let isDone = false
+        while (!isDone) {
+            const { done, value } = await offsetQuery.next();
+            isDone = done
+            console.log('offsetQuery', value)
+        }
+    } catch (e) {
+        console.warn(e)
+    }
+    // By path
+    try {
+        const pathQuery = await aemHeadlessClient.initPaginatedQuery(model, fields, { _path: '/content/dam/wknd-shared/en/magazine/alaska-adventure/alaskan-adventures' })
+        const result = pathQuery.next()
+        console.log('pathQuery', result)
+    } catch (e) {
+        console.warn(e)
+    }
+})()
 ```
 
 ## Authorization

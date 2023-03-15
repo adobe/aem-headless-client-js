@@ -51,11 +51,32 @@ class AEMHeadless {
     this.fetch = this.__getFetch(config.fetch)
   }
 
-  buildQuery (model, itemQuery, args) {
+  /**
+   * Builds a GraphQL query string for the given parameters.
+   *
+   * @param {string} model - The contentFragment model name.
+   * @param {string} itemQuery - The query string for item fields.
+   * @param {object} [args={}] - The paginated query arguments.
+   * @returns {string} The GraphQL query string.
+   */
+  buildQuery (model, itemQuery, args = {}) {
     return graphQLQueryBuilder(model, itemQuery, args)
   }
 
-  __updatePagingArgs (args = {}, { endCursor, offset, limit = 10 }) {
+  /**
+   * Returns the updated paging arguments based on the current arguments and the response data.
+   *
+   * @param {object} args - The current paging arguments.
+   * @param {string} [args.after] - The cursor to start after.
+   * @param {number} [args.offset] - The offset to start from.
+   * @param {number} [args.limit=10] - The maximum number of items to return per page.
+   * @param {object} data - The GraphQL response data.
+   * @param data.after
+   * @param data.offset
+   * @param data.limit
+   * @returns {object} The updated paging arguments.
+   */
+  __updatePagingArgs (args = {}, { after, offset, limit = 10 }) {
     const queryType = getQueryType(args)
     const pagingArgs = { ...args }
     if (queryType === AEM_GRAPHQL_TYPES.LIST) {
@@ -63,7 +84,7 @@ class AEMHeadless {
     }
 
     if (queryType === AEM_GRAPHQL_TYPES.PAGINATED) {
-      pagingArgs.after = endCursor
+      pagingArgs.after = after
     }
 
     return pagingArgs

@@ -109,31 +109,44 @@ const getQueryType = (args = {}) => {
     return AEM_GRAPHQL_TYPES.BY_PATH
   }
 
-  if (args.first || args.after) {
-    return AEM_GRAPHQL_TYPES.PAGINATED
+  if (args.useLimitOffset) {
+    return AEM_GRAPHQL_TYPES.LIST
   }
 
-  return AEM_GRAPHQL_TYPES.LIST
+  return AEM_GRAPHQL_TYPES.PAGINATED
 }
 
 /**
- * Returns a Query for a model and type
+ * Builds a GraphQL query string for the given parameters.
  *
  * @param {string} model - contentFragment Model Name
+ * @param {ModelConfig} [config={}] - Pagination config
  * @param {string} fields - The query string for item fields
  * @param {ModelArgs} [args={}] - Query arguments
- * @returns {QueryBuilderResult} - returns object with query string and type
+ * @returns {QueryBuilderResult} - object with The GraphQL query string and type
  */
-const graphQLQueryBuilder = (model, fields, args = {}) => {
+const graphQLQueryBuilder = (model, config = {}, fields, args = {}) => {
   if (args._path) {
     return __modelByPath(model, fields, args)
   }
 
-  if (args.first || args.after) {
-    return __modelPaginated(model, fields, args)
+  if (config.useLimitOffset) {
+    args.limit = args.limit || config.pageSize || 10
+    if (config.after) {
+      args.offset = args.offset || config.after
+    }
+    return __modelList(model, fields, args)
   }
 
-  return __modelList(model, fields, args)
+  if (config.pageSize) {
+    args.first = args.first || config.pageSize
+  }
+
+  if (config.after) {
+    args.after = args.after || config.after
+  }
+
+  return __modelPaginated(model, fields, args)
 }
 
 module.exports = {

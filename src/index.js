@@ -120,13 +120,14 @@ class AEMHeadless {
    *
    * @generator
    * @param {string} model - contentFragment model name
-   * @param {string} fields - query string for item fields
-   * @param {object} [args={}] - paginated query arguments
+   * @param {ModelConfig} [config={}] - Pagination config
+   * @param {string} fields - The query string for item fields
+   * @param {ModelArgs} [args={}] - Query arguments
    * @param {object} [options={}] - additional POST request options
    * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @yields {null | Promise<object | Array>} - the response items wrapped inside a Promise
    */
-  async * runPaginatedQuery (model, fields, args = {}, options, retryOptions) {
+  async * runPaginatedQuery (model, config = {}, fields, args = {}, options, retryOptions) {
     if (!model || !fields) {
       throw new INVALID_PARAM({
         sdkDetails: {
@@ -139,7 +140,7 @@ class AEMHeadless {
     let isInitial = true
     let hasNext = true
     let after = args.after || ''
-    const limit = args.limit || 10
+    const limit = args.limit
     const size = args.first || limit
     let pagingArgs = args
     while (hasNext) {
@@ -150,7 +151,7 @@ class AEMHeadless {
 
       isInitial = false
 
-      const { query, type } = this.buildQuery(model, fields, pagingArgs)
+      const { query, type } = this.buildQuery(model, config, fields, pagingArgs)
       const { data } = await this.runQuery(query, options, retryOptions)
 
       let filteredData = {}
@@ -175,13 +176,14 @@ class AEMHeadless {
   /**
    * Builds a GraphQL query string for the given parameters.
    *
-   * @param {string} model - The contentFragment model name
+   * @param {string} model - contentFragment Model Name
+   * @param {ModelConfig} [config={}] - Pagination config
    * @param {string} fields - The query string for item fields
-   * @param {object} [args={}] - Query arguments
-   * @returns {QueryBuilderResult} object with The GraphQL query string and type
+   * @param {ModelArgs} [args={}] - Query arguments
+   * @returns {QueryBuilderResult} - object with The GraphQL query string and type
    */
-  buildQuery (model, fields, args = {}) {
-    return graphQLQueryBuilder(model, fields, args)
+  buildQuery (model, config, fields, args = {}) {
+    return graphQLQueryBuilder(model, config, fields, args)
   }
 
   /**

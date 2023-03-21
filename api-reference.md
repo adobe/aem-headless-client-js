@@ -47,6 +47,8 @@ with GraphQL endpoint, GraphQL serviceURL and auth if needed</p>
 <dd></dd>
 <dt><a href="#QueryBuilderResult">QueryBuilderResult</a> : <code>object</code></dt>
 <dd></dd>
+<dt><a href="#ModelConfig">ModelConfig</a> : <code>object</code></dt>
+<dd></dd>
 </dl>
 
 <a name="AEMHeadless"></a>
@@ -64,8 +66,8 @@ with GraphQL endpoint, GraphQL serviceURL and auth if needed
     * [.persistQuery(query, path, [options], [retryOptions])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.listPersistedQueries([options], [retryOptions])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.runPersistedQuery(path, [variables], [options], [retryOptions])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.runPaginatedQuery(model, fields, [args], [options], [retryOptions])](#AEMHeadless+runPaginatedQuery)
-    * [.buildQuery(model, fields, [args])](#AEMHeadless+buildQuery) ⇒ [<code>QueryBuilderResult</code>](#QueryBuilderResult)
+    * [.runPaginatedQuery(model, [config], fields, [args], [options], [retryOptions])](#AEMHeadless+runPaginatedQuery)
+    * [.buildQuery(model, [config], fields, [args])](#AEMHeadless+buildQuery) ⇒ [<code>QueryBuilderResult</code>](#QueryBuilderResult)
 
 <a name="new_AEMHeadless_new"></a>
 
@@ -212,7 +214,7 @@ Returns a Promise that resolves with a GET request JSON data.
 
 <a name="AEMHeadless+runPaginatedQuery"></a>
 
-### aemHeadless.runPaginatedQuery(model, fields, [args], [options], [retryOptions])
+### aemHeadless.runPaginatedQuery(model, [config], fields, [args], [options], [retryOptions])
 Returns a Generator Function.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -227,10 +229,13 @@ Returns a Generator Function.
     <td>model</td><td><code>string</code></td><td></td><td><p>contentFragment model name</p>
 </td>
     </tr><tr>
-    <td>fields</td><td><code>string</code></td><td></td><td><p>query string for item fields</p>
+    <td>[config]</td><td><code><a href="#ModelConfig">ModelConfig</a></code></td><td><code>{}</code></td><td><p>Pagination config</p>
 </td>
     </tr><tr>
-    <td>[args]</td><td><code>object</code></td><td><code>{}</code></td><td><p>paginated query arguments</p>
+    <td>fields</td><td><code>string</code></td><td></td><td><p>The query string for item fields</p>
+</td>
+    </tr><tr>
+    <td>[args]</td><td><code><a href="#ModelArgs">ModelArgs</a></code></td><td><code>{}</code></td><td><p>Query arguments</p>
 </td>
     </tr><tr>
     <td>[options]</td><td><code>object</code></td><td><code>{}</code></td><td><p>additional POST request options</p>
@@ -243,11 +248,11 @@ Returns a Generator Function.
 
 <a name="AEMHeadless+buildQuery"></a>
 
-### aemHeadless.buildQuery(model, fields, [args]) ⇒ [<code>QueryBuilderResult</code>](#QueryBuilderResult)
+### aemHeadless.buildQuery(model, [config], fields, [args]) ⇒ [<code>QueryBuilderResult</code>](#QueryBuilderResult)
 Builds a GraphQL query string for the given parameters.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
-**Returns**: [<code>QueryBuilderResult</code>](#QueryBuilderResult) - object with The GraphQL query string and type  
+**Returns**: [<code>QueryBuilderResult</code>](#QueryBuilderResult) - - object with The GraphQL query string and type  
 <table>
   <thead>
     <tr>
@@ -256,13 +261,16 @@ Builds a GraphQL query string for the given parameters.
   </thead>
   <tbody>
 <tr>
-    <td>model</td><td><code>string</code></td><td></td><td><p>The contentFragment model name</p>
+    <td>model</td><td><code>string</code></td><td></td><td><p>contentFragment Model Name</p>
+</td>
+    </tr><tr>
+    <td>[config]</td><td><code><a href="#ModelConfig">ModelConfig</a></code></td><td><code>{}</code></td><td><p>Pagination config</p>
 </td>
     </tr><tr>
     <td>fields</td><td><code>string</code></td><td></td><td><p>The query string for item fields</p>
 </td>
     </tr><tr>
-    <td>[args]</td><td><code>object</code></td><td><code>{}</code></td><td><p>Query arguments</p>
+    <td>[args]</td><td><code><a href="#ModelArgs">ModelArgs</a></code></td><td><code>{}</code></td><td><p>Query arguments</p>
 </td>
     </tr>  </tbody>
 </table>
@@ -525,6 +533,31 @@ GraphQL Model type
 </td>
     </tr><tr>
     <td>query</td><td><code>QueryString</code></td><td><p>Query string</p>
+</td>
+    </tr>  </tbody>
+</table>
+
+<a name="ModelConfig"></a>
+
+## ModelConfig : <code>object</code>
+**Kind**: global typedef  
+**Properties**
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th><th>Type</th><th>Default</th><th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+<tr>
+    <td>[pageSize]</td><td><code>number</code></td><td><code>10</code></td><td><p>page size</p>
+</td>
+    </tr><tr>
+    <td>[after]</td><td><code>string</code> | <code>number</code></td><td></td><td><p>starting cursor or offset</p>
+</td>
+    </tr><tr>
+    <td>[useLimitOffset]</td><td><code>boolean</code></td><td><code>false</code></td><td><p>use offset pagination</p>
 </td>
     </tr>  </tbody>
 </table>

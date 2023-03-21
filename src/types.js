@@ -79,4 +79,11 @@
  * @property {QueryString} query - Query string
  */
 
+/**
+ * @typedef {object} ModelConfig
+ * @property {number} [pageSize=10] - page size
+ * @property {string|number} [after] - starting cursor or offset
+ * @property {boolean} [useLimitOffset=false] - use offset pagination
+ */
+
 module.exports = {}

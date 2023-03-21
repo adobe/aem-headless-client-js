@@ -122,34 +122,18 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
         }
       }`
     
-    // Offset based: Loop all pages
-    const offsetQueryAll = await aemHeadlessClient.runPaginatedQuery(model, fields, { limit: 3 })
-    for await (let value of offsetQueryAll) {
-        console.log('offsetQueryAll', value)
-    }
-    // Offset based: Manually get next page
-    const offsetQuery = await aemHeadlessClient.runPaginatedQuery(model, fields, { limit: 3 })
-    while (true) {
-        const { done, value } = await offsetQuery.next();
-        if (done) break
-        console.log('offsetQuery', value)
-    }
     // Cursor based: Loop all pages
-    const cursorQueryAll = await aemHeadlessClient.runPaginatedQuery(model, fields, { first: 4 })
+    const cursorQueryAll = await aemHeadlessClient.runPaginatedQuery(model, { pageSize: 3 }, fields)
     for await (let value of cursorQueryAll) {
         console.log('cursorQueryAll', value)
     }
     // Cursor based: Manually get next page
-    const cursorQuery = await aemHeadlessClient.runPaginatedQuery(model, fields, { first: 4 })
+    const cursorQuery = await aemHeadlessClient.runPaginatedQuery(model, { pageSize: 4 }, fields)
     while (true) {
         const { done, value } = await cursorQuery.next();
         if (done) break
         console.log('cursorQuery', value)
     }
-    // By path
-    const pathQuery = await aemHeadlessClient.runPaginatedQuery(model, fields, { _path: '/content/dam/wknd-shared/en/magazine/alaska-adventure/alaskan-adventures' })
-    const result = await pathQuery.next()
-    console.log('pathQuery', result)
 })()
 ```
 

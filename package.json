@@ -16,7 +16,8 @@
     "lint": "eslint src test",
     "unit-tests": "jest --config test/jest.config.js --maxWorkers=2 --verbose",
     "test": "npm run lint && npm run unit-tests",
-    "e2e": "jest --config e2e/jest.config.js"
+    "e2e": "jest --config e2e/jest.config.js",
+    "types": "tsc"
   },
   "publishConfig": {
     "access": "public"

@@ -120,14 +120,14 @@ class AEMHeadless {
    *
    * @generator
    * @param {string} model - contentFragment model name
-   * @param {ModelConfig} [config={}] - Pagination config
    * @param {string} fields - The query string for item fields
+   * @param {ModelConfig} [config={}] - Pagination config
    * @param {ModelArgs} [args={}] - Query arguments
    * @param {object} [options={}] - additional POST request options
    * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
    * @yields {null | Promise<object | Array>} - the response items wrapped inside a Promise
    */
-  async * runPaginatedQuery (model, config = {}, fields, args = {}, options, retryOptions) {
+  async * runPaginatedQuery (model, fields, config = {}, args = {}, options, retryOptions) {
     if (!model || !fields) {
       throw new INVALID_PARAM({
         sdkDetails: {
@@ -151,7 +151,7 @@ class AEMHeadless {
 
       isInitial = false
 
-      const { query, type } = this.buildQuery(model, config, fields, pagingArgs)
+      const { query, type } = this.buildQuery(model, fields, config, pagingArgs)
       const { data } = await this.runQuery(query, options, retryOptions)
 
       let filteredData = {}
@@ -177,13 +177,13 @@ class AEMHeadless {
    * Builds a GraphQL query string for the given parameters.
    *
    * @param {string} model - contentFragment Model Name
-   * @param {ModelConfig} [config={}] - Pagination config
    * @param {string} fields - The query string for item fields
+   * @param {ModelConfig} [config={}] - Pagination config
    * @param {ModelArgs} [args={}] - Query arguments
    * @returns {QueryBuilderResult} - object with The GraphQL query string and type
    */
-  buildQuery (model, config, fields, args = {}) {
-    return graphQLQueryBuilder(model, config, fields, args)
+  buildQuery (model, fields, config, args = {}) {
+    return graphQLQueryBuilder(model, fields, config, args)
   }
 
   /**

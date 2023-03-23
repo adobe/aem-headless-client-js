@@ -122,13 +122,13 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
         }
       }`
     
-    // Cursor based: Loop all pages
-    const cursorQueryAll = await aemHeadlessClient.runPaginatedQuery(model, { pageSize: 3 }, fields)
+    // Loop all pages (default Cursor based)
+    const cursorQueryAll = await aemHeadlessClient.runPaginatedQuery(model, fields, { pageSize: 3 })
     for await (let value of cursorQueryAll) {
         console.log('cursorQueryAll', value)
     }
-    // Cursor based: Manually get next page
-    const cursorQuery = await aemHeadlessClient.runPaginatedQuery(model, { pageSize: 4 }, fields)
+    // Manually get next page (default pageSize = 10)
+    const cursorQuery = await aemHeadlessClient.runPaginatedQuery(model, fields)
     while (true) {
         const { done, value } = await cursorQuery.next();
         if (done) break

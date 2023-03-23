@@ -120,12 +120,12 @@ const getQueryType = (args = {}) => {
  * Builds a GraphQL query string for the given parameters.
  *
  * @param {string} model - contentFragment Model Name
- * @param {ModelConfig} [config={}] - Pagination config
  * @param {string} fields - The query string for item fields
+ * @param {ModelConfig} [config={}] - Pagination config
  * @param {ModelArgs} [args={}] - Query arguments
  * @returns {QueryBuilderResult} - object with The GraphQL query string and type
  */
-const graphQLQueryBuilder = (model, config = {}, fields, args = {}) => {
+const graphQLQueryBuilder = (model, fields, config = {}, args = {}) => {
   if (args._path) {
     return __modelByPath(model, fields, args)
   }

@@ -234,12 +234,12 @@ describe('runPaginatedQuery', () => {
   const mockRetryOptions = {}
 
   it('should throw an error if model is missing', async () => {
-    const gen = sdk.runPaginatedQuery(null, mockConfig, mockFields, mockArgs, mockOptions, mockRetryOptions)
+    const gen = sdk.runPaginatedQuery(null, mockFields, mockConfig, mockArgs, mockOptions, mockRetryOptions)
     await expect(gen.next()).rejects.toThrow(ErrorCodes.INVALID_PARAM)
   })
 
   it('should throw an error if fields are missing', async () => {
-    const gen = sdk.runPaginatedQuery(mockModel, mockConfig, null, mockArgs, mockOptions, mockRetryOptions)
+    const gen = sdk.runPaginatedQuery(mockModel, null, mockConfig, mockArgs, mockOptions, mockRetryOptions)
     await expect(gen.next()).rejects.toThrow(ErrorCodes.INVALID_PARAM)
   })
 
@@ -261,7 +261,7 @@ describe('runPaginatedQuery', () => {
       })
     })
 
-    const gen = sdk.runPaginatedQuery(mockModel, mockConfig, mockFields, mockArgs, mockOptions, mockRetryOptions)
+    const gen = sdk.runPaginatedQuery(mockModel, mockFields, mockConfig, mockArgs, mockOptions, mockRetryOptions)
     const result = await gen.next()
 
     expect(result).toEqual({ done: false, value: [mockData] })

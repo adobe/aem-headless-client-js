@@ -66,8 +66,8 @@ with GraphQL endpoint, GraphQL serviceURL and auth if needed
     * [.persistQuery(query, path, [options], [retryOptions])](#AEMHeadless+persistQuery) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.listPersistedQueries([options], [retryOptions])](#AEMHeadless+listPersistedQueries) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.runPersistedQuery(path, [variables], [options], [retryOptions])](#AEMHeadless+runPersistedQuery) ⇒ <code>Promise.&lt;any&gt;</code>
-    * [.runPaginatedQuery(model, [config], fields, [args], [options], [retryOptions])](#AEMHeadless+runPaginatedQuery)
-    * [.buildQuery(model, [config], fields, [args])](#AEMHeadless+buildQuery) ⇒ [<code>QueryBuilderResult</code>](#QueryBuilderResult)
+    * [.runPaginatedQuery(model, fields, [config], [args], [options], [retryOptions])](#AEMHeadless+runPaginatedQuery)
+    * [.buildQuery(model, fields, [config], [args])](#AEMHeadless+buildQuery) ⇒ [<code>QueryBuilderResult</code>](#QueryBuilderResult)
 
 <a name="new_AEMHeadless_new"></a>
 
@@ -214,7 +214,7 @@ Returns a Promise that resolves with a GET request JSON data.
 
 <a name="AEMHeadless+runPaginatedQuery"></a>
 
-### aemHeadless.runPaginatedQuery(model, [config], fields, [args], [options], [retryOptions])
+### aemHeadless.runPaginatedQuery(model, fields, [config], [args], [options], [retryOptions])
 Returns a Generator Function.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -229,10 +229,10 @@ Returns a Generator Function.
     <td>model</td><td><code>string</code></td><td></td><td><p>contentFragment model name</p>
 </td>
     </tr><tr>
-    <td>[config]</td><td><code><a href="#ModelConfig">ModelConfig</a></code></td><td><code>{}</code></td><td><p>Pagination config</p>
+    <td>fields</td><td><code>string</code></td><td></td><td><p>The query string for item fields</p>
 </td>
     </tr><tr>
-    <td>fields</td><td><code>string</code></td><td></td><td><p>The query string for item fields</p>
+    <td>[config]</td><td><code><a href="#ModelConfig">ModelConfig</a></code></td><td><code>{}</code></td><td><p>Pagination config</p>
 </td>
     </tr><tr>
     <td>[args]</td><td><code><a href="#ModelArgs">ModelArgs</a></code></td><td><code>{}</code></td><td><p>Query arguments</p>
@@ -248,7 +248,7 @@ Returns a Generator Function.
 
 <a name="AEMHeadless+buildQuery"></a>
 
-### aemHeadless.buildQuery(model, [config], fields, [args]) ⇒ [<code>QueryBuilderResult</code>](#QueryBuilderResult)
+### aemHeadless.buildQuery(model, fields, [config], [args]) ⇒ [<code>QueryBuilderResult</code>](#QueryBuilderResult)
 Builds a GraphQL query string for the given parameters.
 
 **Kind**: instance method of [<code>AEMHeadless</code>](#AEMHeadless)  
@@ -264,10 +264,10 @@ Builds a GraphQL query string for the given parameters.
     <td>model</td><td><code>string</code></td><td></td><td><p>contentFragment Model Name</p>
 </td>
     </tr><tr>
-    <td>[config]</td><td><code><a href="#ModelConfig">ModelConfig</a></code></td><td><code>{}</code></td><td><p>Pagination config</p>
+    <td>fields</td><td><code>string</code></td><td></td><td><p>The query string for item fields</p>
 </td>
     </tr><tr>
-    <td>fields</td><td><code>string</code></td><td></td><td><p>The query string for item fields</p>
+    <td>[config]</td><td><code><a href="#ModelConfig">ModelConfig</a></code></td><td><code>{}</code></td><td><p>Pagination config</p>
 </td>
     </tr><tr>
     <td>[args]</td><td><code><a href="#ModelArgs">ModelArgs</a></code></td><td><code>{}</code></td><td><p>Query arguments</p>

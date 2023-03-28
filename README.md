@@ -105,6 +105,38 @@ aemHeadlessClient.runPersistedQuery('wknd/persist-query-name-with-variables', { 
 })()    
 ```
 
+#### Pagination:
+```javascript
+(async () => {
+    const model = 'article'
+    const fields = `{
+        title
+        _path
+        authorFragment {
+          firstName
+          profilePicture {
+            ...on ImageRef {
+              _authorUrl
+            }
+          }
+        }
+      }`
+    
+    // Loop all pages (default Cursor based)
+    const cursorQueryAll = await aemHeadlessClient.runPaginatedQuery(model, fields, { pageSize: 3 })
+    for await (let value of cursorQueryAll) {
+        console.log('cursorQueryAll', value)
+    }
+    // Manually get next page (default pageSize = 10)
+    const cursorQuery = await aemHeadlessClient.runPaginatedQuery(model, fields)
+    while (true) {
+        const { done, value } = await cursorQuery.next();
+        if (done) break
+        console.log('cursorQuery', value)
+    }
+})()
+```
+
 ## Authorization
 
 If `auth` param is a string, it's treated as a Bearer token

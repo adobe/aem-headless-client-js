@@ -6,6 +6,13 @@ const AEM_GRAPHQL_ACTIONS = {
   serviceURL: '/'
 }
 
+const AEM_GRAPHQL_TYPES = {
+  BY_PATH: 'ByPath',
+  LIST: 'List',
+  PAGINATED: 'Paginated'
+}
+
 module.exports = {
-  AEM_GRAPHQL_ACTIONS
+  AEM_GRAPHQL_ACTIONS,
+  AEM_GRAPHQL_TYPES
 }

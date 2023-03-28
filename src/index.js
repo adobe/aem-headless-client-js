@@ -10,7 +10,9 @@ governing permissions and limitations under the License.
 */
 
 const ErrorCodes = require('./utils/SDKErrors').codes
-const { AEM_GRAPHQL_ACTIONS } = require('./utils/config')
+const { AEM_GRAPHQL_ACTIONS, AEM_GRAPHQL_TYPES } = require('./utils/config')
+const { graphQLQueryBuilder, getQueryType } = require('./utils/GraphQLQueryBuilder')
+const { __getUrl, __getPath, __getDomain, __validateUrl, __getFetch, __getAuthHeader } = require('./utils/utils')
 const { REQUEST_ERROR, RESPONSE_ERROR, API_ERROR, INVALID_PARAM } = ErrorCodes
 
 /**
@@ -45,9 +47,9 @@ class AEMHeadless {
       this.headers = config.headers
     }
 
-    this.serviceURL = this.__getDomain(serviceURL)
-    this.endpoint = this.__getPath(endpoint)
-    this.fetch = this.__getFetch(config.fetch)
+    this.serviceURL = __getDomain(serviceURL)
+    this.endpoint = __getPath(endpoint)
+    this.fetch = __getFetch(config.fetch)
   }
 
   /**
@@ -114,35 +116,139 @@ class AEMHeadless {
   }
 
   /**
-   * Returns Authorization Header value.
+   * Returns a Generator Function.
    *
-   * @private
-   * @param {string|array} auth - Bearer token string or [user,pass] pair array
-   * @returns {string} Authorization Header value
+   * @generator
+   * @param {string} model - contentFragment model name
+   * @param {string} fields - The query string for item fields
+   * @param {ModelConfig} [config={}] - Pagination config
+   * @param {ModelArgs} [args={}] - Query arguments
+   * @param {object} [options={}] - additional POST request options
+   * @param {object} [retryOptions={}] - retry options for @adobe/aio-lib-core-networking
+   * @yields {null | Promise<object | Array>} - the response items wrapped inside a Promise
    */
-  __getAuthHeader (auth) {
-    let authType = 'Bearer'
-    let authToken = auth
-    // If auth is user, pass pair
-    if (Array.isArray(auth) && auth[0] && auth[1]) {
-      authType = 'Basic'
-      authToken = this.__str2base64(`${auth[0]}:${auth[1]}`)
+  async * runPaginatedQuery (model, fields, config = {}, args = {}, options, retryOptions) {
+    if (!model || !fields) {
+      throw new INVALID_PARAM({
+        sdkDetails: {
+          serviceURL: this.serviceURL
+        },
+        messageValues: 'Required param missing: @param {string} fields - query string for item fields'
+      })
     }
 
-    return `${authType} ${authToken}`
+    let isInitial = true
+    let hasNext = true
+    let after = args.after || ''
+    const limit = args.limit
+    const size = args.first || limit
+    let pagingArgs = args
+    while (hasNext) {
+      const offset = pagingArgs.offset || 0
+      if (!isInitial) {
+        pagingArgs = this.__updatePagingArgs(args, { offset, limit, after })
+      }
+
+      isInitial = false
+
+      const { query, type } = this.buildQuery(model, fields, config, pagingArgs)
+      const { data } = await this.runQuery(query, options, retryOptions)
+
+      let filteredData = {}
+      try {
+        filteredData = this.__filterData(model, type, data, size)
+      } catch (e) {
+        throw new API_ERROR({
+          sdkDetails: {
+            serviceURL: this.serviceURL
+          },
+          messageValues: `Error while filtering response data. ${e.message}`
+        })
+      }
+
+      hasNext = filteredData.hasNext
+      after = filteredData.endCursor
+
+      yield filteredData.data
+    }
   }
 
   /**
-   * simple string to base64 implementation
+   * Builds a GraphQL query string for the given parameters.
+   *
+   * @param {string} model - contentFragment Model Name
+   * @param {string} fields - The query string for item fields
+   * @param {ModelConfig} [config={}] - Pagination config
+   * @param {ModelArgs} [args={}] - Query arguments
+   * @returns {QueryBuilderResult} - object with The GraphQL query string and type
+   */
+  buildQuery (model, fields, config, args = {}) {
+    return graphQLQueryBuilder(model, fields, config, args)
+  }
+
+  /**
+   * Returns the updated paging arguments based on the current arguments and the response data.
    *
    * @private
-   * @param {string} str
+   * @param {object} args - The current paging arguments.
+   * @param {object} data - Current page arguments.
+   * @param {string} data.after - The cursor to start after.
+   * @param {number} data.offset - The offset to start from.
+   * @param {number} [data.limit = 10] - The maximum number of items to return per page.
+   * @returns {object} The updated paging arguments.
    */
-  __str2base64 (str) {
-    try {
-      return btoa(str)
-    } catch (err) {
-      return Buffer.from(str, 'utf8').toString('base64')
+  __updatePagingArgs (args = {}, { after, offset, limit = 10 }) {
+    const queryType = getQueryType(args)
+    const pagingArgs = { ...args }
+    if (queryType === AEM_GRAPHQL_TYPES.LIST) {
+      pagingArgs.offset = offset + limit
+    }
+
+    if (queryType === AEM_GRAPHQL_TYPES.PAGINATED) {
+      pagingArgs.after = after
+    }
+
+    return pagingArgs
+  }
+
+  /**
+   * Returns items list and paging info.
+   *
+   * @private
+   * @param {string} model - contentFragment model name
+   * @param {string} type - model query type: byPath, List, Paginated
+   * @param {object} data - raw response data
+   * @param {number} size - page size
+   * @returns {object} - object with filtered data and paging info
+   */
+  __filterData (model, type, data, size = 0) {
+    let response
+    let filteredData
+    let hasNext
+    let endCursor
+    let len
+    switch (type) {
+      case AEM_GRAPHQL_TYPES.BY_PATH:
+        filteredData = data[`${model}${type}`].item
+        hasNext = false
+        break
+      case AEM_GRAPHQL_TYPES.PAGINATED:
+        response = data[`${model}${type}`]
+        filteredData = response.edges.map(item => item.node)
+        len = (filteredData && filteredData.length) || 0
+        hasNext = response.pageInfo.hasNextPage && len > 0 && len >= size
+        endCursor = response.pageInfo.endCursor
+        break
+      default:
+        filteredData = data[`${model}${type}`].items
+        len = (filteredData && filteredData.length) || 0
+        hasNext = len > 0 && len >= size
+    }
+
+    return {
+      data: filteredData,
+      hasNext,
+      endCursor
     }
   }
 
@@ -173,7 +279,7 @@ class AEMHeadless {
     if (this.auth) {
       requestOptions.headers = {
         ...requestOptions.headers,
-        Authorization: this.__getAuthHeader(this.auth)
+        Authorization: __getAuthHeader(this.auth)
       }
       requestOptions.credentials = 'include'
     }
@@ -198,8 +304,8 @@ class AEMHeadless {
    */
   async __handleRequest (endpoint, body, options, retryOptions) {
     const requestOptions = this.__getRequestOptions(body, options)
-    const url = this.__getUrl(this.serviceURL, endpoint)
-    this.__validateUrl(url)
+    const url = __getUrl(this.serviceURL, endpoint)
+    __validateUrl(url)
 
     let response
     // 1. Handle Request
@@ -257,107 +363,18 @@ class AEMHeadless {
         messageValues: error.message
       })
     }
-
-    return data
-  }
-
-  /**
-   * Returns valid url.
-   *
-   * @private
-   * @param {string} domain
-   * @param {string} path
-   * @returns {string} valid url
-   */
-  __getUrl (domain, path) {
-    return `${domain}${path}`
-  }
-
-  /**
-   * Removes first / in a path
-   *
-   * @private
-   * @param {string} path
-   * @returns {string} path
-   */
-  __getPath (path) {
-    return path[0] === '/' ? path.substring(1) : path
-  }
-
-  /**
-   * Add last / in domain
-   *
-   * @private
-   * @param {string} domain
-   * @returns {string} valid domain
-   */
-  __getDomain (domain) {
-    return domain[domain.length - 1] === '/' ? domain : `${domain}/`
-  }
-
-  /**
-   * get Fetch instance
-   *
-   * @private
-   * @param {object} [fetch]
-   * @returns {object} fetch instance
-   */
-  __getFetch (fetch) {
-    if (!fetch) {
-      const browserFetch = this.__getBrowserFetch()
-      if (!browserFetch) {
-        throw new INVALID_PARAM({
-          sdkDetails: {
-            serviceURL: this.serviceURL
-          },
-          messageValues: 'Required param missing: config.fetch'
-        })
-      }
-
-      return browserFetch
-    }
-
-    return fetch
-  }
-
-  /**
-   * get Browser Fetch instance
-   *
-   * @private
-   * @returns {object} fetch instance
-   */
-  __getBrowserFetch () {
-    if (typeof window !== 'undefined') {
-      return window.fetch.bind(window)
-    }
-
-    if (typeof self !== 'undefined') {
-      return self.fetch.bind(self) // eslint-disable-line
-    }
-
-    return null
-  }
-
-  /**
-   * Check valid url or absolute path
-   *
-   * @private
-   * @param {string} url
-   * @returns void
-   */
-  __validateUrl (url) {
-    const fullUrl = url[0] === '/' ? `https://domain${url}` : url
-
-    try {
-      new URL(fullUrl) // eslint-disable-line
-    } catch (e) {
-      throw new INVALID_PARAM({
+    // 3.2. Response ok: containing errors info
+    if (data && data.errors) {
+      throw new RESPONSE_ERROR({
         sdkDetails: {
-          serviceURL: this.serviceURL
+          serviceURL: this.serviceURL,
+          endpoint
         },
-        messageValues: `Invalid URL/path: ${url}`
+        messageValues: data.errors.map((error) => error.message).join('. ')
       })
     }
+
+    return data
   }
 }
 

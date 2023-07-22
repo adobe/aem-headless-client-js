@@ -105,7 +105,7 @@ class AEMHeadless {
     const method = (options.method || 'GET').toUpperCase()
     let body = ''
     let variablesString = encodeURIComponent(Object.keys(variables).map(key => {
-      const val = JSON.stringify(variables[key])
+      const val = (typeof variables[key] === 'string') ? variables[key] : JSON.stringify(variables[key])
       return `;${key}=${val}`
     }).join(''))
 

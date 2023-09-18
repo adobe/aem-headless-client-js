@@ -324,7 +324,13 @@ class AEMHeadless {
         messageValues: error.message
       })
     }
+
     let apiError
+    const sdkDetails = {
+      serviceURL: this.serviceURL,
+      endpoint,
+      status: response.status
+    }
     // 2. Handle Response error
     if (!response.ok) {
       try {
@@ -333,10 +339,7 @@ class AEMHeadless {
       } catch (error) {
         // 2.3 Response error: Couldn't parse JSON - no error defined in API response
         throw new RESPONSE_ERROR({
-          sdkDetails: {
-            serviceURL: this.serviceURL,
-            endpoint
-          },
+          sdkDetails,
           messageValues: error.message
         })
       }
@@ -345,10 +348,7 @@ class AEMHeadless {
     if (apiError) {
       // 2.2 Response error: JSON parsed - valid error defined in API response
       throw new API_ERROR({
-        sdkDetails: {
-          serviceURL: this.serviceURL,
-          endpoint
-        },
+        sdkDetails,
         messageValues: apiError
       })
     }
@@ -359,20 +359,14 @@ class AEMHeadless {
     } catch (error) {
       // 3.2. Response ok: Data error - Couldn't parse the JSON from OK response
       throw new RESPONSE_ERROR({
-        sdkDetails: {
-          serviceURL: this.serviceURL,
-          endpoint
-        },
+        sdkDetails,
         messageValues: error.message
       })
     }
     // 3.2. Response ok: containing errors info
     if (data && data.errors) {
       throw new RESPONSE_ERROR({
-        sdkDetails: {
-          serviceURL: this.serviceURL,
-          endpoint
-        },
+        sdkDetails,
         messageValues: data.errors.map((error) => error.message).join('. ')
       })
     }

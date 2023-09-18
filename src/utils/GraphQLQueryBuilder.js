@@ -8,13 +8,8 @@ const { AEM_GRAPHQL_TYPES } = require('./config')
  * @returns {string} - query args as a string
  */
 function objToStringArgs (obj) {
-  let str = ''
-  for (const [key, value] of Object.entries(obj)) {
-    let val = typeof value === 'string' ? `"${value}"` : value
-    val = typeof value === 'object' ? `{ ${objToStringArgs(value)} }` : val
-    str += `${key}:${val}\n`
-  }
-  return str
+  const str = JSON.stringify(obj).replace(/"([^"]+)":/g, '$1:')
+  return str.substring(1, str.length - 1)
 }
 
 /**

@@ -157,7 +157,10 @@ class AEMHeadless {
       hasNext = filteredData.hasNext
       after = filteredData.endCursor
 
-      yield filteredData.data
+      yield {
+        data: filteredData.data,
+        hasNext
+      }
     }
   }
 

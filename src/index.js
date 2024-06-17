@@ -109,6 +109,11 @@ class AEMHeadless {
       return `;${key}=${val}`
     }).join(''))
 
+    if (method === 'GET') {
+      // https://experienceleague.adobe.com/en/docs/experience-manager-cloud-service/content/headless/graphql-api/content-fragments#dynamic-image-delivery-multiple-specified-parameters
+      variablesString += variablesString + ';';
+    }
+
     if (method === 'POST') {
       body = JSON.stringify({ variables })
       variablesString = ''

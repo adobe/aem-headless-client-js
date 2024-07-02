@@ -110,7 +110,7 @@ class AEMHeadless {
     }).join(''))
 
     if (method === 'GET') {
-      variablesString += variablesString + ';'
+      variablesString += ';'
     }
 
     if (method === 'POST') {

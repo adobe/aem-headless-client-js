@@ -106,14 +106,14 @@ test('API: runPersistedQuery with variables API Success', () => {
 test('API: runPersistedQuery GET with variables API Success', () => {
   // check success response
   const promise = sdk.runPersistedQuery(persistedName, { name: 'test' })
-  expect(fetch).toHaveBeenCalledWith(`http://localhost/graphql/execute.json/${persistedName}%3Bname%3Dtest`, expect.anything(), expect.anything())
+  expect(fetch).toHaveBeenCalledWith(`http://localhost/graphql/execute.json/${persistedName}%3Bname%3Dtest;`, expect.anything(), expect.anything())
   return expect(promise).resolves.toBeTruthy()
 })
 
 test('API: runPersistedQuery GET with two variables API Success', () => {
   // check success response
   const promise = sdk.runPersistedQuery(persistedName, { name: 'test', locale: 'en' })
-  expect(fetch).toHaveBeenCalledWith(`http://localhost/graphql/execute.json/${persistedName}%3Bname%3Dtest%3locale%3en;`, expect.anything(), expect.anything())
+  expect(fetch).toHaveBeenCalledWith(`http://localhost/graphql/execute.json/${persistedName}%3Bname%3Dtest%3Blocale%3Den;`, expect.anything(), expect.anything())
   return expect(promise).resolves.toBeTruthy()
 })
 

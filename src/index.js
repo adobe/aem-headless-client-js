@@ -109,7 +109,7 @@ class AEMHeadless {
       return `;${key}=${val}`
     }).join(''))
 
-    if (method === 'GET') {
+    if (method === 'GET' && variablesString) {
       variablesString += ';'
     }
 

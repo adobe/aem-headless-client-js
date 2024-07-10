@@ -117,6 +117,19 @@ test('API: runPersistedQuery GET with two variables API Success', () => {
   return expect(promise).resolves.toBeTruthy()
 })
 
+test('API: runPersistedQuery GET with no variables API Success', () => {
+  // check success response
+  const promise = sdk.runPersistedQuery(persistedName)
+  expect(fetch).toHaveBeenCalledWith(`http://localhost/graphql/execute.json/${persistedName}`, expect.anything(), expect.anything())
+  return expect(promise).resolves.toBeTruthy()
+})
+
+test('API: runPersistedQuery GET with no variables API Success and empty variables', () => {
+  const promise = sdk.runPersistedQuery(persistedName, {})
+  expect(fetch).toHaveBeenCalledWith(`http://localhost/graphql/execute.json/${persistedName}`, expect.anything(), expect.anything())
+  return expect(promise).resolves.toBeTruthy()
+})
+
 test('API: runPersistedQuery API Error', () => {
   fetch.mockRejectedValue({
     ok: false

@@ -109,6 +109,10 @@ class AEMHeadless {
       return `;${key}=${val}`
     }).join(''))
 
+    if (method === 'GET' && variablesString) {
+      variablesString += ';'
+    }
+
     if (method === 'POST') {
       body = JSON.stringify({ variables })
       variablesString = ''

@@ -20,7 +20,7 @@ let sdk = {}
 
 test('SDK Constructor: string as a constructor param fails in NodeJS env', () => {
   const config = 'http://localhost'
-  expect(() => new AEMHeadless(config)).toThrowError(ErrorCodes.REQUIRED_PARAMS)
+  expect(() => new AEMHeadless(config)).toThrow(ErrorCodes.REQUIRED_PARAMS)
 })
 
 test('SDK Constructor: Fetch is a required param "config.fetch" in NodeJS env', () => {

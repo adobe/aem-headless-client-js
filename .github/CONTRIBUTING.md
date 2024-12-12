@@ -10,6 +10,37 @@ This project adheres to the Adobe [code of conduct](../CODE_OF_CONDUCT.md). By p
 you are expected to uphold this code. Please report unacceptable behavior to
 [Grp-opensourceoffice@adobe.com](mailto:Grp-opensourceoffice@adobe.com).
 
+## Release
+- based on Angular Commit Message Conventions in commits -
+  https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit-message-header
+- Commit message format is used to build:
+    * Release notes
+    * Changelog updates
+    * NPM package semver
+
+## Commit message Convention
+
+```
+<type>(<scope>): <short summary>
+│       │             │
+│       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
+│       │
+│       └─⫸ Commit Scope (optional): project|based|list
+│
+└─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|test
+```
+
+
+### Major Version Release:
+
+In order to trigger Major Version upgrade, `BREAKING CHANGE:` needs to be in the footer of a commit message:
+
+```
+<type>(<scope>): <short summary>
+<BLANK LINE>
+BREAKING CHANGE: <breaking change summary>
+```
+
 ## Have A Question?
 
 Start by filing an issue. The existing committers on this project work to reach

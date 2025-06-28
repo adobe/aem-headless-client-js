@@ -35,7 +35,7 @@
   "devDependencies": {
     "@adobe/eslint-config-aio-lib-config": "4.0.0",
     "cross-fetch": "4.1.0",
-    "dotenv": "16.6.1",
+    "dotenv": "17.0.0",
     "jest": "30.0.3",
     "jest-environment-jsdom": "30.0.2",
     "jest-fetch-mock": "3.0.3",

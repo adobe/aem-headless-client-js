@@ -33,7 +33,7 @@
     "@adobe/aio-lib-core-errors": "4.0.1"
   },
   "devDependencies": {
-    "@adobe/eslint-config-aio-lib-config": "4.0.0",
+    "@adobe/eslint-config-aio-lib-config": "5.0.0",
     "cross-fetch": "4.1.0",
     "dotenv": "17.4.2",
     "jest": "30.4.2",

@@ -67,7 +67,7 @@ jobs:
       - name: Run Tests
         run: npm test --if-present
       - name: Publish npm package
-        uses: cycjimmy/semantic-release-action@v4
+        uses: cycjimmy/semantic-release-action@v6.0.0
         with:
           dry_run: ${{ github.event.inputs.dryRun == 'true' }}
           extra_plugins: |
